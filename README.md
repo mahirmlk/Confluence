@@ -204,80 +204,87 @@ Or on Windows:
 
 ## Architecture
 
-```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                           BROWSER (Client)                               │
-│                                                                          │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────┐  ┌──────────────────┐  │
-│  │   Zustand    │  │ TanStack     │  │ Canvas2D │  │ Three.js         │  │
-│  │   (State)    │  │ Query (Cache)│  │ (Heatmap)│  │ (3D Mode)        │  │
-│  └──────┬───────┘  └──────┬───────┘  └────┬─────┘  └────────┬─────────┘  │
-│         │                 │               │                  │            │
-│         └─────────────────┴───────────────┴──────────────────┘            │
-│                                    │                                      │
-│                           Axios HTTP Client                               │
-│                           + WebSocket                                     │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │
-                          REST + WebSocket (JSON)
-                                     │
-┌────────────────────────────────────┴─────────────────────────────────────┐
-│                        FASTAPI BACKEND (Python 3.11)                      │
-│                                                                          │
-│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐                │
-│  │   Routers      │  │  Algorithms   │  │   Schemas     │                │
-│  │   (Endpoints)  │──│  (scikit-     │──│  (Pydantic)   │                │
-│  │                │  │   learn)      │  │               │                │
-│  └───────┬───────┘  └───────┬───────┘  └───────────────┘                │
-│          │                  │                                             │
-│  ┌───────┴───────┐  ┌───────┴───────┐  ┌───────────────┐                │
-│  │   Grid Engine  │  │   Metrics     │  │   Redis       │                │
-│  │   (meshgrid +  │  │   (CV, ROC,   │  │   (Cache)     │                │
-│  │    contours)   │  │    curves)    │  │               │                │
-│  └───────────────┘  └───────────────┘  └───────────────┘                │
-│                                                                          │
-│  OpenAPI Schema ──► openapi-typescript ──► Auto-generated TS types       │
-└──────────────────────────────────────────────────────────────────────────┘
+### System Overview
+
+```mermaid
+graph TB
+    subgraph Browser["Browser (Client)"]
+        Z[Zustand<br/>State Management]
+        TQ[TanStack Query<br/>Data Fetching]
+        C2D[Canvas2D<br/>Heatmap Rendering]
+        TJS[Three.js<br/>3D Visualization]
+        AX[Axios + WebSocket<br/>HTTP Client]
+    end
+
+    subgraph Backend["FastAPI Backend (Python 3.11)"]
+        R[Routers<br/>REST Endpoints]
+        AL[Algorithms<br/>scikit-learn]
+        SC[Schemas<br/>Pydantic Validation]
+        GE[Grid Engine<br/>Meshgrid + Contours]
+        M[Metrics<br/>CV / ROC / Curves]
+        RD[Redis<br/>Prediction Cache]
+    end
+
+    Z --> AX
+    TQ --> AX
+    C2D --> AX
+    TJS --> AX
+    AX <-->|REST + WebSocket JSON| R
+    R --> AL
+    AL --> SC
+    AL --> GE
+    AL --> M
+    R --> RD
+
+    style Browser fill:#1e293b,stroke:#60a5fa,color:#fff
+    style Backend fill:#1e293b,stroke:#34d399,color:#fff
+    style AX fill:#334155,stroke:#facc15,color:#fff
+    style R fill:#334155,stroke:#facc15,color:#fff
 ```
 
 ### Data Flow: Static Boundary Request
 
-```
-User selects dataset + algorithm + hyperparameters
-         │
-         ▼
-Frontend builds request ──► Check Redis cache (deterministic key)
-         │                        │
-         │                   Cache miss
-         ▼                        ▼
-Backend: generate_dataset() ──► fit_and_predict_grid()
-         │                        │
-         │                   Model.fit(X, y)
-         │                   Model.predict_proba(meshgrid)
-         │                        │
-         ▼                        ▼
-Extract contours (skimage) ◄── Probability grid
-         │
-         ▼
-Frontend: Canvas2D heatmap + contour overlay + Framer Motion cross-fade
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as Frontend
+    participant BE as Backend
+    participant RD as Redis
+    participant ML as scikit-learn
+
+    U->>FE: Select dataset + algorithm + hyperparameters
+    FE->>BE: POST /api/classification/predict
+    BE->>RD: Check cache (deterministic key)
+    alt Cache Hit
+        RD-->>BE: Return cached grid
+    else Cache Miss
+        BE->>ML: generate_dataset()
+        BE->>ML: fit_and_predict_grid()
+        ML-->>BE: Probability grid
+        BE->>BE: Extract contours (skimage)
+        BE->>RD: Store result
+    end
+    BE-->>FE: JSON response (grid, contours, points)
+    FE->>FE: Canvas2D heatmap + contour overlay
 ```
 
 ### Data Flow: WebSocket Training Animation
 
-```
-Frontend opens WS connection ──► /ws/stream
-         │
-         ▼
-Backend: stream_boosting_frames() / stream_tree_growth_frames() / ...
-         │
-         ├── Fit model with n_estimators=1
-         ├── Predict grid → send JSON frame
-         ├── Increment n_estimators
-         ├── Repeat...
-         └── Send {"type": "done"}
-         │
-         ▼
-Frontend: Buffer frames → Scrubber component → Re-render boundary per frame
+```mermaid
+sequenceDiagram
+    participant FE as Frontend
+    participant BE as Backend
+    participant ML as scikit-learn
+
+    FE->>BE: WS connect + config (algorithm, params, dataset)
+    loop Training Steps
+        BE->>ML: Fit model (step N)
+        ML-->>BE: Model state
+        BE->>BE: Predict grid
+        BE-->>FE: Frame JSON (step, total, grid)
+        FE->>FE: Render boundary + update scrubber
+    end
+    BE-->>FE: {"type": "done"}
 ```
 
 ---
@@ -690,7 +697,7 @@ make install        # Install all dependencies
 
 GitHub Actions runs on every push:
 - **Frontend job**: `npm ci` → `lint` → `typecheck` → `build`
-- **Backend job**: `pip install` → `pytest`
+- **Backend job**: `pip install` → import validation
 
 ---
 
