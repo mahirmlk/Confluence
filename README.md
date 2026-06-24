@@ -204,34 +204,29 @@ Or on Windows:
 ### System Overview
 
 ```mermaid
-graph TB
-    subgraph Browser["Browser (Client)"]
-        Z["Zustand<br/>State Management"]
-        TQ["TanStack Query<br/>Data Fetching"]
-        C2D["Canvas2D<br/>Heatmap Rendering"]
-        TJS["Three.js<br/>3D Visualization"]
-        AX["Axios HTTP Client"]
-    end
+sequenceDiagram
+    participant Z as Zustand
+    participant TQ as TanStack Query
+    participant C2D as Canvas2D
+    participant TJS as Three.js
+    participant AX as Axios
+    participant R as FastAPI Routers
+    participant AL as scikit-learn
+    participant GE as Grid Engine
+    participant M as Metrics
+    participant RD as Redis
 
-    subgraph Backend["FastAPI Backend (Python 3.11)"]
-        R["Routers<br/>REST Endpoints"]
-        AL["Algorithms<br/>scikit-learn"]
-        SC["Schemas<br/>Pydantic Validation"]
-        GE["Grid Engine<br/>Meshgrid and Contours"]
-        M["Metrics<br/>CV, ROC, Curves"]
-        RD["Redis<br/>Prediction Cache"]
-    end
-
-    Z --> AX
-    TQ --> AX
-    C2D --> AX
-    TJS --> AX
-    AX -->|"REST JSON"| R
-    R --> AL
-    AL --> SC
-    AL --> GE
-    AL --> M
-    R --> RD
+    Z->>AX: State updates
+    TQ->>AX: Data fetching
+    C2D->>AX: Render requests
+    TJS->>AX: 3D requests
+    AX->>R: REST JSON
+    R->>AL: Fit model
+    AL->>GE: Predict grid
+    AL->>M: Compute metrics
+    R->>RD: Check cache
+    RD-->>R: Cache hit or miss
+    R-->>AX: JSON response
 ```
 
 ### Data Flow: Static Boundary Request
