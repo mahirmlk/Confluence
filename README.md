@@ -204,29 +204,66 @@ Or on Windows:
 ### System Overview
 
 ```mermaid
-sequenceDiagram
-    participant Z as Zustand
-    participant TQ as TanStack Query
-    participant C2D as Canvas2D
-    participant TJS as Three.js
-    participant AX as Axios
-    participant R as FastAPI Routers
-    participant AL as scikit-learn
-    participant GE as Grid Engine
-    participant M as Metrics
-    participant RD as Redis
+graph TB
+    subgraph CLIENT["Browser"]
+        direction TB
+        STATE["Zustand Store"]
+        QUERY["TanStack Query"]
+        CANVAS["Canvas2D Renderer"]
+        THREE["Three.js 3D"]
+        HTTP["Axios Client"]
+    end
 
-    Z->>AX: State updates
-    TQ->>AX: Data fetching
-    C2D->>AX: Render requests
-    TJS->>AX: 3D requests
-    AX->>R: REST JSON
-    R->>AL: Fit model
-    AL->>GE: Predict grid
-    AL->>M: Compute metrics
-    R->>RD: Check cache
-    RD-->>R: Cache hit or miss
-    R-->>AX: JSON response
+    subgraph API["REST API Layer"]
+        direction TB
+        CLASS["Classification Routes"]
+        REG["Regression Routes"]
+        CLUST["Clustering Routes"]
+        DIM["Dim Reduction Routes"]
+        DATA["Dataset Routes"]
+        WS["WebSocket Stream"]
+    end
+
+    subgraph CORE["Core Engine"]
+        direction TB
+        GRID["Grid Engine"]
+        ALGO["Algorithm Factory"]
+        METRIC["Metrics Engine"]
+        CACHE["Redis Cache"]
+    end
+
+    subgraph ML["scikit-learn"]
+        direction TB
+        SKLearn["Model Training"]
+        PREDICT["Prediction"]
+        CROSS["Cross Validation"]
+    end
+
+    STATE --> HTTP
+    QUERY --> HTTP
+    CANVAS --> HTTP
+    THREE --> HTTP
+
+    HTTP -->|"REST JSON"| CLASS
+    HTTP -->|"REST JSON"| REG
+    HTTP -->|"REST JSON"| CLUST
+    HTTP -->|"REST JSON"| DIM
+    HTTP -->|"REST JSON"| DATA
+    HTTP -->|"WebSocket"| WS
+
+    CLASS --> GRID
+    REG --> GRID
+    CLUST --> GRID
+    DIM --> GRID
+    DATA --> GRID
+    WS --> GRID
+
+    GRID --> ALGO
+    ALGO --> SKLearn
+    ALGO --> PREDICT
+    ALGO --> CROSS
+    GRID --> METRIC
+    GRID --> CACHE
 ```
 
 ### Data Flow: Static Boundary Request
