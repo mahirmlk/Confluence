@@ -204,6 +204,7 @@ Or on Windows:
 ### System Overview
 
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '14px'}}}%%
 graph TB
     subgraph Browser["Browser (Client)"]
         Z["Zustand<br/>State Management"]
@@ -237,6 +238,7 @@ graph TB
 ### Data Flow: Static Boundary Request
 
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '14px'}}}%%
 sequenceDiagram
     participant U as User
     participant FE as Frontend
@@ -263,6 +265,7 @@ sequenceDiagram
 ### Data Flow: WebSocket Training Animation
 
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '14px'}}}%%
 sequenceDiagram
     participant FE as Frontend
     participant BE as Backend
