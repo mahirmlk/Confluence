@@ -205,21 +205,21 @@ Or on Windows:
 
 ```mermaid
 graph TB
-    subgraph Browser["Browser Client"]
-        Z["Zustand State"]
-        TQ["TanStack Query"]
-        C2D["Canvas2D Heatmap"]
-        TJS["Three.js 3D"]
+    subgraph Browser["Browser (Client)"]
+        Z["Zustand<br/>State Management"]
+        TQ["TanStack Query<br/>Data Fetching"]
+        C2D["Canvas2D<br/>Heatmap Rendering"]
+        TJS["Three.js<br/>3D Visualization"]
         AX["Axios HTTP Client"]
     end
 
-    subgraph Backend["FastAPI Backend"]
-        R["Routers"]
-        AL["Algorithms scikit-learn"]
-        SC["Schemas Pydantic"]
-        GE["Grid Engine"]
-        M["Metrics"]
-        RD["Redis Cache"]
+    subgraph Backend["FastAPI Backend (Python 3.11)"]
+        R["Routers<br/>REST Endpoints"]
+        AL["Algorithms<br/>scikit-learn"]
+        SC["Schemas<br/>Pydantic Validation"]
+        GE["Grid Engine<br/>Meshgrid and Contours"]
+        M["Metrics<br/>CV, ROC, Curves"]
+        RD["Redis<br/>Prediction Cache"]
     end
 
     Z --> AX
@@ -245,19 +245,19 @@ sequenceDiagram
     participant ML as scikit-learn
 
     U->>FE: Select dataset and algorithm
-    FE->>BE: POST predict
+    FE->>BE: POST /api/predict
     BE->>RD: Check cache
     alt Cache Hit
         RD-->>BE: Return cached grid
     else Cache Miss
-        BE->>ML: generate dataset
-        BE->>ML: fit and predict
+        BE->>ML: generate_dataset()
+        BE->>ML: fit_and_predict_grid()
         ML-->>BE: Probability grid
         BE->>BE: Extract contours
         BE->>RD: Store result
     end
     BE-->>FE: JSON response
-    FE->>FE: Render heatmap
+    FE->>FE: Canvas2D heatmap
 ```
 
 ### Data Flow: WebSocket Training Animation
@@ -270,13 +270,13 @@ sequenceDiagram
 
     FE->>BE: WS connect with config
     loop Training Steps
-        BE->>ML: Fit model
+        BE->>ML: Fit model step N
         ML-->>BE: Model state
         BE->>BE: Predict grid
         BE-->>FE: Frame JSON
         FE->>FE: Render boundary
     end
-    BE-->>FE: Done
+    BE-->>FE: Done signal
 ```
 
 ---
