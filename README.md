@@ -22,7 +22,7 @@ Explore **38 algorithms** across classification, regression, clustering, and dim
 
 <br />
 
-[Getting Started](#-getting-started) · [Architecture](#-architecture) · [API Reference](#-api-reference) · [Algorithm Catalog](#-algorithm-catalog) · [Deployment](#-deployment) · [Contributing](CONTRIBUTING.md)
+[Getting Started](#-getting-started) · [Architecture](#-architecture) · [API Reference](#-api-reference) · [Algorithm Catalog](#-algorithm-catalog) · [Contributing](CONTRIBUTING.md)
 
 <br />
 
@@ -45,13 +45,10 @@ Explore **38 algorithms** across classification, regression, clustering, and dim
 - [Algorithm Catalog](#-algorithm-catalog)
 - [Dataset Catalog](#-dataset-catalog)
 - [API Reference](#-api-reference)
-- [WebSocket Streaming](#-websocket-streaming)
-- [Deployment](#-deployment)
 - [Configuration](#-configuration)
 - [Verification & Testing](#-verification--testing)
 - [Tech Stack](#-tech-stack)
 - [Performance & Caching](#-performance--caching)
-- [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -575,85 +572,6 @@ Response:
 
 ---
 
-## WebSocket Streaming
-
-Stream training dynamics for staged algorithms via WebSocket.
-
-### Supported Algorithms
-
-| Algorithm | Stream Type | Frames |
-|-----------|-------------|--------|
-| `adaboost` | Boosting rounds | n_estimators / step |
-| `gradient-boosting` | Boosting rounds | n_estimators / step |
-| `random-forest` | Tree addition | n_estimators / step |
-| `sgd` | Epoch-by-epoch | n_epochs |
-| `decision-tree` | Depth growth | max_depth |
-| `mlp` | Epoch-by-epoch | max_epochs |
-
-### Protocol
-
-```javascript
-// Connect
-const ws = new WebSocket("ws://localhost:8000/ws/stream");
-
-// Send configuration
-ws.send(JSON.stringify({
-  algorithm: "gradient-boosting",
-  hyperparameters: { n_estimators: 50 },
-  dataset_name: "moons",
-  resolution: 100
-}));
-
-// Receive frames
-ws.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  if (data.type === "frame") {
-    // data.step, data.total_steps, data.grid
-    renderBoundary(data.grid);
-  } else if (data.type === "done") {
-    console.log("Training complete");
-  }
-};
-```
-
-### Input Bounds (DoS Protection)
-
-| Parameter | Max Value |
-|-----------|-----------|
-| `resolution` | 200 |
-| `n_estimators` | 200 |
-| `max_depth` | 20 |
-| `n_epochs` | 100 |
-| `max_epochs` | 100 |
-
----
-
-## Deployment
-
-See **[docs/deployment.md](docs/deployment.md)** for full deployment guide covering:
-
-| Platform | Frontend | Backend | Difficulty |
-|----------|----------|---------|------------|
-| Vercel + Fly.io | Vercel (free) | Fly.io (free tier) | Easy |
-| Vercel + Railway | Vercel | Railway | Easy |
-| Render | Static Site | Web Service | Easy |
-| Docker Compose | Container | Container | Medium |
-| Kubernetes | Pod | Pod | Advanced |
-
-### Quick Deploy (Vercel + Fly.io)
-
-```bash
-# Backend
-cd backend && fly launch --name confluence-backend --no-deploy
-fly secrets set CORS_ORIGINS=https://your-frontend.vercel.app
-fly deploy
-
-# Frontend
-cd frontend && vercel --prod
-```
-
----
-
 ## Configuration
 
 ### Environment Variables
@@ -759,38 +677,6 @@ prob_grid, _ = await asyncio.to_thread(
 
 ---
 
-## Roadmap
-
-### Completed
-
-- 38 algorithms across 4 families
-- Real-time decision boundary visualization
-- Hyperparameter tuning with sliders
-- CSV upload and custom point placement
-- Side-by-side comparison mode
-- Boundary taxonomy explorer
-- WebSocket training animation
-- Algorithm recommendation engine
-- Cross-validation visualization
-- Learning curves and sensitivity heatmaps
-- Redis caching layer
-- Docker Compose orchestration
-- CI pipeline (GitHub Actions)
-- Auto-generated TypeScript types from OpenAPI
-
-### Planned
-
-- Framer Motion boundary morphing (smooth transitions)
-- Support vector / centroid overlays
-- Dendrogram view for hierarchical clustering
-- Math/pseudocode panels (KaTeX)
-- XGBoost / LightGBM integration
-- 3D classification volumes
-- GP uncertainty surfaces in 3D
-- Pyodide WASM fallback for backend-less deploy
-
----
-
 ## Contributing
 
 See **[CONTRIBUTING.md](CONTRIBUTING.md)** for development setup, code quality standards, and guidelines for adding new algorithms.
@@ -805,6 +691,6 @@ MIT
 
 <div align="center">
 
-**[Getting Started](#-getting-started)** · **[Architecture](#-architecture)** · **[API Reference](#-api-reference)** · **[Deployment](#-deployment)** · **[Contributing](CONTRIBUTING.md)**
+**[Getting Started](#-getting-started)** · **[Architecture](#-architecture)** · **[API Reference](#-api-reference)** · **[Contributing](CONTRIBUTING.md)**
 
 </div>
