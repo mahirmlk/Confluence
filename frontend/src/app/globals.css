@@ -1,0 +1,489 @@
+@import "tailwindcss";
+
+:root {
+  /* ── Light (default) ── */
+  --background:         #F5F7FC;   /* Cool off-white page bg */
+  --foreground:         #0D1B35;   /* Deep navy text */
+  --primary:            #255EBA;   /* Brand blue */
+  --primary-foreground: #FFFFFF;
+  --secondary:          #DDE3EE;   /* Pale blue-grey surfaces */
+  --secondary-foreground:#0D1B35;
+  --border:             #C8D3E8;   /* Soft blue-grey border */
+  --muted-foreground:   #4C73B9;   /* Mid-blue muted text */
+  --card:               #FFFFFF;   /* Pure white cards */
+  --card-foreground:    #0D1B35;
+  --accent:             #E8EDF8;   /* Very light blue accent */
+  --accent-foreground:  #255EBA;
+  --destructive:        #dc2626;
+  --ring:               #4C73B9;
+  --radius:             0rem;      /* Sharp corners throughout */
+}
+
+.dark {
+  --background:         #0D1B35;
+  --foreground:         #F5F7FC;
+  --primary:            #4C73B9;
+  --primary-foreground: #FFFFFF;
+  --secondary:          #1a2a4a;
+  --secondary-foreground:#F5F7FC;
+  --border:             #2a3a5a;
+  --muted-foreground:   #7B9FD4;
+  --card:               #142240;
+  --card-foreground:    #F5F7FC;
+  --accent:             #1a2a4a;
+  --accent-foreground:  #4C73B9;
+  --destructive:        #dc2626;
+  --ring:               #7B9FD4;
+}
+
+@theme inline {
+  --color-background:         var(--background);
+  --color-foreground:         var(--foreground);
+  --color-primary:            var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary:          var(--secondary);
+  --color-secondary-foreground:var(--secondary-foreground);
+  --color-border:             var(--border);
+  --color-muted-foreground:   var(--muted-foreground);
+  --color-card:               var(--card);
+  --color-card-foreground:    var(--card-foreground);
+  --color-accent:             var(--accent);
+  --color-accent-foreground:  var(--accent-foreground);
+  --color-destructive:        var(--destructive);
+  --color-ring:               var(--ring);
+  --radius-sm:  calc(var(--radius) - 4px);
+  --radius-md:  calc(var(--radius) - 2px);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) + 4px);
+  --font-sans:             var(--font-geist-sans);
+  --font-mono:             var(--font-geist-mono);
+  --font-inter:            var(--font-inter);
+  --font-instrument-serif: var(--font-instrument-serif);
+  --font-montserrat:       var(--font-montserrat);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Landing-page data constellation */
+.data-constellation {
+  position: relative;
+  height: 390px;
+  overflow: hidden;
+  border-block: 1px solid rgba(200, 211, 232, 0.7);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(232, 237, 248, 0.5));
+  isolation: isolate;
+}
+
+.constellation-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgba(76, 115, 185, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 185, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse at center, black 12%, transparent 76%);
+}
+
+.constellation-scan {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, transparent 0%, rgba(37, 94, 186, 0.08) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: constellation-scan 6s ease-in-out infinite 1.5s;
+}
+
+.constellation-connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.constellation-core {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 190px;
+  height: fit-content;
+  margin: auto;
+  border: 1px solid rgba(37, 94, 186, 0.5);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 20px 64px rgba(37, 94, 186, 0.16), 0 0 0 1px rgba(37, 94, 186, 0.08);
+  backdrop-filter: blur(14px);
+  z-index: 2;
+}
+
+.constellation-core svg { display: block; width: 100%; }
+
+.constellation-core__halo {
+  position: absolute;
+  inset: -28px;
+  z-index: -1;
+  border: 1px solid rgba(37, 94, 186, 0.12);
+  animation: constellation-breathe 4s ease-in-out infinite;
+}
+
+.constellation-core__caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-top: 1px solid rgba(200, 211, 232, 0.8);
+  color: #4C73B9;
+  font: 600 8px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.16em;
+}
+
+.constellation-core__caption i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #255EBA;
+  box-shadow: 0 0 12px rgba(37, 94, 186, 0.8);
+  animation: constellation-status 1.8s ease-in-out infinite;
+}
+
+.constellation-node {
+  position: absolute;
+  width: 185px;
+  min-height: 112px;
+  padding: 14px 16px 13px;
+  border-left: 2px solid #255EBA;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.58));
+  text-align: left;
+  box-shadow: 0 12px 36px rgba(13, 27, 53, 0.07);
+}
+
+.constellation-node::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 1px;
+  background: #255EBA;
+}
+
+.constellation-node--one { left: 3%; top: 6%; }
+.constellation-node--two { right: 3%; top: 6%; }
+.constellation-node--three { left: 3%; bottom: 5%; }
+.constellation-node--four { right: 3%; bottom: 5%; }
+
+.constellation-node__index {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #7B9FD4;
+  font: 600 8px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.14em;
+}
+
+.constellation-node strong {
+  display: block;
+  color: #0D1B35;
+  font: 800 34px/1 var(--font-montserrat), sans-serif;
+  letter-spacing: -0.05em;
+}
+
+.constellation-node__label {
+  display: block;
+  margin-top: 5px;
+  color: #255EBA;
+  font: 700 10px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.constellation-node__detail {
+  display: block;
+  margin-top: 11px;
+  color: #7B9FD4;
+  font: 600 7px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.14em;
+}
+
+.constellation-node > i {
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border: 1px solid #255EBA;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+@keyframes constellation-scan {
+  0%, 20% { transform: translateX(-100%); opacity: 0; }
+  45% { opacity: 1; }
+  80%, 100% { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes constellation-breathe {
+  0%, 100% { transform: scale(0.96); opacity: 0.35; }
+  50% { transform: scale(1.04); opacity: 0.75; }
+}
+
+@keyframes constellation-status {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .data-constellation { height: 470px; }
+  .constellation-connections { opacity: 0.65; }
+  .constellation-core { width: 164px; }
+  .constellation-core__halo { inset: -17px; }
+  .constellation-node { width: calc(50% - 16px); min-height: 104px; padding: 12px; }
+  .constellation-node--one { left: 0; top: 12px; }
+  .constellation-node--two { right: 0; top: 12px; }
+  .constellation-node--three { left: 0; bottom: 12px; }
+  .constellation-node--four { right: 0; bottom: 12px; }
+  .constellation-node strong { font-size: 28px; }
+  .constellation-node__detail { font-size: 6px; letter-spacing: 0.08em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .constellation-scan,
+  .constellation-core__halo,
+  .constellation-core__caption i,
+  .constellation-packet {
+    animation: none !important;
+  }
+}
+
+/* Landing-page experiment lifecycle */
+.architecture-system {
+  position: relative;
+  margin-top: 48px;
+  overflow: hidden;
+  border-block: 1px solid rgba(200, 211, 232, 0.8);
+  background:
+    radial-gradient(circle at 50% 48%, rgba(37, 94, 186, 0.1), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(232, 237, 248, 0.48));
+  isolation: isolate;
+}
+
+.architecture-system__grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(76, 115, 185, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 185, 0.055) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(90deg, transparent, black 20%, black 80%, transparent);
+}
+
+.architecture-orbit {
+  position: relative;
+  height: 900px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.architecture-orbit__tracks {
+  position: absolute;
+  inset: 24px 0;
+  width: 100%;
+  height: calc(100% - 48px);
+}
+
+.architecture-runner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--runner-width);
+  height: 1px;
+  transform-origin: 0 0;
+  animation: architecture-rotate var(--runner-speed) linear infinite;
+  pointer-events: none;
+}
+
+.architecture-runner i {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid #255EBA;
+  background: #F5F7FC;
+  box-shadow: 0 0 16px rgba(37, 94, 186, 0.75);
+}
+
+.architecture-runner--outer { --runner-width: 41%; --runner-speed: 16s; }
+.architecture-runner--middle { --runner-width: 33%; --runner-speed: 12s; animation-direction: reverse; }
+.architecture-runner--inner { --runner-width: 24%; --runner-speed: 9s; }
+.architecture-system--paused .architecture-runner { animation-play-state: paused; }
+
+.architecture-core {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  height: fit-content;
+  margin: auto;
+  z-index: 5;
+  border: 1px solid rgba(37, 94, 186, 0.42);
+  background: rgba(255, 255, 255, 0.91);
+  box-shadow: 0 24px 70px rgba(13, 27, 53, 0.14);
+  backdrop-filter: blur(16px);
+}
+
+.architecture-core::before,
+.architecture-core::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.architecture-core::before { left: -1px; top: -1px; border-left: 2px solid #255EBA; border-top: 2px solid #255EBA; }
+.architecture-core::after { right: -1px; bottom: -1px; border-right: 2px solid #255EBA; border-bottom: 2px solid #255EBA; }
+
+.architecture-core__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(200, 211, 232, 0.75);
+  color: #4C73B9;
+  font: 700 8px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.18em;
+}
+
+.architecture-core__status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #255EBA;
+  box-shadow: 0 0 12px rgba(37, 94, 186, 0.75);
+  animation: constellation-status 1.8s ease-in-out infinite;
+}
+
+.architecture-core > svg { display: block; width: 100%; height: 90px; }
+
+.architecture-core__detail {
+  min-height: 140px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid rgba(200, 211, 232, 0.75);
+}
+
+.architecture-core__detail > span,
+.architecture-mobile__stage small {
+  color: #4C73B9;
+  font: 700 8px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.architecture-core__detail h3 {
+  margin-top: 7px;
+  color: #0D1B35;
+  font: 700 19px/1.1 var(--font-montserrat), sans-serif;
+}
+
+.architecture-core__detail p {
+  margin-top: 9px;
+  color: #4C73B9;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.architecture-core__detail code,
+.architecture-mobile__stage code {
+  display: block;
+  margin-top: 11px;
+  color: #255EBA;
+  font: 600 8px/1.35 var(--font-geist-mono), monospace;
+  letter-spacing: 0.05em;
+}
+
+.architecture-stage {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  width: 200px;
+  min-height: 56px;
+  padding: 9px 12px;
+  border: 1px solid rgba(200, 211, 232, 0.9);
+  background: rgba(255, 255, 255, 0.82);
+  color: #0D1B35;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(13, 27, 53, 0.06);
+  backdrop-filter: blur(10px);
+  transform: translate(-50%, -50%);
+  transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.architecture-stage:hover,
+.architecture-stage:focus-visible,
+.architecture-stage--active {
+  border-color: #255EBA;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 14px 38px rgba(37, 94, 186, 0.14);
+  transform: translate(-50%, -50%) translateY(-3px);
+  outline: none;
+}
+
+.architecture-stage__number {
+  flex: 0 0 32px;
+  color: #7B9FD4;
+  font: 700 10px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.12em;
+}
+
+.architecture-stage__copy { display: flex; min-width: 0; flex-direction: column; gap: 5px; }
+.architecture-stage__copy small { color: #7B9FD4; font: 600 7px/1 var(--font-geist-mono), monospace; letter-spacing: 0.12em; text-transform: uppercase; }
+.architecture-stage__copy strong { font: 700 12px/1.15 var(--font-montserrat), sans-serif; }
+
+.architecture-stage > i {
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin-top: -4px;
+  border: 1px solid #7B9FD4;
+  background: #F5F7FC;
+  transform: rotate(45deg);
+}
+
+.architecture-stage--active > i { border-color: #255EBA; background: #255EBA; box-shadow: 0 0 12px rgba(37, 94, 186, 0.5); }
+
+.architecture-mobile { display: none; }
+
+@keyframes architecture-rotate {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .architecture-orbit { display: none; }
+  .architecture-mobile { position: relative; display: grid; gap: 16px; padding: 34px 18px 40px; }
+  .architecture-mobile__rail { position: absolute; left: 39px; top: 42px; bottom: 48px; width: 1px; background: linear-gradient(#255EBA, #7B9FD4 65%, transparent); }
+  .architecture-mobile__stage { position: relative; z-index: 1; display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 17px 16px 17px 0; border: 1px solid rgba(200, 211, 232, 0.9); border-left: 0; background: rgba(255, 255, 255, 0.86); }
+  .architecture-mobile__stage > span { display: grid; place-items: center; align-self: start; width: 44px; height: 30px; color: white; background: #255EBA; font: 700 9px/1 var(--font-geist-mono), monospace; }
+  .architecture-mobile__stage h3 { margin-top: 6px; color: #0D1B35; font: 700 16px/1.15 var(--font-montserrat), sans-serif; }
+  .architecture-mobile__stage p { margin-top: 8px; color: #4C73B9; font-size: 12px; line-height: 1.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .architecture-runner,
+  .architecture-core__status i {
+    animation: none !important;
+  }
+}
