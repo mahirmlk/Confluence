@@ -1,0 +1,21 @@
+<svg width="680" height="220" viewBox="0 0 680 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- No background — transparent -->
+
+  <!-- Top accent line -->
+  <rect x="290" y="22" width="100" height="2" rx="1" fill="#255EBA"/>
+
+  <!-- CONFLUENCE -->
+  <text x="340" y="72" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="52" font-weight="800" letter-spacing="2" fill="#255EBA">CONFLUENCE</text>
+
+  <!-- Subtitle -->
+  <text x="340" y="98" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" font-weight="400" letter-spacing="4" fill="#CFCFDC">MACHINE LEARNING FROM FIRST PRINCIPLES</text>
+
+  <!-- Separator dot -->
+  <circle cx="340" cy="124" r="2" fill="#255EBA"/>
+
+  <!-- Tagline -->
+  <text x="340" y="148" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" font-weight="400" fill="#CFCFDC">Open Source · Interactive Visualizations</text>
+
+  <!-- Features -->
+  <text x="340" y="172" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" font-weight="400" fill="#CFCFDC">31 Algorithms · Real Computation · Theory + Math</text>
+</svg>
