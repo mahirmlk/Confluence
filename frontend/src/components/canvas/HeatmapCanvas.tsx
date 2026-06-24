@@ -149,7 +149,7 @@ export const HeatmapCanvas = forwardRef<HTMLCanvasElement, HeatmapCanvasProps>(f
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
     };
-  }, [grid, drawGrid, drawOverlays, width, height]);
+  }, [grid, drawGrid, drawOverlays, width, height, canvasRef]);
 
   return (
     <canvas

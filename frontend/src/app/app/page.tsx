@@ -59,7 +59,7 @@ type AnalysisPanel = "metrics" | "cv" | "coefficients" | "learning" | "decision"
 interface CustomPoint { x: number; y: number; label: number; }
 
 function ExploreView() {
-  const { family, algorithm, hyperparameters, datasetName, resolution, noise, nSamples, setAlgorithm, uploadedDatasetId, customDatasetId } = useAppStore();
+  const { family, algorithm, hyperparameters, datasetName, noise, nSamples, setAlgorithm, uploadedDatasetId, customDatasetId } = useAppStore();
   const [result, setResult] = useState<PredictionResponse | RegressionResponse | ClusteringResponse | DimReductionResponse | null>(null);
   const [classMetrics, setClassMetrics] = useState<ClassificationMetrics | null>(null);
   const [regMetrics, setRegMetrics] = useState<RegressionMetricsResponse | null>(null);
@@ -92,7 +92,7 @@ function ExploreView() {
       else if (family === "dim-reduction") setResult(await reduceDimensions({ ...base, n_components: 2 } as never));
     } catch (err) { console.error(err); }
     setLoading(false);
-  }, [family, algorithm, datasetName, hyperparameters, resolution, noise, nSamples, dataSource, uploadedDatasetId, customDatasetId]);
+  }, [family, algorithm, datasetName, hyperparameters, noise, nSamples, dataSource, uploadedDatasetId, customDatasetId]);
 
   const fetchClassMetrics = useCallback(async () => {
     try {
