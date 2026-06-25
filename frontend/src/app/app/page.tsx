@@ -23,6 +23,7 @@ import { TaxonomyExplorer } from "@/components/taxonomy/TaxonomyExplorer";
 import { ComparisonMode } from "@/components/comparison/ComparisonMode";
 import { StreamingViz } from "@/components/streaming/StreamingViz";
 import { Scene3D } from "@/components/three/Scene3D";
+import { HelpPanel } from "@/components/controls/HelpPanel";
 import { AppNavbar } from "@/components/layout/AppNavbar";
 import {
   predictClassification,
@@ -52,7 +53,7 @@ import { useUrlState, ShareButton, ExportButton, ThemeToggle } from "@/component
 
 const queryClient = new QueryClient();
 
-type Tab = "explore" | "compare" | "taxonomy" | "stream";
+type Tab = "explore" | "compare" | "taxonomy" | "stream" | "help";
 type DataSource = "synthetic" | "upload" | "custom" | "inline";
 type AnalysisPanel = "metrics" | "cv" | "coefficients" | "learning" | "decision" | "elbow" | "recommend";
 
@@ -436,9 +437,9 @@ function AppContent() {
             <ThemeToggle />
           </div>
           <div className="flex flex-wrap gap-1 mb-6 border border-border rounded-lg p-1">
-            {(["explore", "compare", "taxonomy", "stream"] as Tab[]).map((t) => (
+            {(["explore", "compare", "taxonomy", "stream", "help"] as Tab[]).map((t) => (
               <button key={t} onClick={() => setTab(t)} className={`flex-1 px-2 py-1.5 rounded text-xs font-medium transition-colors ${tab === t ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"}`}>
-                {t === "explore" ? "Explore" : t === "compare" ? "Compare" : t === "taxonomy" ? "Taxonomy" : "Stream"}
+                {t === "explore" ? "Explore" : t === "compare" ? "Compare" : t === "taxonomy" ? "Taxonomy" : t === "stream" ? "Stream" : "Help"}
               </button>
             ))}
           </div>
@@ -451,6 +452,7 @@ function AppContent() {
             </div>
           )}
           {tab === "taxonomy" && <div className="px-4 text-xs text-muted-foreground">Filter algorithms by boundary geometry</div>}
+          {tab === "help" && <HelpPanel />}
         </aside>
 
         <main className="flex-1 overflow-auto bg-background">
@@ -460,6 +462,25 @@ function AppContent() {
           {tab === "stream" && (
             <div className="flex items-center justify-center p-8">
               <StreamingViz algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} resolution={resolution} width={600} height={600} />
+            </div>
+          )}
+          {tab === "help" && (
+            <div className="flex-1 flex items-center justify-center p-8">
+              <div className="text-center max-w-md">
+                <div className="text-4xl mb-4">?</div>
+                <h2 className="text-lg font-semibold text-foreground mb-2">Confluence Help</h2>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Browse the help topics in the left panel to learn how to use the visualization tool, understand algorithm outputs, and master the analysis tools.
+                </p>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  <button onClick={() => setTab("explore")} className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
+                    Start Exploring
+                  </button>
+                  <button onClick={() => setTab("compare")} className="px-3 py-1.5 rounded-md border border-border text-foreground text-xs font-medium hover:bg-accent transition-colors">
+                    Compare Algorithms
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </main>
