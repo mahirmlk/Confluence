@@ -15,10 +15,18 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-ALLOWED_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:3000"
+    ).split(",")
+    if origin.strip()
+]
 if "*" in ALLOWED_ORIGINS:
     logger.warning("CORS_ORIGINS contains '*' — this is insecure with allow_credentials=True. Falling back to localhost only.")
     ALLOWED_ORIGINS = ["http://localhost:3000"]
+logger.info("Allowed CORS origins: %s", ALLOWED_ORIGINS)
 
 
 # --- Rate Limiting (fixed-window, per-IP) ---
