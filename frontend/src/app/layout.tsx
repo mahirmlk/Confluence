@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Instrument_Serif, Montserrat } from "next/font/google";
+import { constructMetadata, viewport as viewportConfig } from "@/lib/seo/config";
+import { JsonLd } from "@/lib/seo/json-ld";
+import { Analytics } from "@/components/Analytics";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,13 +30,8 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Confluence",
-  description: "Interactive ML visualization platform with real scikit-learn computation. Explore 38 algorithms across classification, regression, clustering, and dimensionality reduction.",
-  icons: {
-    icon: "/confluence-logo.png",
-  },
-};
+export const metadata = constructMetadata();
+export const viewport = viewportConfig;
 
 export default function RootLayout({
   children,
@@ -46,7 +43,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${instrumentSerif.variable} ${montserrat.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        <JsonLd />
+      </head>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
