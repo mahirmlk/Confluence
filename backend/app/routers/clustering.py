@@ -3,7 +3,7 @@ import numpy as np
 from fastapi import APIRouter
 from ..models.schemas import ClusteringRequest, ClusteringResponse, DatasetSample, DatasetListResponse, ClusteringElbowRequest, ClusteringElbowResponse
 from ..algorithms.datasets import generate_dataset
-from ..algorithms.clustering import fit_and_predict_clustering
+from ..algorithms.clustering import CLUSTERING_ALGORITHMS, fit_and_predict_clustering
 from ..grid import generate_meshgrid, compute_grid_bounds
 
 router = APIRouter(prefix="/api/clustering", tags=["clustering"])
@@ -11,6 +11,9 @@ router = APIRouter(prefix="/api/clustering", tags=["clustering"])
 
 @router.post("/predict", response_model=ClusteringResponse)
 async def predict_clustering(request: ClusteringRequest):
+    if request.algorithm not in CLUSTERING_ALGORITHMS:
+        raise ValueError(f"Unknown clustering algorithm: '{request.algorithm}'. Available: {list(CLUSTERING_ALGORITHMS.keys())}")
+
     X, y = await asyncio.to_thread(generate_dataset, request.dataset_name, n_samples=request.n_samples, noise=request.noise)
 
     x_min, x_max, y_min, y_max = compute_grid_bounds(X)

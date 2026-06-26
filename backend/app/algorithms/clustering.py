@@ -61,9 +61,10 @@ def fit_and_predict_clustering(
 
     metrics = {}
     if len(set(labels)) > 1 and -1 not in labels:
-        from sklearn.metrics import silhouette_score, davies_bouldin_score
+        from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
         metrics["silhouette"] = float(silhouette_score(X, labels))
         metrics["davies_bouldin"] = float(davies_bouldin_score(X, labels))
+        metrics["calinski_harabasz"] = float(calinski_harabasz_score(X, labels))
         if hasattr(model, "inertia_"):
             metrics["inertia"] = float(model.inertia_)
 

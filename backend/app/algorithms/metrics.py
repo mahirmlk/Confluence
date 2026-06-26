@@ -47,7 +47,7 @@ def compute_classification_metrics(
         fpr, tpr, _ = roc_curve(y, y_probas[:, 1])
         roc = {"fpr": fpr.tolist(), "tpr": tpr.tolist()}
     else:
-        fpr, tpr, _ = roc_curve(y, y_probas[:, 1], multi_class="ovr")
+        fpr, tpr, _ = roc_curve(y, y_probas, multi_class="ovr")
         roc = {"fpr": fpr.tolist(), "tpr": tpr.tolist()}
 
     try:
@@ -84,8 +84,12 @@ def compute_regression_metrics(
         raise ValueError(f"Unknown algorithm: {algorithm_name}")
 
     model = REGRESSION_ALGORITHMS[algorithm_name](params)
-    model.fit(X, y)
-    y_pred = model.predict(X)
+
+    try:
+        y_pred = cross_val_predict(model, X, y, cv=5)
+    except Exception:
+        model.fit(X, y)
+        y_pred = model.predict(X)
 
     r2 = float(r2_score(y, y_pred))
     mse = float(mean_squared_error(y, y_pred))

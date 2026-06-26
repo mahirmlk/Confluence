@@ -17,7 +17,11 @@ def extract_contours(grid: np.ndarray, threshold: float = 0.5) -> list[list[list
     return result
 
 
-def compute_grid_bounds(X: np.ndarray, padding: float = 1.0) -> tuple[float, float, float, float]:
-    x_min, x_max = X[:, 0].min() - padding, X[:, 0].max() + padding
-    y_min, y_max = X[:, 1].min() - padding, X[:, 1].max() + padding
+def compute_grid_bounds(X: np.ndarray, padding_fraction: float = 0.15, min_padding: float = 0.5) -> tuple[float, float, float, float]:
+    x_range = X[:, 0].max() - X[:, 0].min()
+    y_range = X[:, 1].max() - X[:, 1].min()
+    padding_x = max(x_range * padding_fraction, min_padding)
+    padding_y = max(y_range * padding_fraction, min_padding)
+    x_min, x_max = X[:, 0].min() - padding_x, X[:, 0].max() + padding_x
+    y_min, y_max = X[:, 1].min() - padding_y, X[:, 1].max() + padding_y
     return x_min, x_max, y_min, y_max

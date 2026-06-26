@@ -29,7 +29,7 @@ CLASSIFICATION_ALGORITHMS = {
         C=params.get("C", 1.0), kernel="linear", probability=True, random_state=42
     ),
     "poly-svm": lambda params: SVC(
-        C=params.get("C", 1.0), kernel="poly", probability=True, random_state=42
+        C=params.get("C", 1.0), kernel="poly", degree=int(params.get("degree", 3)), probability=True, random_state=42
     ),
     "random-forest": lambda params: RandomForestClassifier(
         n_estimators=int(params.get("n_estimators", 100)), random_state=42
@@ -84,6 +84,6 @@ def fit_and_predict_grid(
     if probabilities.shape[1] == 2:
         prob_grid = probabilities[:, 1].reshape(xx.shape)
     else:
-        prob_grid = probabilities.max(axis=1).reshape(xx.shape)
+        prob_grid = probabilities.argmax(axis=1).astype(float).reshape(xx.shape)
 
     return prob_grid, model
