@@ -39,7 +39,7 @@ export function ClusteringCanvas({
     const imageData = ctx.createImageData(cols, rows);
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
-        const label = labelGrid[y][x];
+        const label = labelGrid[rows - 1 - y][x];
         const idx = (y * cols + x) * 4;
 
         if (label < 0) {

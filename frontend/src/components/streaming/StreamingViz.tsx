@@ -47,6 +47,8 @@ interface StreamingVizProps {
   datasetName: string;
   hyperparameters: Record<string, number>;
   resolution: number;
+  noise?: number;
+  nSamples?: number;
   width?: number;
   height?: number;
 }
@@ -56,6 +58,8 @@ export function StreamingViz({
   datasetName,
   hyperparameters,
   resolution,
+  noise = 0.5,
+  nSamples = 300,
   width = 600,
   height = 600,
 }: StreamingVizProps) {
@@ -80,7 +84,7 @@ export function StreamingViz({
     const imageData = ctx.createImageData(cols, rows);
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
-        const v = Math.max(0, Math.min(1, grid[y][x]));
+        const v = Math.max(0, Math.min(1, grid[rows - 1 - y][x]));
         const idx = (y * cols + x) * 4;
         imageData.data[idx] = Math.round(59 + 196 * (1 - v));
         imageData.data[idx + 1] = Math.round(130 + 125 * (1 - v));
@@ -119,6 +123,8 @@ export function StreamingViz({
         hyperparameters,
         dataset_name: datasetName,
         resolution,
+        noise,
+        n_samples: nSamples,
       }));
     };
 
@@ -139,7 +145,7 @@ export function StreamingViz({
     };
 
     ws.onclose = () => setConnected(false);
-  }, [algorithm, hyperparameters, datasetName, resolution, drawGrid]);
+  }, [algorithm, hyperparameters, datasetName, resolution, noise, nSamples, drawGrid]);
 
   useEffect(() => {
     if (isPlaying && framesRef.current.length > 0) {

@@ -12,11 +12,33 @@ interface HeatmapCanvasProps {
   colormap?: (value: number) => [number, number, number];
 }
 
+const CLASS_COLORS: [number, number, number][] = [
+  [59, 130, 246],
+  [239, 68, 68],
+  [16, 185, 129],
+  [245, 158, 11],
+  [139, 92, 246],
+  [236, 72, 153],
+  [6, 182, 212],
+];
+
 const defaultColormap = (value: number): [number, number, number] => {
+  const rounded = Math.round(value);
+  if (Math.abs(value - rounded) < 0.01 && rounded >= 0 && rounded < CLASS_COLORS.length) {
+    return CLASS_COLORS[rounded];
+  }
   const clamped = Math.max(0, Math.min(1, value));
   const r = Math.round(59 + 196 * (1 - clamped));
   const g = Math.round(130 + 125 * (1 - clamped));
   const b = Math.round(246 - 100 * (1 - clamped));
+  return [r, g, b];
+};
+
+export const regressionColormap = (value: number): [number, number, number] => {
+  const clamped = Math.max(0, Math.min(1, value));
+  const r = Math.round(68 + 187 * clamped);
+  const g = Math.round(1 + 207 * (clamped < 0.5 ? clamped * 2 : 1));
+  const b = Math.round(84 + 161 * (clamped < 0.5 ? 1 : (1 - clamped) * 2));
   return [r, g, b];
 };
 
@@ -26,7 +48,7 @@ function gridToImageData(grid: number[][], colormap: (v: number) => [number, num
   const imageData = new ImageData(cols, rows);
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
-      const [r, g, b] = colormap(grid[y][x]);
+      const [r, g, b] = colormap(grid[rows - 1 - y][x]);
       const idx = (y * cols + x) * 4;
       imageData.data[idx] = r;
       imageData.data[idx + 1] = g;
@@ -80,7 +102,7 @@ export const HeatmapCanvas = forwardRef<HTMLCanvasElement, HeatmapCanvasProps>(f
         ctx.beginPath();
         contour.forEach((point, i) => {
           const px = (point[1] / (cols - 1)) * width;
-          const py = (point[0] / (rows - 1)) * height;
+          const py = ((rows - 1 - point[0]) / (rows - 1)) * height;
           if (i === 0) ctx.moveTo(px, py);
           else ctx.lineTo(px, py);
         });

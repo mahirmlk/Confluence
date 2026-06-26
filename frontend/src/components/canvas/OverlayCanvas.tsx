@@ -33,8 +33,8 @@ export function OverlayCanvas({
 
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
-        const v1 = Math.max(0, Math.min(1, grid1[y][x]));
-        const v2 = Math.max(0, Math.min(1, grid2[y][x]));
+        const v1 = Math.max(0, Math.min(1, grid1[rows - 1 - y][x]));
+        const v2 = Math.max(0, Math.min(1, grid2[rows - 1 - y][x]));
         const diff = Math.abs(v1 - v2);
         const idx = (y * cols + x) * 4;
 
@@ -71,7 +71,7 @@ export function OverlayCanvas({
         ctx.beginPath();
         contour.forEach((point, i) => {
           const px = (point[1] / (cols - 1)) * width;
-          const py = (point[0] / (rows - 1)) * height;
+          const py = ((rows - 1 - point[0]) / (rows - 1)) * height;
           if (i === 0) ctx.moveTo(px, py);
           else ctx.lineTo(px, py);
         });
