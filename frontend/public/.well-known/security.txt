@@ -1,0 +1,5 @@
+Contact: https://github.com/mahirmlk
+Expires: 2027-06-26T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://confluence.website/.well-known/security.txt
+Policy: https://github.com/mahirmlk
