@@ -10,7 +10,7 @@ from ..models.schemas import (
     DecisionPathRequest, DecisionPathResponse,
 )
 from ..algorithms.datasets import generate_dataset
-from ..algorithms.classification import fit_and_predict_grid
+from ..algorithms.classification import CLASSIFICATION_ALGORITHMS, fit_and_predict_grid
 from ..algorithms.metrics import compute_classification_metrics
 from ..grid import generate_meshgrid, extract_contours, compute_grid_bounds
 from ..cache import make_cache_key, get_cached_grid, set_cached_grid
@@ -20,9 +20,13 @@ router = APIRouter(prefix="/api/classification", tags=["classification"])
 
 @router.post("/predict", response_model=PredictionResponse)
 async def predict_classification(request: PredictionRequest):
+    if request.algorithm not in CLASSIFICATION_ALGORITHMS:
+        raise ValueError(f"Unknown classification algorithm: '{request.algorithm}'. Available: {list(CLASSIFICATION_ALGORITHMS.keys())}")
+
     cache_key = make_cache_key(
         request.algorithm, request.hyperparameters,
-        request.dataset_name, request.resolution
+        request.dataset_name, request.resolution,
+        noise=request.noise, n_samples=request.n_samples, family="classification"
     )
     cached = await get_cached_grid(cache_key)
 

@@ -3,12 +3,15 @@ from sklearn.datasets import make_blobs, make_moons, make_circles, load_iris, lo
 
 
 def make_spirals(n_samples: int = 300, noise: float = 0.5, n_classes: int = 2) -> tuple[np.ndarray, np.ndarray]:
-    X = np.zeros((n_samples * n_classes, 2))
-    y = np.zeros(n_samples * n_classes, dtype=int)
+    rng = np.random.RandomState(42)
+    n_per_class = n_samples // n_classes
+    total = n_per_class * n_classes
+    X = np.zeros((total, 2))
+    y = np.zeros(total, dtype=int)
     for c in range(n_classes):
-        idx = range(n_samples * c, n_samples * (c + 1))
-        r = np.linspace(0.0, 1, n_samples)
-        t = np.linspace(c * 4, (c + 1) * 4, n_samples) + np.random.randn(n_samples) * noise * 0.3
+        idx = range(n_per_class * c, n_per_class * (c + 1))
+        r = np.linspace(0.0, 1, n_per_class)
+        t = np.linspace(c * 4, (c + 1) * 4, n_per_class) + rng.randn(n_per_class) * noise * 0.3
         X[idx] = np.column_stack([r * np.sin(t * 2.5), r * np.cos(t * 2.5)])
         y[idx] = c
     return X, y

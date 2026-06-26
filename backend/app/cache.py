@@ -32,14 +32,17 @@ async def close_redis():
         _redis = None
 
 
-def make_cache_key(algorithm: str, params: dict, dataset: str, resolution: int) -> str:
+def make_cache_key(algorithm: str, params: dict, dataset: str, resolution: int, noise: float = 0.5, n_samples: int = 300, family: str = "") -> str:
     payload = json.dumps({
         "algorithm": algorithm,
         "params": sorted(params.items()),
         "dataset": dataset,
         "resolution": resolution,
+        "noise": noise,
+        "n_samples": n_samples,
     }, sort_keys=True)
-    return f"grid:{hashlib.sha256(payload.encode()).hexdigest()[:16]}"
+    prefix = f"{family}:" if family else ""
+    return f"{prefix}grid:{hashlib.sha256(payload.encode()).hexdigest()[:16]}"
 
 
 async def get_cached_grid(key: str) -> Optional[np.ndarray]:

@@ -8,7 +8,7 @@ from ..models.schemas import (
     CrossValidationRequest,
 )
 from ..algorithms.datasets import generate_dataset
-from ..algorithms.regression import fit_and_predict_grid_regression
+from ..algorithms.regression import REGRESSION_ALGORITHMS, fit_and_predict_grid_regression
 from ..grid import generate_meshgrid, extract_contours, compute_grid_bounds
 from ..cache import make_cache_key, get_cached_grid, set_cached_grid
 
@@ -29,9 +29,13 @@ DATASET_GENERATORS_REGRESSION = {
 
 @router.post("/predict", response_model=RegressionResponse)
 async def predict_regression(request: RegressionRequest):
+    if request.algorithm not in REGRESSION_ALGORITHMS:
+        raise ValueError(f"Unknown regression algorithm: '{request.algorithm}'. Available: {list(REGRESSION_ALGORITHMS.keys())}")
+
     cache_key = make_cache_key(
         request.algorithm, request.hyperparameters,
-        request.dataset_name, request.resolution
+        request.dataset_name, request.resolution,
+        noise=request.noise, n_samples=request.n_samples, family="regression"
     )
     cached = await get_cached_grid(cache_key)
 
