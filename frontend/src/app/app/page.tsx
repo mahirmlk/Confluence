@@ -8,6 +8,7 @@ import { UploadPanel } from "@/components/controls/UploadPanel";
 import { InlineDataEditor } from "@/components/controls/InlineDataEditor";
 import { RecommendPanel } from "@/components/controls/RecommendPanel";
 import { HeatmapCanvas } from "@/components/canvas/HeatmapCanvas";
+import { regressionColormap } from "@/components/canvas/HeatmapCanvas";
 import { ClusteringCanvas } from "@/components/canvas/ClusteringCanvas";
 import { DimReductionCanvas } from "@/components/canvas/DimReductionCanvas";
 import { PointEditor } from "@/components/canvas/PointEditor";
@@ -372,6 +373,7 @@ function ExploreView() {
                 gridBounds={result.grid_bounds}
                 width={600}
                 height={600}
+                colormap={regressionColormap}
               />
             </ErrorBoundary>
           )}
@@ -424,7 +426,7 @@ function ExploreView() {
 
 function AppContent() {
   const [tab, setTab] = useState<Tab>("explore");
-  const { algorithm, hyperparameters, datasetName, resolution } = useAppStore();
+  const { algorithm, hyperparameters, datasetName, resolution, noise, nSamples } = useAppStore();
   useUrlState();
 
   return (
@@ -461,7 +463,7 @@ function AppContent() {
           {tab === "compare" && <div className="p-8"><ComparisonMode /></div>}
           {tab === "stream" && (
             <div className="flex items-center justify-center p-8">
-              <StreamingViz algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} resolution={resolution} width={600} height={600} />
+              <StreamingViz algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} resolution={resolution} noise={noise} nSamples={nSamples} width={600} height={600} />
             </div>
           )}
           {tab === "help" && (

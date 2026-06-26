@@ -6,6 +6,7 @@ interface ClusteringMetricsDashboardProps {
   metrics: {
     silhouette?: number;
     davies_bouldin?: number;
+    calinski_harabasz?: number;
     inertia?: number;
   };
 }
@@ -26,6 +27,7 @@ export function ClusteringMetricsDashboard({ metrics }: ClusteringMetricsDashboa
       <div className="grid grid-cols-2 gap-2">
         {metrics.silhouette !== undefined && <MetricCard label="Silhouette" value={metrics.silhouette} />}
         {metrics.davies_bouldin !== undefined && <MetricCard label="Davies-Bouldin" value={metrics.davies_bouldin} />}
+        {metrics.calinski_harabasz !== undefined && <MetricCard label="Calinski-Harabasz" value={metrics.calinski_harabasz} />}
         {metrics.inertia !== undefined && <MetricCard label="Inertia" value={metrics.inertia} />}
       </div>
     </div>

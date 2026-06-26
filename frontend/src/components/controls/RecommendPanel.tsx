@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useAppStore } from "@/lib/store";
 
 interface RecommendPanelProps {
   onAlgorithmSelect: (name: string) => void;
@@ -20,6 +21,7 @@ const DEFAULT_RECOMMENDATIONS: Recommendation[] = [
 ];
 
 export function RecommendPanel({ onAlgorithmSelect }: RecommendPanelProps) {
+  const { datasetName, noise, nSamples } = useAppStore();
   const [recommendations, setRecommendations] = React.useState<Recommendation[]>(DEFAULT_RECOMMENDATIONS);
   const [loading, setLoading] = React.useState(false);
 
@@ -30,7 +32,7 @@ export function RecommendPanel({ onAlgorithmSelect }: RecommendPanelProps) {
       const res = await fetch(`${API_URL}/api/datasets/recommend`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dataset_name: "blobs", n_samples: 300, noise: 0.5 }),
+        body: JSON.stringify({ dataset_name: datasetName, n_samples: nSamples, noise }),
       });
       if (res.ok) {
         const data = await res.json();

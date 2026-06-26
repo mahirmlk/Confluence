@@ -114,7 +114,7 @@ export function MetricsDashboard({ metrics }: MetricsDashboardProps) {
         </div>
       )}
       <div className="text-xs text-muted-foreground text-center">
-        Log Loss: {metrics.log_loss.toFixed(4)}
+        Log Loss: {metrics.log_loss != null ? metrics.log_loss.toFixed(4) : "N/A"}
       </div>
     </div>
   );
