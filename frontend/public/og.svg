@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0D1B35"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#grad)" opacity="0.3"/>
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#255EBA;stop-opacity:0.4"/>
+      <stop offset="100%" style="stop-color:#0D1B35;stop-opacity:0"/>
+    </linearGradient>
+  </defs>
+  <text x="600" y="240" text-anchor="middle" font-family="system-ui, sans-serif" font-size="72" font-weight="800" fill="#F5F7FC">Confluence</text>
+  <text x="600" y="320" text-anchor="middle" font-family="system-ui, sans-serif" font-size="28" fill="#7B9FD4">Interactive ML Visualization Platform</text>
+  <text x="600" y="380" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" fill="#4C73B9">Real scikit-learn computation - 38 algorithms - 4 families</text>
+  <line x1="400" y1="420" x2="800" y2="420" stroke="#255EBA" stroke-width="2" opacity="0.5"/>
+  <text x="600" y="470" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" fill="#4C73B9">confluence.website</text>
+</svg>
