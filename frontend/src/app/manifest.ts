@@ -13,19 +13,19 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#255EBA",
     icons: [
       {
-        src: "/android-chrome-192x192.svg",
+        src: "/confluence-logo.png",
         sizes: "192x192",
-        type: "image/svg+xml",
+        type: "image/png",
       },
       {
-        src: "/android-chrome-512x512.svg",
+        src: "/confluence-logo.png",
         sizes: "512x512",
-        type: "image/svg+xml",
+        type: "image/png",
       },
       {
-        src: "/android-chrome-512x512.svg",
+        src: "/confluence-logo.png",
         sizes: "512x512",
-        type: "image/svg+xml",
+        type: "image/png",
         purpose: "maskable",
       },
     ],

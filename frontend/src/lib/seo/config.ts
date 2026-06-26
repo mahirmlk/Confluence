@@ -77,22 +77,22 @@ export function constructMetadata({
     },
     icons: {
       icon: [
+        { url: "/confluence-logo.png", sizes: "any" },
         { url: "/favicon.svg", type: "image/svg+xml" },
-        { url: "/favicon.ico", sizes: "any" },
       ],
       apple: [
-        { url: "/apple-touch-icon.svg", sizes: "180x180", type: "image/svg+xml" },
+        { url: "/confluence-logo.png", sizes: "180x180", type: "image/png" },
       ],
       other: [
         {
-          url: "/android-chrome-192x192.svg",
+          url: "/confluence-logo.png",
           sizes: "192x192",
-          type: "image/svg+xml",
+          type: "image/png",
         },
         {
-          url: "/android-chrome-512x512.svg",
+          url: "/confluence-logo.png",
           sizes: "512x512",
-          type: "image/svg+xml",
+          type: "image/png",
         },
       ],
     },
