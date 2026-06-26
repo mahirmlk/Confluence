@@ -578,7 +578,11 @@ function SearchBar({ onSelect }: { onSelect: (name: string) => void }) {
         algo.name.toLowerCase().includes(q) ||
         algo.label.toLowerCase().includes(q) ||
         algo.tag.toLowerCase().includes(q) ||
-        algo.theory.some((t) => t.toLowerCase().includes(q))
+        algo.theory.some((t) => t.toLowerCase().includes(q)) ||
+        algo.example.toLowerCase().includes(q) ||
+        algo.formula.toLowerCase().includes(q) ||
+        algo.strengths.some((s) => s.toLowerCase().includes(q)) ||
+        algo.limitations.some((l) => l.toLowerCase().includes(q))
     ).slice(0, 8);
   }, [query]);
 
@@ -611,7 +615,8 @@ function SearchBar({ onSelect }: { onSelect: (name: string) => void }) {
           {filtered.map((algo) => (
             <button
               key={algo.name}
-              onClick={() => {
+              onMouseDown={(e) => {
+                e.preventDefault();
                 onSelect(algo.name);
                 setQuery("");
                 setIsOpen(false);
