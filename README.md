@@ -7,7 +7,7 @@
 <br />
 
 An interactive, production-grade ML visualization and education platform backed by real scikit-learn computation.
-Explore **38 algorithms** across classification, regression, clustering, and dimensionality reduction — with **24 datasets**, real-time training animation, prediction explanations, algorithm comparison, and an AI assistant.
+Explore **38 algorithms** across classification, regression, clustering, and dimensionality reduction — with **25 datasets** (13 real-world from Kaggle + 12 synthetic), real-time training animation, prediction explanations, algorithm comparison, and an AI assistant.
 
 <br />
 
@@ -89,10 +89,17 @@ Most ML visualization tools fall into two traps:
 - **Real-time hyperparameter sliders** with debounced recompute (resolution 1-200)
 - **Probability gradients** — see confidence, not just class labels
 - **3D mode** via Three.js/react-three-fiber for GP uncertainty surfaces and embedding projections
+- **PCA projection** for high-dimensional datasets (>2 features) with explained variance labels
+- **Feature scaling** via StandardScaler for scale-sensitive algorithms (SVM, KNN, Logistic Regression, MLP)
+- **Axis labels** showing PC1/PC2 with variance percentages for PCA datasets
+- **Legend** with real dataset class names (e.g., Survived/Did Not Survive, Adelie/Chinstrap/Gentoo)
+- **Improved points** — larger radius, white outline, subtle transparency
+- **Decision boundary contrast** — shadow pass + white line for visibility across all regions
 
-### Dataset Gallery (24 datasets)
+### Dataset Gallery (25 datasets)
 - **Synthetic**: blobs, moons, spirals, XOR, checkerboard, linearly separable
-- **Real-world**: Iris, Wine, Breast Cancer, Digits, Titanic, Penguins, Heart Disease, Adult Income, Mushroom, Wine Quality, California Housing, Diabetes, Bike Sharing, Insurance, Concrete, Mall Customers, Wholesale Customers, Seeds
+- **Real-world (Kaggle)**: Titanic, Penguins, Heart Disease, Adult Income, Mushroom, Wine Quality, California Housing, Diabetes, Insurance, Concrete, Mall Customers, Wholesale Customers, Seeds
+- **sklearn built-in**: Iris, Wine, Breast Cancer, Digits, Diabetes, California Housing
 - **Categorized selector** with source toggle (Synthetic / Real World) and category filters
 - **Dataset info panel** showing story, stats, features, recommended algorithms
 - **Data Generator Studio** — generate spirals, XOR, gaussian, moons, circles, or draw custom datasets
@@ -143,6 +150,7 @@ Most ML visualization tools fall into two traps:
 - **Updates automatically** when you change configuration
 
 ### AI Assistant
+- **Floating chat button** on landing page and visualizer page
 - **Chat interface** with context-aware ML explanations
 - **Quick questions** for common queries (overfitting, boundaries, metrics)
 - **Works with or without LLM API** — built-in fallback for common questions
@@ -217,6 +225,18 @@ npm run dev
 
 Open **[http://localhost:3000](http://localhost:3000)** → click **Launch App** → select an algorithm and dataset.
 
+### AI Assistant (Local Setup)
+
+The floating chat button works immediately with built-in responses. For LLM-powered answers:
+
+```bash
+# Create .env in backend/
+echo "LLM_PROVIDER=openai" >> backend/.env
+echo "LLM_API_KEY=sk-your-key-here" >> backend/.env
+```
+
+Restart the backend. The assistant will use your LLM for context-aware ML explanations.
+
 ### Docker Compose (Recommended for Full Stack)
 
 ```bash
@@ -227,6 +247,37 @@ This starts three services:
 - `frontend` — Next.js on port 3000
 - `backend` — FastAPI on port 8000
 - `redis` — Redis on port 6379
+
+### AI Assistant Configuration
+
+The AI Assistant works out-of-the-box with built-in responses. For enhanced LLM-powered answers:
+
+1. Copy the environment template:
+```bash
+cp .env.example .env
+```
+
+2. Add your API keys to `.env`:
+```bash
+# AI Assistant (optional — works without these)
+LLM_PROVIDER=openai          # openai | anthropic | groq
+LLM_API_KEY=sk-...           # Your API key
+LLM_MODEL=gpt-4o-mini        # Model name (default: gpt-4o-mini)
+```
+
+3. Restart the backend:
+```bash
+docker compose restart backend
+```
+
+**Supported providers:**
+| Provider | LLM_PROVIDER | Models |
+|----------|--------------|--------|
+| OpenAI | `openai` | gpt-4o-mini, gpt-4o, gpt-3.5-turbo |
+| Anthropic | `anthropic` | claude-3-haiku, claude-3-sonnet |
+| Groq | `groq` | llama3-8b, llama3-70b, mixtral |
+
+Without API keys, the assistant uses pattern-matching for common ML questions (overfitting, metrics, boundaries, hyperparameters).
 
 ### Verify Installation
 
@@ -408,7 +459,6 @@ Confluence/
 │   │   └── feature_request.md              # Feature request template
 │   └── PULL_REQUEST_TEMPLATE.md            # PR template with checklist
 │
-├── plans/                                  # Implementation plans (6 phases)
 ├── docker-compose.yml                      # 3-service orchestration
 ├── Makefile                                # Build commands
 ├── CONTRIBUTING.md                         # Contribution guidelines with templates
@@ -501,45 +551,46 @@ Confluence/
 
 | Dataset | Features | Classes | Category | Source |
 |---------|----------|---------|----------|--------|
-| `iris` | petal length, petal width | 3 | General | Fisher's Iris |
-| `iris-full` | 4 features | 3 | General | Fisher's Iris |
-| `wine` | alcohol, proline | 3 | General | UCI Wine |
-| `wine-full` | 13 features | 3 | General | UCI Wine |
-| `breast-cancer` | radius, texture | 2 | Healthcare | Wisconsin BC |
-| `breast-cancer-full` | 30 features | 2 | Healthcare | Wisconsin BC |
-| `digits-2d` | PCA-projected | 10 | General | sklearn Digits |
-| `digits-full` | 64 pixel features | 10 | General | sklearn Digits |
-| `titanic` | age, fare, sex, class | 2 | General | Synthetic |
-| `penguins` | bill length, flipper | 3 | General | Synthetic |
-| `heart-disease` | age, chol, HR | 2 | Healthcare | Synthetic |
+| `iris` | petal length, petal width | 3 | General | sklearn |
+| `iris-full` | 4 features | 3 | General | sklearn |
+| `wine` | alcohol, proline | 3 | General | sklearn |
+| `wine-full` | 13 features | 3 | General | sklearn |
+| `breast-cancer` | radius, texture | 2 | Healthcare | sklearn |
+| `breast-cancer-full` | 30 features | 2 | Healthcare | sklearn |
+| `digits-2d` | PCA-projected | 10 | General | sklearn |
+| `digits-full` | 64 pixel features | 10 | General | sklearn |
+| `titanic` | age, fare, sex, class | 2 | General | Kaggle |
+| `penguins` | bill length, flipper | 3 | General | Kaggle |
+| `heart-disease` | age, chol, HR | 2 | Healthcare | Kaggle |
 
 ### Classification — Extended (4)
 
-| Dataset | Features | Classes | Category |
-|---------|----------|---------|----------|
-| `adult-income` | age, education, hours | 2 | Finance |
-| `mushroom` | cap, gill, stem | 2 | General |
-| `wine-quality` | acidity, alcohol | 2 | General |
+| Dataset | Features | Classes | Category | Source |
+|---------|----------|---------|----------|--------|
+| `adult-income` | age, education, hours | 2 | Finance | Kaggle |
+| `mushroom` | cap, gill, stem | 2 | General | Kaggle |
+| `wine-quality` | acidity, alcohol | 2 | General | Kaggle |
 
-### Regression (7)
+### Regression (8)
 
 | Dataset | Features | Category | Source |
 |---------|----------|----------|--------|
 | `california-housing` | income, age | Housing | sklearn |
 | `california-housing-full` | 8 features | Housing | sklearn |
+| `california-housing-kaggle` | 4 features | Housing | Kaggle |
 | `diabetes` | BMI, S5 | Healthcare | sklearn |
 | `diabetes-full` | 10 features | Healthcare | sklearn |
-| `bike-sharing` | temp, humidity, hour | Business | Synthetic |
-| `insurance` | age, BMI, smoker | Finance | Synthetic |
-| `concrete` | cement, water, age | Housing | Synthetic |
+| `diabetes-kaggle` | glucose, BMI, age | Healthcare | Kaggle |
+| `insurance` | age, BMI, smoker | Finance | Kaggle |
+| `concrete` | cement, water, age | Housing | Kaggle |
 
 ### Clustering (3)
 
-| Dataset | Features | Clusters | Category |
-|---------|----------|----------|----------|
-| `mall-customers` | income, spending | 4 | Business |
-| `wholesale-customers` | fresh, milk, grocery | 3 | Business |
-| `seeds` | area, perimeter, compactness | 3 | General |
+| Dataset | Features | Clusters | Category | Source |
+|---------|----------|----------|----------|--------|
+| `mall-customers` | income, spending | 4 | Business | Kaggle |
+| `wholesale-customers` | fresh, milk, grocery | 4 | Business | Kaggle |
+| `seeds` | area, perimeter, compactness | 3 | General | Kaggle |
 
 ### Regression-Specific (1)
 
