@@ -15,6 +15,7 @@ class PredictionRequest(BaseModel):
     resolution: int = Field(default=100, ge=1, le=200)
     noise: float = Field(default=0.5, ge=0, le=5)
     n_samples: int = Field(default=300, ge=10, le=5000)
+    session_id: Optional[str] = None
 
 
 class PredictionResponse(BaseModel):
@@ -24,6 +25,7 @@ class PredictionResponse(BaseModel):
     algorithm: str
     cache_hit: bool
     grid_bounds: dict
+    viz_metadata: Optional[dict] = None
 
 
 class MetricsRequest(BaseModel):
@@ -32,6 +34,7 @@ class MetricsRequest(BaseModel):
     hyperparameters: dict = Field(default={}, max_length=20)
     noise: float = Field(default=0.5, ge=0, le=5)
     n_samples: int = Field(default=300, ge=10, le=5000)
+    session_id: Optional[str] = None
 
 
 class ClassificationMetrics(BaseModel):
@@ -51,6 +54,7 @@ class RegressionRequest(BaseModel):
     resolution: int = Field(default=100, ge=1, le=200)
     noise: float = Field(default=0.5, ge=0, le=5)
     n_samples: int = Field(default=300, ge=10, le=5000)
+    session_id: Optional[str] = None
 
 
 class RegressionResponse(BaseModel):
@@ -60,6 +64,7 @@ class RegressionResponse(BaseModel):
     algorithm: str
     cache_hit: bool
     grid_bounds: dict
+    viz_metadata: Optional[dict] = None
 
 
 class ClusteringRequest(BaseModel):
@@ -69,6 +74,7 @@ class ClusteringRequest(BaseModel):
     resolution: int = Field(default=100, ge=1, le=200)
     noise: float = Field(default=0.5, ge=0, le=5)
     n_samples: int = Field(default=300, ge=10, le=5000)
+    session_id: Optional[str] = None
 
 
 class ClusteringResponse(BaseModel):
@@ -78,6 +84,7 @@ class ClusteringResponse(BaseModel):
     metrics: dict
     cache_hit: bool
     grid_bounds: dict
+    viz_metadata: Optional[dict] = None
 
 
 class DimReductionRequest(BaseModel):
@@ -87,6 +94,7 @@ class DimReductionRequest(BaseModel):
     n_components: int = Field(default=2, ge=2, le=3)
     noise: float = Field(default=0.5, ge=0, le=5)
     n_samples: int = Field(default=300, ge=10, le=5000)
+    session_id: Optional[str] = None
 
 
 class DimReductionResponse(BaseModel):
