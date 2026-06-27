@@ -9,3 +9,4 @@ redis==5.2.1
 websockets==14.1
 httpx==0.28.1
 python-multipart==0.0.20
+python-dotenv==1.0.1

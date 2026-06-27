@@ -3,12 +3,16 @@ import os
 import time
 from collections import defaultdict
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from .routers import health, classification, regression, clustering, dim_reduction, streaming, datasets, explain, training, compare, tools
 from .cache import close_redis
 from .datasets.loaders import register_all_datasets
+
+# Load .env file from backend/ directory
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
 
 logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO"),
