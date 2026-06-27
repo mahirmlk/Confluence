@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { DataConstellation } from "@/components/landing/DataConstellation";
 import { ArchitectureOrbit } from "@/components/landing/ArchitectureOrbit";
 import { AlgorithmKnowledgeGraph } from "@/components/algorithms/knowledge-graph";
+import { FloatingAIAssistant } from "@/components/tools/FloatingAIAssistant";
 
 const FEATURES = [
   {
@@ -19,8 +20,8 @@ const FEATURES = [
     ),
   },
   {
-    title: "24 Real-World Datasets",
-    description: "Explore Iris, Titanic, Housing, Diabetes, and more. Categorized by domain with automatic algorithm recommendations.",
+    title: "Boundary Taxonomy",
+    description: "Algorithms organized by the geometric shape of their decision boundaries — linear, tree-based, kernel, probabilistic, neural.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 7V4h16v3M9 20h6M12 4v16" />
@@ -28,8 +29,8 @@ const FEATURES = [
     ),
   },
   {
-    title: "Explain Every Prediction",
-    description: "Click any point to see the full decision path, feature contributions, nearest neighbors, and probability breakdown.",
+    title: "Training Dynamics",
+    description: "Watch boosting rounds, tree splits, and gradient descent iterations evolve in real-time with a scrubber timeline.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
@@ -38,8 +39,8 @@ const FEATURES = [
     ),
   },
   {
-    title: "Algorithm Race",
-    description: "Run multiple algorithms simultaneously on the same dataset. Compare accuracy, speed, and decision boundaries in real-time.",
+    title: "Side-by-Side Comparison",
+    description: "Compare 2-4 algorithms on the same dataset simultaneously. Overlay boundaries to see exactly where they diverge.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" />
@@ -47,8 +48,8 @@ const FEATURES = [
     ),
   },
   {
-    title: "Training Playground",
-    description: "Watch models learn step-by-step. Animated loss curves, weight updates, and decision boundary evolution with playback controls.",
+    title: "3D Visualization",
+    description: "Render decision surfaces, Gaussian Process uncertainty bands, and embedding projections in interactive 3D with Three.js.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="5,3 19,12 5,21" />
@@ -56,8 +57,8 @@ const FEATURES = [
     ),
   },
   {
-    title: "AI Assistant",
-    description: "Ask questions about your model and get context-aware explanations. Works with or without an external LLM API.",
+    title: "Full Metrics Suite",
+    description: "Accuracy, precision, recall, F1, confusion matrix, ROC/AUC for classification. R², MSE, MAE for regression. Silhouette for clustering.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
@@ -404,6 +405,7 @@ export default function LandingPage() {
       </section>
 
       <Footer />
+      <FloatingAIAssistant />
     </div>
   );
 }

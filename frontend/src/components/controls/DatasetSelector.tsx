@@ -32,7 +32,7 @@ export function DatasetSelector({ onDatasetInfo }: DatasetSelectorProps) {
       setLoading(true);
       listDatasetsV2({ family })
         .then((res) => {
-          setRealDatasets(res.datasets.filter((d) => d.source !== "synthetic" || d.name === "titanic" || d.name === "penguins" || d.name === "heart-disease" || d.name === "adult-income" || d.name === "mushroom" || d.name === "wine-quality" || d.name === "bike-sharing" || d.name === "insurance" || d.name === "concrete" || d.name === "mall-customers" || d.name === "wholesale-customers" || d.name === "seeds"));
+          setRealDatasets(res.datasets.filter((d) => d.source !== "synthetic"));
         })
         .catch(() => setRealDatasets([]))
         .finally(() => setLoading(false));

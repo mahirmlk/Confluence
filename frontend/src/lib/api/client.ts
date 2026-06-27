@@ -17,6 +17,15 @@ export type PredictionRequest = Omit<components["schemas"]["PredictionRequest"],
 
 export type PredictionResponse = components["schemas"]["PredictionResponse"] & {
   grid_bounds: { x_min: number; x_max: number; y_min: number; y_max: number };
+  viz_metadata?: {
+    original_features: number;
+    displayed_dimensions: number;
+    scaled: boolean;
+    pca_applied: boolean;
+    explained_variance_ratio: number[] | null;
+    total_variance_explained: number | null;
+    class_names?: string[];
+  };
 };
 
 export type ClassificationMetrics = Omit<components["schemas"]["ClassificationMetrics"], "roc_curve"> & {
@@ -25,10 +34,26 @@ export type ClassificationMetrics = Omit<components["schemas"]["ClassificationMe
 
 export type RegressionResponse = components["schemas"]["RegressionResponse"] & {
   grid_bounds: { x_min: number; x_max: number; y_min: number; y_max: number };
+  viz_metadata?: {
+    original_features: number;
+    displayed_dimensions: number;
+    scaled: boolean;
+    pca_applied: boolean;
+    explained_variance_ratio: number[] | null;
+    total_variance_explained: number | null;
+  };
 };
 
 export type ClusteringResponse = components["schemas"]["ClusteringResponse"] & {
   grid_bounds: { x_min: number; x_max: number; y_min: number; y_max: number };
+  viz_metadata?: {
+    original_features: number;
+    displayed_dimensions: number;
+    scaled: boolean;
+    pca_applied: boolean;
+    explained_variance_ratio: number[] | null;
+    total_variance_explained: number | null;
+  };
 };
 
 export type DimReductionResponse = components["schemas"]["DimReductionResponse"];

@@ -16,7 +16,7 @@ import { DataGeneratorStudio } from "@/components/controls/DataGeneratorStudio";
 import { PredictionExplainer, LearningModeToggle, MetricExplainerModal, TreeBuilder } from "@/components/explain";
 import { TrainingPlayground, WrongPredictionExplorer } from "@/components/training";
 import { HyperparameterComparison, AlgorithmRace, BenchmarkSuite } from "@/components/compare";
-import { PCAExplorer, CodeGenerator, AIAssistant } from "@/components/tools";
+import { PCAExplorer, CodeGenerator, AIAssistant, FloatingAIAssistant } from "@/components/tools";
 import { explainPrediction, type ExplainPredictionResponse } from "@/lib/api/client";
 import { ErrorBoundary } from "@/components/canvas/ErrorBoundary";
 import { MetricsDashboard } from "@/components/metrics/MetricsDashboard";
@@ -403,8 +403,9 @@ function ExploreView() {
                 contourLines={result.contour_lines}
                 points={result.points}
                 gridBounds={result.grid_bounds}
-                width={600}
+                width={700}
                 height={600}
+                vizMetadata={"viz_metadata" in result ? (result as { viz_metadata?: { original_features: number; displayed_dimensions: number; scaled: boolean; pca_applied: boolean; explained_variance_ratio: number[] | null; total_variance_explained: number | null } }).viz_metadata : null}
               />
             </ErrorBoundary>
           )}
@@ -415,25 +416,55 @@ function ExploreView() {
                 grid={result.grid}
                 points={result.points}
                 gridBounds={result.grid_bounds}
-                width={600}
+                width={700}
                 height={600}
                 colormap={regressionColormap}
+                vizMetadata={"viz_metadata" in result ? (result as { viz_metadata?: { original_features: number; displayed_dimensions: number; scaled: boolean; pca_applied: boolean; explained_variance_ratio: number[] | null; total_variance_explained: number | null } }).viz_metadata : null}
               />
             </ErrorBoundary>
           )}
           {!show3D && result && isClust(result) && (
             <ErrorBoundary>
-              <ClusteringCanvas labelGrid={result.label_grid} points={result.points} gridBounds={result.grid_bounds} width={600} height={600} />
+              <ClusteringCanvas
+                labelGrid={result.label_grid}
+                points={result.points}
+                gridBounds={result.grid_bounds}
+                width={700}
+                height={600}
+                vizMetadata={"viz_metadata" in result ? (result as { viz_metadata?: { original_features: number; displayed_dimensions: number; scaled: boolean; pca_applied: boolean; explained_variance_ratio: number[] | null; total_variance_explained: number | null } }).viz_metadata : null}
+              />
             </ErrorBoundary>
           )}
           {!show3D && result && "embedding" in (result as Record<string, unknown>) && (
             <ErrorBoundary>
-              <DimReductionCanvas embedding={(result as DimReductionResponse).embedding} points={(result as DimReductionResponse).points} width={600} height={600} info={(result as DimReductionResponse).info} />
+              <DimReductionCanvas embedding={(result as DimReductionResponse).embedding} points={(result as DimReductionResponse).points} width={700} height={600} info={(result as DimReductionResponse).info} />
             </ErrorBoundary>
           )}
 
           {!result && !loading && <div className="text-muted-foreground text-sm">Click Run to visualize</div>}
           {loading && <div className="text-muted-foreground text-sm animate-pulse">Computing...</div>}
+
+          {/* Visualization metadata badge */}
+          {result && "viz_metadata" in result && (() => {
+            const meta = (result as { viz_metadata?: { original_features: number; pca_applied: boolean; explained_variance_ratio: number[] | null; total_variance_explained: number | null; scaled: boolean } }).viz_metadata;
+            if (!meta) return null;
+            return (
+              <div className="absolute bottom-4 right-4 bg-card/90 border border-border rounded-lg px-3 py-2 text-[10px] text-muted-foreground backdrop-blur-sm max-w-[200px]">
+                <div className="space-y-0.5">
+                  {meta.pca_applied && (
+                    <div className="text-[#255EBA] font-medium">
+                      PCA 2D ({(meta.total_variance_explained! * 100).toFixed(0)}% var)
+                    </div>
+                  )}
+                  <div>Features: {meta.original_features} → 2D</div>
+                  {meta.scaled && <div>Scaled: StandardScaler</div>}
+                  {meta.pca_applied && meta.explained_variance_ratio && (
+                    <div>PC1: {(meta.explained_variance_ratio[0] * 100).toFixed(1)}% | PC2: {(meta.explained_variance_ratio[1] * 100).toFixed(1)}%</div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Analysis panels overlay */}
           {activePanel && (
@@ -509,6 +540,7 @@ function AppContent() {
   return (
     <div className="flex flex-col h-screen bg-background">
       <AppNavbar />
+      <FloatingAIAssistant algorithm={algorithm} datasetName={datasetName} />
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-80 border-r border-border bg-card p-4 overflow-y-auto flex-shrink-0">
           <div className="flex items-center gap-2 mb-4 px-1">

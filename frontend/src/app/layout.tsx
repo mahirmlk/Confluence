@@ -41,12 +41,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${instrumentSerif.variable} ${montserrat.variable} h-full antialiased`}
     >
       <head>
         <JsonLd />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
         {children}
         <Analytics />
       </body>
