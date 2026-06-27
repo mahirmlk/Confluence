@@ -312,3 +312,63 @@ export async function getLearningTip(request: {
   const { data } = await api.post("/api/explain/learning-tip", request);
   return data;
 }
+
+// --- Compare APIs ---
+
+export interface HyperparamComparisonResult {
+  config: Record<string, number>;
+  config_label: string;
+  grid: number[][];
+  contour_lines: number[][][];
+  train_accuracy: number;
+  test_accuracy: number;
+  gap: number;
+}
+
+export interface HyperparamComparisonResponse {
+  results: HyperparamComparisonResult[];
+  grid_bounds: { x_min: number; x_max: number; y_min: number; y_max: number };
+}
+
+export interface RaceResult {
+  algorithm: string;
+  grid: number[][];
+  accuracy: number;
+  train_time: number;
+  pred_time: number;
+  grid_bounds: { x_min: number; x_max: number; y_min: number; y_max: number };
+}
+
+export interface BenchmarkResult {
+  algorithm: string;
+  dataset: string;
+  accuracy: number;
+  train_time: number;
+  pred_time: number;
+  peak_memory_kb: number;
+  n_samples: number;
+  n_features: number;
+  error?: string;
+}
+
+export async function compareHyperparameters(request: {
+  algorithm: string;
+  dataset_name: string;
+  configs: Record<string, number>[];
+  noise?: number;
+  n_samples?: number;
+  resolution?: number;
+}): Promise<HyperparamComparisonResponse> {
+  const { data } = await api.post("/api/compare/hyperparameter-comparison", request);
+  return data;
+}
+
+export async function runBenchmark(request: {
+  algorithms: string[];
+  datasets: string[];
+  n_samples?: number;
+  noise?: number;
+}): Promise<{ results: BenchmarkResult[] }> {
+  const { data } = await api.post("/api/compare/benchmark", request);
+  return data;
+}

@@ -15,6 +15,7 @@ import { PointEditor } from "@/components/canvas/PointEditor";
 import { DataGeneratorStudio } from "@/components/controls/DataGeneratorStudio";
 import { PredictionExplainer, LearningModeToggle, MetricExplainerModal, TreeBuilder } from "@/components/explain";
 import { TrainingPlayground, WrongPredictionExplorer } from "@/components/training";
+import { HyperparameterComparison, AlgorithmRace, BenchmarkSuite } from "@/components/compare";
 import { explainPrediction, type ExplainPredictionResponse } from "@/lib/api/client";
 import { ErrorBoundary } from "@/components/canvas/ErrorBoundary";
 import { MetricsDashboard } from "@/components/metrics/MetricsDashboard";
@@ -535,7 +536,25 @@ function AppContent() {
         <main className="flex-1 overflow-auto bg-background">
           {tab === "explore" && <ExploreView />}
           {tab === "taxonomy" && <div className="p-8"><TaxonomyExplorer /></div>}
-          {tab === "compare" && <div className="p-8"><ComparisonMode /></div>}
+          {tab === "compare" && (
+            <div className="p-8 space-y-8">
+              <ComparisonMode />
+              <div className="border-t border-border pt-8">
+                <HyperparameterComparison
+                  algorithm={algorithm}
+                  datasetName={datasetName}
+                  noise={noise}
+                  nSamples={nSamples}
+                />
+              </div>
+              <div className="border-t border-border pt-8">
+                <AlgorithmRace datasetName={datasetName} noise={noise} nSamples={nSamples} />
+              </div>
+              <div className="border-t border-border pt-8">
+                <BenchmarkSuite />
+              </div>
+            </div>
+          )}
           {tab === "stream" && (
             <div className="flex items-center justify-center p-8">
               <StreamingViz algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} resolution={resolution} noise={noise} nSamples={nSamples} width={600} height={600} />
