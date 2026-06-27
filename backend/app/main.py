@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from .routers import health, classification, regression, clustering, dim_reduction, streaming, datasets
 from .cache import close_redis
+from .datasets.loaders import register_all_datasets
 
 logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO"),
@@ -46,6 +47,8 @@ def _check_rate_limit(ip: str) -> bool:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    register_all_datasets()
+    logger.info("Registered %d datasets", len(__import__('app.datasets.registry', fromlist=['DatasetRegistry']).DatasetRegistry.names()))
     yield
     await close_redis()
 

@@ -8,6 +8,7 @@ import numpy as np
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel, Field
 from typing import Optional
+from ..models.schemas import GeneratorRequest
 
 logger = logging.getLogger(__name__)
 
@@ -355,3 +356,138 @@ async def recommend_algorithms(request: RecommendRequest):
     recommendations = unique[:5]
 
     return RecommendResponse(recommendations=recommendations)
+
+
+# --- V2 Endpoints ---
+
+
+@router.get("/v2/datasets")
+async def list_datasets_v2(
+    family: str = None,
+    category: str = None,
+    difficulty: str = None,
+    source: str = None,
+    search: str = None,
+):
+    from ..datasets.registry import DatasetRegistry
+
+    datasets = DatasetRegistry.list_all()
+
+    if family:
+        datasets = [d for d in datasets if d.family == family]
+    if category:
+        datasets = [d for d in datasets if d.category == category]
+    if difficulty:
+        datasets = [d for d in datasets if d.difficulty == difficulty]
+    if source:
+        datasets = [d for d in datasets if d.source == source]
+    if search:
+        datasets = DatasetRegistry.search(search)
+
+    return {
+        "datasets": [
+            {
+                "name": d.name,
+                "display_name": d.display_name,
+                "description": d.description,
+                "story": d.story,
+                "source": d.source,
+                "family": d.family,
+                "category": d.category,
+                "target_column": d.target_column,
+                "n_rows": d.n_rows,
+                "n_features": d.n_features,
+                "n_classes": d.n_classes,
+                "feature_names": d.feature_names,
+                "feature_types": d.feature_types,
+                "missing_values": d.missing_values,
+                "difficulty": d.difficulty,
+                "recommended_algorithms": d.recommended_algorithms,
+                "tags": d.tags,
+                "license": d.license,
+            }
+            for d in datasets
+        ],
+        "total": len(datasets),
+    }
+
+
+@router.get("/v2/datasets/{name}")
+async def get_dataset_detail_v2(name: str):
+    from ..datasets.registry import DatasetRegistry
+
+    entry = DatasetRegistry.get(name)
+    X, y = entry.loader(n_samples=5, noise=0.0)
+
+    sample = []
+    for i in range(min(5, len(X))):
+        row = [f"{v:.4f}" if isinstance(v, float) else str(v) for v in X[i]]
+        row.append(str(int(y[i])))
+        sample.append(row)
+
+    return {
+        "metadata": {
+            "name": entry.name,
+            "display_name": entry.display_name,
+            "description": entry.description,
+            "story": entry.story,
+            "source": entry.source,
+            "family": entry.family,
+            "category": entry.category,
+            "target_column": entry.target_column,
+            "n_rows": entry.n_rows,
+            "n_features": entry.n_features,
+            "n_classes": entry.n_classes,
+            "feature_names": entry.feature_names,
+            "feature_types": entry.feature_types,
+            "missing_values": entry.missing_values,
+            "difficulty": entry.difficulty,
+            "recommended_algorithms": entry.recommended_algorithms,
+            "tags": entry.tags,
+            "license": entry.license,
+        },
+        "sample": sample,
+    }
+
+
+@router.get("/v2/categories")
+async def list_categories():
+    from ..datasets.registry import DatasetRegistry
+
+    datasets = DatasetRegistry.list_all()
+    categories = {}
+    for d in datasets:
+        if d.category not in categories:
+            categories[d.category] = {"count": 0, "families": set()}
+        categories[d.category]["count"] += 1
+        categories[d.category]["families"].add(d.family)
+
+    return {
+        "categories": [
+            {"name": k, "count": v["count"], "families": list(v["families"])}
+            for k, v in sorted(categories.items())
+        ]
+    }
+
+
+@router.post("/v2/generate")
+async def generate_dataset_v2(request: GeneratorRequest):
+    from ..algorithms.generators import GENERATORS
+
+    if request.generator not in GENERATORS:
+        raise ValueError(f"Unknown generator: '{request.generator}'. Available: {list(GENERATORS.keys())}")
+
+    gen_fn = GENERATORS[request.generator]
+    X, y = gen_fn(
+        n_samples=request.n_samples,
+        noise=request.noise,
+        n_classes=request.n_classes,
+    )
+
+    return {
+        "X": X.tolist(),
+        "y": y.tolist(),
+        "generator": request.generator,
+        "n_samples": len(X),
+        "n_classes": len(set(y.tolist())),
+    }

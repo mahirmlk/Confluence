@@ -106,10 +106,10 @@ export const HYPERPARAMETER_CONFIGS: Record<string, { name: string; min: number;
 };
 
 export const FAMILY_DATASETS: Record<AlgorithmFamily, string[]> = {
-  classification: ["blobs", "blobs-3class", "blobs-4class", "moons", "circles", "spirals", "xor", "linearly-separable", "checkerboard", "iris", "wine", "breast-cancer"],
-  regression: ["sine", "blobs", "moons", "circles", "spirals", "xor", "linearly-separable", "iris", "wine", "breast-cancer"],
-  clustering: ["blobs", "moons", "circles", "spirals", "xor", "iris", "wine", "breast-cancer"],
-  "dim-reduction": ["blobs", "blobs-3class", "blobs-4class", "moons", "circles", "spirals", "xor", "linearly-separable", "checkerboard", "iris", "wine", "breast-cancer"],
+  classification: ["blobs", "blobs-3class", "blobs-4class", "moons", "circles", "spirals", "xor", "linearly-separable", "checkerboard", "iris", "iris-full", "wine", "wine-full", "breast-cancer", "breast-cancer-full", "digits-2d", "digits-full", "titanic", "penguins", "heart-disease", "adult-income", "mushroom", "wine-quality"],
+  regression: ["sine", "blobs", "moons", "circles", "spirals", "xor", "linearly-separable", "iris", "wine", "breast-cancer", "california-housing", "california-housing-full", "diabetes", "diabetes-full", "bike-sharing", "insurance", "concrete"],
+  clustering: ["blobs", "moons", "circles", "spirals", "xor", "iris", "wine", "breast-cancer", "mall-customers", "wholesale-customers", "seeds"],
+  "dim-reduction": ["blobs", "blobs-3class", "blobs-4class", "moons", "circles", "spirals", "xor", "linearly-separable", "checkerboard", "iris", "iris-full", "wine", "wine-full", "breast-cancer", "breast-cancer-full", "digits-2d", "digits-full"],
 };
 
 export interface AppState {

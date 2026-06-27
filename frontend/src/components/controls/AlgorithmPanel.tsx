@@ -1,8 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useAppStore, ALGORITHMS, HYPERPARAMETER_CONFIGS, FAMILY_DATASETS, type AlgorithmFamily } from "@/lib/store";
 import { HyperparameterSlider } from "./HyperparameterSlider";
+import { DatasetSelector } from "./DatasetSelector";
+import { DatasetInfoPanel } from "./DatasetInfoPanel";
+import type { DatasetMetaV2 } from "@/lib/api/client";
 
 const FAMILY_OPTIONS: { value: AlgorithmFamily; label: string }[] = [
   { value: "classification", label: "Classification" },
@@ -13,12 +16,12 @@ const FAMILY_OPTIONS: { value: AlgorithmFamily; label: string }[] = [
 
 export function AlgorithmPanel() {
   const {
-    family, algorithm, datasetName, hyperparameters, noise, nSamples,
+    family, algorithm, hyperparameters, noise, nSamples,
     setFamily, setAlgorithm, setDatasetName, setHyperparameters, setNoise, setNSamples,
   } = useAppStore();
+  const [selectedDatasetInfo, setSelectedDatasetInfo] = useState<DatasetMetaV2 | null>(null);
 
   const filteredAlgorithms = ALGORITHMS.filter((a) => a.family === family);
-  const datasets = FAMILY_DATASETS[family];
   const configs = HYPERPARAMETER_CONFIGS[algorithm] || [];
   const algoConfig = filteredAlgorithms.find((a) => a.name === algorithm);
 
@@ -93,18 +96,13 @@ export function AlgorithmPanel() {
         )}
       </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Dataset</label>
-        <select
-          value={datasetName}
-          onChange={(e) => setDatasetName(e.target.value)}
-          className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-        >
-          {datasets.map((d) => (
-            <option key={d} value={d}>{d}</option>
-          ))}
-        </select>
-      </div>
+      <DatasetSelector onDatasetInfo={setSelectedDatasetInfo} />
+
+      {selectedDatasetInfo && (
+        <div className="border border-border rounded-lg p-3">
+          <DatasetInfoPanel dataset={selectedDatasetInfo} />
+        </div>
+      )}
 
       <div className="space-y-3">
         <h2 className="text-sm font-medium text-foreground">Data Settings</h2>

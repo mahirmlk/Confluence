@@ -108,6 +108,16 @@ DATASET_GENERATORS = {
 
 
 def generate_dataset(name: str, n_samples: int = 300, noise: float = 0.5) -> tuple[np.ndarray, np.ndarray]:
-    if name not in DATASET_GENERATORS:
-        raise ValueError(f"Unknown dataset: {name}. Available: {list(DATASET_GENERATORS.keys())}")
-    return DATASET_GENERATORS[name](n=n_samples, noise=noise)
+    if name in DATASET_GENERATORS:
+        return DATASET_GENERATORS[name](n=n_samples, noise=noise)
+
+    from ..datasets.registry import DatasetRegistry
+    if not DatasetRegistry.names():
+        from ..datasets.loaders import register_all_datasets
+        register_all_datasets()
+
+    if DatasetRegistry.exists(name):
+        entry = DatasetRegistry.get(name)
+        return entry.loader(n_samples=n_samples, noise=noise)
+
+    raise ValueError(f"Unknown dataset: {name}. Available: {list(DATASET_GENERATORS.keys()) + DatasetRegistry.names()}")

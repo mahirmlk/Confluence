@@ -174,3 +174,73 @@ export async function getDecisionPath(
   const { data } = await api.post<DecisionPathResponse>("/api/classification/decision-path", request);
   return data;
 }
+
+// --- V2 Dataset APIs ---
+
+export interface DatasetMetaV2 {
+  name: string;
+  display_name: string;
+  description: string;
+  story: string;
+  source: string;
+  family: string;
+  category: string;
+  target_column: string | null;
+  n_rows: number;
+  n_features: number;
+  n_classes: number | null;
+  feature_names: string[];
+  feature_types: string[];
+  missing_values: boolean;
+  difficulty: string;
+  recommended_algorithms: string[];
+  tags: string[];
+  license: string | null;
+}
+
+export interface DatasetListV2Response {
+  datasets: DatasetMetaV2[];
+  total: number;
+}
+
+export interface DatasetDetailV2Response {
+  metadata: DatasetMetaV2;
+  sample: string[][];
+}
+
+export interface CategoryInfo {
+  name: string;
+  count: number;
+  families: string[];
+}
+
+export async function listDatasetsV2(params?: {
+  family?: string;
+  category?: string;
+  difficulty?: string;
+  source?: string;
+  search?: string;
+}): Promise<DatasetListV2Response> {
+  const { data } = await api.get<DatasetListV2Response>("/api/datasets/v2/datasets", { params });
+  return data;
+}
+
+export async function getDatasetDetailV2(name: string): Promise<DatasetDetailV2Response> {
+  const { data } = await api.get<DatasetDetailV2Response>(`/api/datasets/v2/datasets/${name}`);
+  return data;
+}
+
+export async function listCategories(): Promise<{ categories: CategoryInfo[] }> {
+  const { data } = await api.get("/api/datasets/v2/categories");
+  return data;
+}
+
+export async function generateDatasetV2(request: {
+  generator: string;
+  n_samples?: number;
+  noise?: number;
+  n_classes?: number;
+}): Promise<{ X: number[][]; y: number[]; generator: string; n_samples: number; n_classes: number }> {
+  const { data } = await api.post("/api/datasets/v2/generate", request);
+  return data;
+}

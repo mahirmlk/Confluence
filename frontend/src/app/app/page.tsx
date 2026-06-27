@@ -12,6 +12,7 @@ import { regressionColormap } from "@/components/canvas/HeatmapCanvas";
 import { ClusteringCanvas } from "@/components/canvas/ClusteringCanvas";
 import { DimReductionCanvas } from "@/components/canvas/DimReductionCanvas";
 import { PointEditor } from "@/components/canvas/PointEditor";
+import { DataGeneratorStudio } from "@/components/controls/DataGeneratorStudio";
 import { ErrorBoundary } from "@/components/canvas/ErrorBoundary";
 import { MetricsDashboard } from "@/components/metrics/MetricsDashboard";
 import { RegressionMetricsDashboard } from "@/components/metrics/RegressionMetricsDashboard";
@@ -55,7 +56,7 @@ import { useUrlState, ShareButton, ExportButton, ThemeToggle } from "@/component
 const queryClient = new QueryClient();
 
 type Tab = "explore" | "compare" | "taxonomy" | "stream" | "help";
-type DataSource = "synthetic" | "upload" | "custom" | "inline";
+type DataSource = "synthetic" | "upload" | "custom" | "inline" | "generator";
 type AnalysisPanel = "metrics" | "cv" | "coefficients" | "learning" | "decision" | "elbow" | "recommend";
 
 interface CustomPoint { x: number; y: number; label: number; }
@@ -228,7 +229,7 @@ function ExploreView() {
       <div className="flex items-center gap-2 p-3 border-b border-border bg-card/50 flex-wrap">
         {/* Data source selector */}
         <div className="flex rounded-md border border-border overflow-hidden">
-          {(["synthetic", "upload", "inline", "custom"] as DataSource[]).map((ds) => (
+          {(["synthetic", "upload", "inline", "custom", "generator"] as DataSource[]).map((ds) => (
             <button
               key={ds}
               onClick={() => {
@@ -240,7 +241,7 @@ function ExploreView() {
                 dataSource === ds ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"
               }`}
             >
-              {ds === "synthetic" ? "Synthetic" : ds === "upload" ? "CSV" : ds === "inline" ? "Paste" : "Draw"}
+              {ds === "synthetic" ? "Synthetic" : ds === "upload" ? "CSV" : ds === "inline" ? "Paste" : ds === "custom" ? "Draw" : "Generate"}
             </button>
           ))}
         </div>
@@ -340,6 +341,16 @@ function ExploreView() {
                 Use This Dataset
               </button>
             )}
+          </div>
+        )}
+        {dataSource === "generator" && (
+          <div className="w-72 border-r border-border bg-card p-4 overflow-y-auto">
+            <DataGeneratorStudio
+              onDatasetReady={(X, y, name) => {
+                useAppStore.getState().setDatasetName(name);
+                setDataSource("synthetic");
+              }}
+            />
           </div>
         )}
 

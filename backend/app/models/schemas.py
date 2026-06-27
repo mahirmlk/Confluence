@@ -238,3 +238,52 @@ class DecisionPathResponse(BaseModel):
     path: list[str]
     prediction: int
     model_type: str
+
+
+# --- V2 Dataset Schemas ---
+
+class DatasetMetadataV2(BaseModel):
+    name: str
+    display_name: str
+    description: str
+    story: str
+    source: str
+    family: str
+    category: str
+    target_column: Optional[str] = None
+    n_rows: int
+    n_features: int
+    n_classes: Optional[int] = None
+    feature_names: list[str]
+    feature_types: list[str]
+    missing_values: bool
+    difficulty: str
+    recommended_algorithms: list[str]
+    tags: list[str]
+    license: Optional[str] = None
+
+
+class DatasetListV2Response(BaseModel):
+    datasets: list[DatasetMetadataV2]
+    total: int
+
+
+class DatasetDetailV2Response(BaseModel):
+    metadata: DatasetMetadataV2
+    sample: list[list[str]]
+
+
+class GeneratorRequest(BaseModel):
+    generator: str = Field(min_length=1, max_length=50)
+    n_samples: int = Field(default=300, ge=10, le=5000)
+    noise: float = Field(default=0.5, ge=0, le=5)
+    n_classes: int = Field(default=2, ge=2, le=5)
+    custom_params: dict = Field(default={}, max_length=20)
+
+
+class GeneratorResponse(BaseModel):
+    X: list[list[float]]
+    y: list[float]
+    generator: str
+    n_samples: int
+    n_classes: int
