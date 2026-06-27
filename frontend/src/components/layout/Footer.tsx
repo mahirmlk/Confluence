@@ -17,6 +17,7 @@ const FOOTER_LINKS = {
     { label: "Dimensionality Reduction", href: "/app" },
   ],
   Resources: [
+    { label: "ML Roadmap", href: "/resources" },
     { label: "Documentation", href: "/algorithms" },
     { label: "GitHub Repository", href: "https://github.com/mahirmlk" },
     { label: "API Reference", href: "/app" },

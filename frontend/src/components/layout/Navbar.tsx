@@ -40,6 +40,9 @@ export function Navbar() {
           <Link href="/algorithms" className="text-muted-foreground hover:text-foreground transition-colors">
             Algorithms
           </Link>
+          <Link href="/resources" className="text-muted-foreground hover:text-foreground transition-colors">
+            Resources
+          </Link>
           <Link href="/#architecture" className="text-muted-foreground hover:text-foreground transition-colors">
             Architecture
           </Link>
