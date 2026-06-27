@@ -283,6 +283,7 @@ def _get_uploaded_dataset(dataset_id: str) -> tuple[np.ndarray, np.ndarray]:
 @router.post("/recommend", response_model=RecommendResponse)
 async def recommend_algorithms(request: RecommendRequest):
     from ..algorithms.datasets import generate_dataset
+    from ..datasets.registry import DatasetRegistry
 
     if request.session_id:
         X, y = _get_uploaded_dataset(request.session_id)
@@ -292,70 +293,75 @@ async def recommend_algorithms(request: RecommendRequest):
             n_samples=request.n_samples, noise=request.noise
         )
 
-    n_samples, n_features = X.shape
+    n_samples_actual, n_features = X.shape
     n_classes = len(set(y.tolist()))
     class_counts = np.bincount(y.astype(int))
     class_balance = class_counts.min() / class_counts.max() if class_counts.max() > 0 else 0
 
+    # Get dataset metadata if available
+    dataset_entry = None
+    if DatasetRegistry.exists(request.dataset_name):
+        dataset_entry = DatasetRegistry.get(request.dataset_name)
+
     recommendations = []
-
-    if n_samples < 500:
-        recommendations.append(AlgorithmRecommendation(
-            name="knn", label="K-Nearest Neighbors", confidence=0.9,
-            reason="Small dataset — KNN works well with limited samples"
-        ))
-        recommendations.append(AlgorithmRecommendation(
-            name="gaussian-nb", label="Gaussian Naive Bayes", confidence=0.85,
-            reason="Small dataset — Naive Bayes is robust with few samples"
-        ))
-        recommendations.append(AlgorithmRecommendation(
-            name="logistic-regression", label="Logistic Regression", confidence=0.8,
-            reason="Small dataset — simple linear model generalizes well"
-        ))
-    elif n_samples < 2000:
-        recommendations.append(AlgorithmRecommendation(
-            name="random-forest", label="Random Forest", confidence=0.9,
-            reason="Medium dataset — ensemble method handles complexity well"
-        ))
-        recommendations.append(AlgorithmRecommendation(
-            name="rbf-svm", label="SVM (RBF Kernel)", confidence=0.85,
-            reason="Medium dataset — RBF SVM captures non-linear boundaries"
-        ))
-        recommendations.append(AlgorithmRecommendation(
-            name="gradient-boosting", label="Gradient Boosting", confidence=0.85,
-            reason="Medium dataset — strong performance on tabular data"
-        ))
-    else:
-        recommendations.append(AlgorithmRecommendation(
-            name="gradient-boosting", label="Gradient Boosting", confidence=0.9,
-            reason="Large dataset — gradient boosting excels with ample data"
-        ))
-        recommendations.append(AlgorithmRecommendation(
-            name="random-forest", label="Random Forest", confidence=0.85,
-            reason="Large dataset — scales well, resistant to overfitting"
-        ))
-
-    if class_balance < 0.5:
-        recommendations.append(AlgorithmRecommendation(
-            name="random-forest", label="Random Forest", confidence=0.75,
-            reason="Imbalanced classes — ensemble methods handle imbalance better"
-        ))
-
-    if n_features > 10:
-        recommendations.append(AlgorithmRecommendation(
-            name="random-forest", label="Random Forest", confidence=0.8,
-            reason="High dimensionality — built-in feature importance"
-        ))
-
     seen = set()
-    unique = []
-    for r in recommendations:
-        if r.name not in seen:
-            seen.add(r.name)
-            unique.append(r)
-    recommendations = unique[:5]
 
-    return RecommendResponse(recommendations=recommendations)
+    def add(name, label, confidence, reason):
+        if name not in seen:
+            seen.add(name)
+            recommendations.append(AlgorithmRecommendation(
+                name=name, label=label, confidence=confidence, reason=reason
+            ))
+
+    # Dataset-specific recommendations
+    dataset_tips = {
+        "titanic": ("logistic-regression", "Logistic Regression", 0.9, "Titanic — sex and class are strong linear predictors"),
+        "penguins": ("knn", "K-Nearest Neighbors", 0.9, "Penguins — bill/flipper measurements cluster well by neighbor proximity"),
+        "heart-disease": ("random-forest", "Random Forest", 0.9, "Heart Disease — mixed feature types benefit from ensemble splits"),
+        "adult-income": ("gradient-boosting", "Gradient Boosting", 0.9, "Adult Income — tabular data with mixed types, boosting excels"),
+        "mushroom": ("decision-tree", "Decision Tree", 0.95, "Mushroom — categorical features with clear decision rules"),
+        "wine-quality": ("random-forest", "Random Forest", 0.9, "Wine Quality — chemical features with non-linear interactions"),
+        "iris": ("knn", "K-Nearest Neighbors", 0.95, "Iris — small, well-separated clusters, KNN is ideal"),
+        "wine": ("random-forest", "Random Forest", 0.9, "Wine — 3 classes with feature interactions"),
+        "breast-cancer": ("logistic-regression", "Logistic Regression", 0.9, "Breast Cancer — linearly separable features"),
+        "california-housing": ("random-forest-regressor", "Random Forest Regressor", 0.9, "Housing — non-linear feature interactions"),
+        "california-housing-kaggle": ("gradient-boosting-regressor", "Gradient Boosting Regressor", 0.9, "Housing — mixed features, boosting handles well"),
+        "diabetes": ("ridge", "Ridge Regression", 0.85, "Diabetes — small dataset, regularization prevents overfitting"),
+        "insurance": ("gradient-boosting-regressor", "Gradient Boosting Regressor", 0.9, "Insurance — smoker/age interactions need boosting"),
+        "concrete": ("random-forest-regressor", "Random Forest Regressor", 0.9, "Concrete — non-linear curing age relationship"),
+        "mall-customers": ("kmeans", "K-Means", 0.9, "Mall Customers — clear income/spending clusters"),
+        "wholesale-customers": ("kmeans", "K-Means", 0.85, "Wholesale — spending pattern clusters"),
+        "seeds": ("agglomerative", "Agglomerative Clustering", 0.9, "Seeds — hierarchical structure in measurements"),
+    }
+
+    if request.dataset_name in dataset_tips:
+        name, label, conf, reason = dataset_tips[request.dataset_name]
+        add(name, label, conf, reason)
+
+    # Size-based recommendations
+    if n_samples_actual < 500:
+        add("knn", "K-Nearest Neighbors", 0.85, "Small dataset — KNN works well with limited samples")
+        add("gaussian-nb", "Gaussian Naive Bayes", 0.8, "Small dataset — Naive Bayes is robust with few samples")
+    elif n_samples_actual < 2000:
+        add("random-forest", "Random Forest", 0.85, "Medium dataset — ensemble method handles complexity well")
+        add("rbf-svm", "SVM (RBF Kernel)", 0.8, "Medium dataset — RBF SVM captures non-linear boundaries")
+    else:
+        add("gradient-boosting", "Gradient Boosting", 0.85, "Large dataset — gradient boosting excels with ample data")
+        add("random-forest", "Random Forest", 0.8, "Large dataset — scales well, resistant to overfitting")
+
+    # Class balance recommendations
+    if class_balance < 0.5:
+        add("random-forest", "Random Forest", 0.75, "Imbalanced classes — ensemble methods handle imbalance better")
+
+    # High dimensionality
+    if n_features > 10:
+        add("random-forest", "Random Forest", 0.8, "High dimensionality — built-in feature importance")
+
+    # Multi-class
+    if n_classes > 2:
+        add("gradient-boosting", "Gradient Boosting", 0.8, "Multi-class — gradient boosting handles multiple classes well")
+
+    return RecommendResponse(recommendations=recommendations[:5])
 
 
 # --- V2 Endpoints ---

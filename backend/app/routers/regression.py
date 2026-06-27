@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import numpy as np
 from fastapi import APIRouter
 from ..models.schemas import (
@@ -9,9 +10,11 @@ from ..models.schemas import (
 )
 from ..algorithms.datasets import generate_dataset
 from ..algorithms.regression import REGRESSION_ALGORITHMS, fit_and_predict_grid_regression
+from ..pipeline import VisualizationPipeline
 from ..grid import generate_meshgrid, extract_contours, compute_grid_bounds
 from ..cache import make_cache_key, get_cached_grid, set_cached_grid
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/regression", tags=["regression"])
 
 
@@ -50,8 +53,16 @@ async def predict_regression(request: RegressionRequest):
             request.dataset_name, n_samples=request.n_samples, noise=request.noise
         )
 
-    x_min, x_max, y_min, y_max = compute_grid_bounds(X)
-    xx, yy = generate_meshgrid((x_min, x_max), (y_min, y_max), request.resolution)
+    # Use unified pipeline
+    pipeline = VisualizationPipeline()
+    X_2d, metadata = pipeline.process(X, request.algorithm)
+
+    # Add class names
+    from ..pipeline import DATASET_CLASS_NAMES
+    metadata["class_names"] = DATASET_CLASS_NAMES.get(request.dataset_name, [])
+
+    bounds = compute_grid_bounds(X_2d)
+    xx, yy = generate_meshgrid((bounds[0], bounds[1]), (bounds[2], bounds[3]), request.resolution)
 
     if cached is not None and cached.shape == xx.shape:
         pred_grid = cached
@@ -60,7 +71,7 @@ async def predict_regression(request: RegressionRequest):
     else:
         pred_grid, std_grid = await asyncio.to_thread(
             fit_and_predict_grid_regression,
-            request.algorithm, request.hyperparameters, X, y, xx, yy
+            request.algorithm, request.hyperparameters, X_2d, y, xx, yy
         )
         await set_cached_grid(cache_key, pred_grid)
         cache_hit = False
@@ -68,10 +79,11 @@ async def predict_regression(request: RegressionRequest):
     return RegressionResponse(
         grid=pred_grid.tolist(),
         uncertainty_grid=std_grid.tolist() if std_grid is not None else None,
-        points=DatasetSample(X=X.tolist(), y=y.tolist()),
+        points=DatasetSample(X=X_2d.tolist(), y=y.tolist()),
         algorithm=request.algorithm,
         cache_hit=cache_hit,
-        grid_bounds={"x_min": float(x_min), "x_max": float(x_max), "y_min": float(y_min), "y_max": float(y_max)},
+        grid_bounds={"x_min": float(bounds[0]), "x_max": float(bounds[1]), "y_min": float(bounds[2]), "y_max": float(bounds[3])},
+        viz_metadata=metadata,
     )
 
 

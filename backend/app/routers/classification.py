@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from fastapi import APIRouter
 from ..models.schemas import (
     PredictionRequest, PredictionResponse, DatasetSample, MetricsRequest,
@@ -12,9 +13,10 @@ from ..models.schemas import (
 from ..algorithms.datasets import generate_dataset
 from ..algorithms.classification import CLASSIFICATION_ALGORITHMS, fit_and_predict_grid
 from ..algorithms.metrics import compute_classification_metrics
-from ..grid import generate_meshgrid, extract_contours, compute_grid_bounds
+from ..pipeline import run_pipeline
 from ..cache import make_cache_key, get_cached_grid, set_cached_grid
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/classification", tags=["classification"])
 
 
@@ -31,29 +33,41 @@ async def predict_classification(request: PredictionRequest):
     cached = await get_cached_grid(cache_key)
 
     X, y = await asyncio.to_thread(generate_dataset, request.dataset_name, n_samples=request.n_samples, noise=request.noise)
-    x_min, x_max, y_min, y_max = compute_grid_bounds(X)
-    xx, yy = generate_meshgrid((x_min, x_max), (y_min, y_max), request.resolution)
 
-    if cached is not None and cached.shape == xx.shape:
-        prob_grid = cached
-        cache_hit = True
-    else:
-        prob_grid, _ = await asyncio.to_thread(
-            fit_and_predict_grid,
-            request.algorithm, request.hyperparameters, X, y, xx, yy
+    if cached is not None:
+        # Re-run pipeline for metadata but use cached grid
+        pipeline_result = await asyncio.to_thread(
+            run_pipeline, X, y, request.algorithm, request.hyperparameters,
+            fit_and_predict_grid, request.resolution, dataset_name=request.dataset_name
         )
-        await set_cached_grid(cache_key, prob_grid)
-        cache_hit = False
+        if cached.shape == pipeline_result["grid"].shape:
+            pipeline_result["grid"] = cached
+            pipeline_result["cache_hit"] = True
+        return PredictionResponse(
+            grid=pipeline_result["grid"].tolist(),
+            contour_lines=pipeline_result["contour_lines"],
+            points=DatasetSample(X=pipeline_result["points_x"], y=pipeline_result["points_y"]),
+            algorithm=request.algorithm,
+            cache_hit=pipeline_result["cache_hit"],
+            grid_bounds=pipeline_result["grid_bounds"],
+            viz_metadata=pipeline_result["metadata"],
+        )
 
-    contours = extract_contours(prob_grid, threshold=0.5)
+    pipeline_result = await asyncio.to_thread(
+        run_pipeline, X, y, request.algorithm, request.hyperparameters,
+        fit_and_predict_grid, request.resolution, dataset_name=request.dataset_name
+    )
+
+    await set_cached_grid(cache_key, pipeline_result["grid"])
 
     return PredictionResponse(
-        grid=prob_grid.tolist(),
-        contour_lines=contours,
-        points=DatasetSample(X=X.tolist(), y=y.tolist()),
+        grid=pipeline_result["grid"].tolist(),
+        contour_lines=pipeline_result["contour_lines"],
+        points=DatasetSample(X=pipeline_result["points_x"], y=pipeline_result["points_y"]),
         algorithm=request.algorithm,
-        cache_hit=cache_hit,
-        grid_bounds={"x_min": x_min, "x_max": x_max, "y_min": y_min, "y_max": y_max},
+        cache_hit=False,
+        grid_bounds=pipeline_result["grid_bounds"],
+        viz_metadata=pipeline_result["metadata"],
     )
 
 
