@@ -14,6 +14,7 @@ import { DimReductionCanvas } from "@/components/canvas/DimReductionCanvas";
 import { PointEditor } from "@/components/canvas/PointEditor";
 import { DataGeneratorStudio } from "@/components/controls/DataGeneratorStudio";
 import { PredictionExplainer, LearningModeToggle, MetricExplainerModal, TreeBuilder } from "@/components/explain";
+import { TrainingPlayground, WrongPredictionExplorer } from "@/components/training";
 import { explainPrediction, type ExplainPredictionResponse } from "@/lib/api/client";
 import { ErrorBoundary } from "@/components/canvas/ErrorBoundary";
 import { MetricsDashboard } from "@/components/metrics/MetricsDashboard";
@@ -57,7 +58,7 @@ import { useUrlState, ShareButton, ExportButton, ThemeToggle } from "@/component
 
 const queryClient = new QueryClient();
 
-type Tab = "explore" | "compare" | "taxonomy" | "stream" | "help";
+type Tab = "explore" | "compare" | "taxonomy" | "stream" | "playground" | "help";
 type DataSource = "synthetic" | "upload" | "custom" | "inline" | "generator";
 type AnalysisPanel = "metrics" | "cv" | "coefficients" | "learning" | "decision" | "elbow" | "recommend" | "explain" | "tree-build" | "metric-explain";
 
@@ -83,6 +84,7 @@ function ExploreView() {
   const [explainResult, setExplainResult] = useState<ExplainPredictionResponse | null>(null);
   const [learningMode, setLearningMode] = useState(false);
   const [metricExplainTarget, setMetricExplainTarget] = useState<{ name: string; value: number } | null>(null);
+  const [showWrongPredictions, setShowWrongPredictions] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const fetchPrediction = useCallback(async () => {
@@ -298,6 +300,7 @@ function ExploreView() {
             {algorithm === "decision-tree" && (
               <button onClick={() => setActivePanel("tree-build")} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Tree Builder</button>
             )}
+            <button onClick={() => setShowWrongPredictions(true)} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Wrong</button>
           </>
         )}
 
@@ -480,6 +483,18 @@ function ExploreView() {
           onClose={() => setMetricExplainTarget(null)}
         />
       )}
+
+      {/* Wrong Predictions Explorer */}
+      {showWrongPredictions && family === "classification" && (
+        <WrongPredictionExplorer
+          algorithm={algorithm}
+          datasetName={datasetName}
+          hyperparameters={hyperparameters}
+          noise={noise}
+          nSamples={nSamples}
+          onClose={() => setShowWrongPredictions(false)}
+        />
+      )}
     </div>
   );
 }
@@ -499,13 +514,13 @@ function AppContent() {
             <ThemeToggle />
           </div>
           <div className="flex flex-wrap gap-1 mb-6 border border-border rounded-lg p-1">
-            {(["explore", "compare", "taxonomy", "stream", "help"] as Tab[]).map((t) => (
+            {(["explore", "compare", "taxonomy", "stream", "playground", "help"] as Tab[]).map((t) => (
               <button key={t} onClick={() => setTab(t)} className={`flex-1 px-2 py-1.5 rounded text-xs font-medium transition-colors ${tab === t ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"}`}>
-                {t === "explore" ? "Explore" : t === "compare" ? "Compare" : t === "taxonomy" ? "Taxonomy" : t === "stream" ? "Stream" : "Help"}
+                {t === "explore" ? "Explore" : t === "compare" ? "Compare" : t === "taxonomy" ? "Taxonomy" : t === "stream" ? "Stream" : t === "playground" ? "Train" : "Help"}
               </button>
             ))}
           </div>
-          {(tab === "explore" || tab === "stream") && <AlgorithmPanel />}
+          {(tab === "explore" || tab === "stream" || tab === "playground") && <AlgorithmPanel />}
           {tab === "stream" && (
             <div className="mt-4 px-4">
               <div className="text-[10px] text-muted-foreground bg-muted/50 rounded-md p-2">
@@ -524,6 +539,17 @@ function AppContent() {
           {tab === "stream" && (
             <div className="flex items-center justify-center p-8">
               <StreamingViz algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} resolution={resolution} noise={noise} nSamples={nSamples} width={600} height={600} />
+            </div>
+          )}
+          {tab === "playground" && (
+            <div className="p-8 max-w-4xl mx-auto">
+              <TrainingPlayground
+                algorithm={algorithm}
+                datasetName={datasetName}
+                hyperparameters={hyperparameters}
+                noise={noise}
+                nSamples={nSamples}
+              />
             </div>
           )}
           {tab === "help" && (
