@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.datasets import make_blobs, make_moons, make_circles, load_iris, load_wine, load_breast_cancer
+from sklearn.decomposition import PCA
 
 
 def make_spirals(n_samples: int = 300, noise: float = 0.5, n_classes: int = 2) -> tuple[np.ndarray, np.ndarray]:
@@ -91,6 +92,14 @@ def _load_breast_cancer_2d(n_samples: int = 300, noise: float = 0.0) -> tuple[np
     return X, y
 
 
+def _reduce_to_2d(X: np.ndarray) -> np.ndarray:
+    """Reduce high-dimensional data to 2D using PCA for visualization."""
+    if X.shape[1] <= 2:
+        return X
+    pca = PCA(n_components=2, random_state=42)
+    return pca.fit_transform(X)
+
+
 DATASET_GENERATORS = {
     "blobs": lambda n=300, noise=0.5: make_blobs(n_samples=n, centers=2, cluster_std=noise, random_state=42),
     "blobs-3class": lambda n=300, noise=0.5: make_blobs(n_samples=n, centers=3, cluster_std=noise, random_state=42),
@@ -107,7 +116,16 @@ DATASET_GENERATORS = {
 }
 
 
-def generate_dataset(name: str, n_samples: int = 300, noise: float = 0.5) -> tuple[np.ndarray, np.ndarray]:
+def generate_dataset(name: str, n_samples: int = 300, noise: float = 0.5, reduce_dim: bool = False) -> tuple[np.ndarray, np.ndarray]:
+    """Generate or load a dataset.
+
+    Args:
+        name: Dataset name
+        n_samples: Number of samples
+        noise: Noise level
+        reduce_dim: If True, reduce to 2D via PCA (for legacy callers).
+                   The visualization pipeline handles this separately.
+    """
     if name in DATASET_GENERATORS:
         return DATASET_GENERATORS[name](n=n_samples, noise=noise)
 
@@ -118,6 +136,10 @@ def generate_dataset(name: str, n_samples: int = 300, noise: float = 0.5) -> tup
 
     if DatasetRegistry.exists(name):
         entry = DatasetRegistry.get(name)
-        return entry.loader(n_samples=n_samples, noise=noise)
+        X, y = entry.loader(n_samples=n_samples, noise=noise)
+        # Only reduce if explicitly requested (legacy mode)
+        if reduce_dim and X.shape[1] > 2:
+            X = _reduce_to_2d(X)
+        return X, y
 
     raise ValueError(f"Unknown dataset: {name}. Available: {list(DATASET_GENERATORS.keys()) + DatasetRegistry.names()}")
