@@ -19,20 +19,27 @@ const FEATURES = [
     ),
   },
   {
-    title: "Boundary Taxonomy",
-    description: "Algorithms organized by the geometric shape of their decision boundaries — linear, tree-based, kernel, probabilistic, neural.",
+    title: "24 Real-World Datasets",
+    description: "Explore Iris, Titanic, Housing, Diabetes, and more. Categorized by domain with automatic algorithm recommendations.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1" />
-        <rect x="14" y="3" width="7" height="7" rx="1" />
-        <rect x="3" y="14" width="7" height="7" rx="1" />
-        <rect x="14" y="14" width="7" height="7" rx="1" />
+        <path d="M4 7V4h16v3M9 20h6M12 4v16" />
       </svg>
     ),
   },
   {
-    title: "Training Dynamics",
-    description: "Watch boosting rounds, tree splits, and gradient descent iterations evolve in real-time with a scrubber timeline.",
+    title: "Explain Every Prediction",
+    description: "Click any point to see the full decision path, feature contributions, nearest neighbors, and probability breakdown.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 16v-4M12 8h.01" />
+      </svg>
+    ),
+  },
+  {
+    title: "Algorithm Race",
+    description: "Run multiple algorithms simultaneously on the same dataset. Compare accuracy, speed, and decision boundaries in real-time.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" />
@@ -40,32 +47,20 @@ const FEATURES = [
     ),
   },
   {
-    title: "Side-by-Side Comparison",
-    description: "Compare 2-4 algorithms on the same dataset simultaneously. Overlay boundaries to see exactly where they diverge.",
+    title: "Training Playground",
+    description: "Watch models learn step-by-step. Animated loss curves, weight updates, and decision boundary evolution with playback controls.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="3" width="8" height="18" rx="1" />
-        <rect x="14" y="3" width="8" height="18" rx="1" />
+        <polygon points="5,3 19,12 5,21" />
       </svg>
     ),
   },
   {
-    title: "3D Visualization",
-    description: "Render decision surfaces, Gaussian Process uncertainty bands, and embedding projections in interactive 3D with Three.js.",
+    title: "AI Assistant",
+    description: "Ask questions about your model and get context-aware explanations. Works with or without an external LLM API.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-        <path d="M2 17l10 5 10-5" />
-        <path d="M2 12l10 5 10-5" />
-      </svg>
-    ),
-  },
-  {
-    title: "Full Metrics Suite",
-    description: "Accuracy, precision, recall, F1, confusion matrix, ROC/AUC for classification. R, MSE, MAE for regression. Silhouette for clustering.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 20V10M12 20V4M6 20v-6" />
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
       </svg>
     ),
   },
@@ -302,7 +297,7 @@ export default function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-6 text-center pt-8" style={{ zIndex: 2 }}>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-none border border-[#C8D3E8] bg-white/80 text-xs text-[#4C73B9] mb-6 backdrop-blur-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-            30+ algorithms across 4 families
+            38 algorithms · 24 datasets · AI-powered explanations
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold text-foreground tracking-tight leading-tight mb-4 font-montserrat">
@@ -315,9 +310,9 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed font-sans">
-            An interactive visualization platform powered by real scikit-learn computation.
-            Explore decision boundaries, compare algorithms side-by-side, and watch models
-            train step-by-step.
+            An interactive ML education platform powered by real scikit-learn computation.
+            Explore decision boundaries, explain predictions, race algorithms, and learn
+            with 24 real-world datasets.
           </p>
 
           <div className="flex items-center justify-center gap-4">

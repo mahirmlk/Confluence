@@ -6,8 +6,8 @@
 
 <br />
 
-An interactive, production-grade ML visualization platform backed by real scikit-learn computation.
-Explore **38 algorithms** across classification, regression, clustering, and dimensionality reduction — with real-time hyperparameter tuning, decision boundary visualization, and training-process animation via WebSocket streaming.
+An interactive, production-grade ML visualization and education platform backed by real scikit-learn computation.
+Explore **38 algorithms** across classification, regression, clustering, and dimensionality reduction — with **24 datasets**, real-time training animation, prediction explanations, algorithm comparison, and an AI assistant.
 
 <br />
 
@@ -22,7 +22,7 @@ Explore **38 algorithms** across classification, regression, clustering, and dim
 
 <br />
 
-[Getting Started](#-getting-started) · [Architecture](#-architecture) · [API Reference](#-api-reference) · [Algorithm Catalog](#-algorithm-catalog) · [Contributing](CONTRIBUTING.md)
+[Getting Started](#-getting-started) · [Features](#-features) · [Architecture](#-architecture) · [API Reference](#-api-reference) · [Algorithm Catalog](#-algorithm-catalog) · [Contributing](CONTRIBUTING.md)
 
 <br />
 
@@ -63,19 +63,21 @@ Most ML visualization tools fall into two traps:
 | **Toy and shallow** | TensorFlow Playground, CodePen demos | Client-side-only math, covers 3-4 algorithms, no regression/clustering/dim-reduction |
 | **Static and academic** | scikit-learn gallery, Distill.pub | Good math, zero interactivity, fixed datasets, no hyperparameter exploration |
 
-**Confluence closes the gap** — a unified, interactive ML visualization platform backed by genuine `scikit-learn`-class computation (not reimplemented approximations), spanning four algorithm families, with synchronized comparison, training-process animation, and a geometric taxonomy of decision boundaries as the organizing idea.
+**Confluence closes the gap** — a unified, interactive ML education platform backed by genuine `scikit-learn`-class computation, spanning four algorithm families, with synchronized comparison, training-process animation, prediction explanations, and a geometric taxonomy of decision boundaries as the organizing idea.
 
 ### Core Differentiators
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│  1. Boundary Taxonomy        Algorithms tagged by geometric shape   │
-│  2. Four Families, One UI    Classification · Regression · Cluster  │
-│  3. Real Computation         Actual scikit-learn, not toy math      │
-│  4. Training Dynamics        Watch boosting rounds / tree growth    │
-│  5. Side-by-Side Compare     2-4 algorithms on the same dataset     │
-│  6. 3D Where It Matters      GP uncertainty bands, 3D projections   │
-└─────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│  1. Boundary Taxonomy          Algorithms tagged by geometric shape     │
+│  2. Four Families, One UI      Classification · Regression · Cluster    │
+│  3. Real Computation           Actual scikit-learn, not toy math        │
+│  4. Training Playground        Watch models learn step-by-step          │
+│  5. Explain Every Prediction   Decision paths, feature contributions    │
+│  6. Algorithm Race             Run multiple algorithms simultaneously   │
+│  7. 24 Real-World Datasets     Iris, Titanic, Housing, and more         │
+│  8. AI Assistant               Context-aware ML explanations            │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -88,30 +90,80 @@ Most ML visualization tools fall into two traps:
 - **Probability gradients** — see confidence, not just class labels
 - **3D mode** via Three.js/react-three-fiber for GP uncertainty surfaces and embedding projections
 
-### Data Pipeline
-- **12 built-in datasets** — synthetic (blobs, moons, spirals, XOR, checkerboard) + real-world (Iris, Wine, Breast Cancer)
-- **CSV upload** with column mapping, auto-detection of numeric columns
-- **Custom point placement** — click-to-draw on canvas
-- **Algorithm recommendation engine** based on dataset characteristics (size, balance, dimensionality)
+### Dataset Gallery (24 datasets)
+- **Synthetic**: blobs, moons, spirals, XOR, checkerboard, linearly separable
+- **Real-world**: Iris, Wine, Breast Cancer, Digits, Titanic, Penguins, Heart Disease, Adult Income, Mushroom, Wine Quality, California Housing, Diabetes, Bike Sharing, Insurance, Concrete, Mall Customers, Wholesale Customers, Seeds
+- **Categorized selector** with source toggle (Synthetic / Real World) and category filters
+- **Dataset info panel** showing story, stats, features, recommended algorithms
+- **Data Generator Studio** — generate spirals, XOR, gaussian, moons, circles, or draw custom datasets
 
-### Analysis Tools
-- **Classification metrics**: accuracy, precision, recall, F1, confusion matrix, ROC/AUC, log loss
-- **Regression metrics**: R², MSE, RMSE, MAE, residual plots
-- **Clustering metrics**: silhouette score, Davies-Bouldin index, inertia
+### Training Playground
+- **Animated training** — watch logistic regression learn via gradient descent, MLP weight updates, decision tree depth growth, KNN k-sweep, boosting rounds
+- **Loss curve** and **accuracy history** in real-time alongside the decision boundary
+- **Playback controls** — play, pause, step forward/back, scrubber timeline
+
+### Explain Every Prediction
+- **Click any point** to see: prediction, probability, and full explanation
+- **Decision path** for tree-based models (split feature, threshold, Gini at each node)
+- **Feature contributions** for linear models (weight × value per feature)
+- **Feature importance** for ensemble models
+- **Nearest neighbors** for KNN models
+
+### Learning Mode
+- **Toggle ON** to get context-aware explanations when clicking the canvas
+- **Boundary explanations** — why the boundary is shaped this way
+- **Hyperparameter effects** — what changing C, max_depth, n_neighbors actually does
+
+### Metric Explanations
+- **Click any metric** (accuracy, precision, recall, F1) to see: formula, calculation, interpretation
+- **Per-class breakdown** showing where the model succeeds and fails
+- **Confusion matrix breakdown** with TP/TN/FP/FN labels
+
+### Algorithm Comparison
+- **Hyperparameter Comparison** — 4 configs side-by-side (e.g., max_depth 2, 5, 10, 20) with overfit detection
+- **Algorithm Race** — run multiple algorithms simultaneously via WebSocket, real-time leaderboard
+- **Benchmark Suite** — cross-algorithm, cross-dataset accuracy heatmap and speed ranking
+- **Side-by-side mode**: 2-4 algorithms on the same dataset with synchronized zoom/pan
+
+### Interactive Visualizations
+- **Interactive Confusion Matrix** — click TP/TN/FP/FN to highlight those points on the canvas
+- **Interactive ROC Curve** — hover to see threshold, FPR, TPR at any point
+- **Interactive PR Curve** — hover to see threshold, precision, recall
+- **Wrong Prediction Explorer** — see expected class, predicted class, probability, decision path, nearest correct neighbors
+
+### PCA Explorer
+- **Projection canvas** showing data in PC1 vs PC2 space
+- **Scree plot** with variance per component
+- **Feature loadings** showing which features contribute to each principal component
+- **Cumulative variance** explained
+
+### Code Generator
+- **Auto-generates Python code** matching your current algorithm, dataset, and hyperparameters
+- **Copy to clipboard** or **download as .py** file
+- **Updates automatically** when you change configuration
+
+### AI Assistant
+- **Chat interface** with context-aware ML explanations
+- **Quick questions** for common queries (overfitting, boundaries, metrics)
+- **Works with or without LLM API** — built-in fallback for common questions
+
+### Step-by-Step Tree Builder
+- **Animated tree construction** — watch splits grow depth by depth
+- **Tree visualization** showing nodes, thresholds, Gini values, class counts
+- **Synced with decision boundary** — see how each split changes the boundary
+
+### ML Roadmap
+- **7 learning categories**: Statistics, Linear Algebra, Optimization, Feature Engineering, Evaluation, Model Selection, Deployment
+- **Each topic** links to relevant Confluence features for hands-on practice
+- **External resources** for deeper learning
+
+### Other Tools
 - **Cross-validation** with per-fold boundary visualization
 - **Coefficient inspector** for linear/tree models
 - **Learning curves** showing train vs. validation performance
 - **Sensitivity heatmaps** for hyperparameter interaction analysis
-- **Decision path viewer** for tree-based models
-
-### Comparison & Exploration
-- **Side-by-side mode**: 2-4 algorithms on the same dataset with synchronized zoom/pan
 - **Boundary taxonomy explorer**: filter algorithms by geometric boundary type
 - **Algorithm encyclopedia**: 38 algorithms with complexity, intuition, and SVG diagrams
-
-### Streaming & Animation
-- **WebSocket training animation**: watch boosting rounds, tree growth, gradient descent, MLP epochs frame-by-frame
-- **Scrubber timeline** for stepping through training stages
 
 ---
 
@@ -132,13 +184,6 @@ Confluence ships with a dedicated **Algorithm Encyclopedia** — an interactive 
 | **Complexity Reference** | Every card shows Big-O complexity for both fit and predict operations, helping you reason about scalability |
 | **SVG Diagrams** | Visual diagrams illustrate the intuition behind each algorithm's decision-making process |
 | **Interactive Launch** | Click any algorithm card to jump directly into the visualizer with that algorithm pre-selected |
-
-### Why It Matters
-
-- **Learning** — Students and practitioners can build intuition for how different model families produce different boundary geometries
-- **Selection** — The taxonomy-based organization helps you quickly narrow down candidate algorithms based on the shape of boundary your problem requires
-- **Comparison** — Side-by-side complexity and boundary type information makes trade-offs immediately visible
-- **Reference** — A single, always-up-to-date source of truth for every algorithm in the platform
 
 ---
 
@@ -191,12 +236,6 @@ make lint          # Frontend ESLint
 make test-backend  # Backend pytest
 ```
 
-Or on Windows:
-
-```powershell
-.\verify.ps1 -All
-```
-
 ---
 
 ## Architecture
@@ -214,14 +253,18 @@ graph TB
         HTTP["Axios Client"]
     end
 
-    subgraph API["REST API Layer"]
+    subgraph API["REST + WebSocket Layer"]
         direction TB
         CLASS["Classification Routes"]
         REG["Regression Routes"]
         CLUST["Clustering Routes"]
         DIM["Dim Reduction Routes"]
         DATA["Dataset Routes"]
-        WS["WebSocket Stream"]
+        EXPLAIN["Explain Routes"]
+        TRAIN["Training Routes"]
+        COMPARE["Compare Routes"]
+        TOOLS["Tools Routes"]
+        WS["WebSocket Streams"]
     end
 
     subgraph CORE["Core Engine"]
@@ -229,6 +272,8 @@ graph TB
         GRID["Grid Engine"]
         ALGO["Algorithm Factory"]
         METRIC["Metrics Engine"]
+        EXPLAINER["Explainers"]
+        REGISTRY["Dataset Registry"]
         CACHE["Redis Cache"]
     end
 
@@ -249,14 +294,21 @@ graph TB
     HTTP -->|"REST JSON"| CLUST
     HTTP -->|"REST JSON"| DIM
     HTTP -->|"REST JSON"| DATA
+    HTTP -->|"REST JSON"| EXPLAIN
+    HTTP -->|"REST JSON"| TRAIN
+    HTTP -->|"REST JSON"| COMPARE
+    HTTP -->|"REST JSON"| TOOLS
     HTTP -->|"WebSocket"| WS
 
     CLASS --> GRID
     REG --> GRID
     CLUST --> GRID
     DIM --> GRID
-    DATA --> GRID
-    WS --> GRID
+    DATA --> REGISTRY
+    EXPLAIN --> EXPLAINER
+    TRAIN --> ALGO
+    COMPARE --> ALGO
+    TOOLS --> ALGO
 
     GRID --> ALGO
     ALGO --> SKLearn
@@ -264,51 +316,6 @@ graph TB
     ALGO --> CROSS
     GRID --> METRIC
     GRID --> CACHE
-```
-
-### Data Flow: Static Boundary Request
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant FE as Frontend
-    participant BE as Backend
-    participant RD as Redis
-    participant ML as scikit-learn
-
-    U->>FE: Select dataset and algorithm
-    FE->>BE: POST /api/predict
-    BE->>RD: Check cache
-    alt Cache Hit
-        RD-->>BE: Return cached grid
-    else Cache Miss
-        BE->>ML: generate_dataset()
-        BE->>ML: fit_and_predict_grid()
-        ML-->>BE: Probability grid
-        BE->>BE: Extract contours
-        BE->>RD: Store result
-    end
-    BE-->>FE: JSON response
-    FE->>FE: Canvas2D heatmap
-```
-
-### Data Flow: WebSocket Training Animation
-
-```mermaid
-sequenceDiagram
-    participant FE as Frontend
-    participant BE as Backend
-    participant ML as scikit-learn
-
-    FE->>BE: WS connect with config
-    loop Training Steps
-        BE->>ML: Fit model step N
-        ML-->>BE: Model state
-        BE->>BE: Predict grid
-        BE-->>FE: Frame JSON
-        FE->>FE: Render boundary
-    end
-    BE-->>FE: Done signal
 ```
 
 ---
@@ -319,27 +326,40 @@ sequenceDiagram
 Confluence/
 ├── backend/
 │   ├── app/
-│   │   ├── main.py                    # FastAPI app, CORS, exception handlers
-│   │   ├── cache.py                   # Redis caching layer (async)
-│   │   ├── grid.py                    # Meshgrid generation + contour extraction
+│   │   ├── main.py                         # FastAPI app, CORS, exception handlers
+│   │   ├── cache.py                        # Redis caching layer (async)
+│   │   ├── grid.py                         # Meshgrid generation + contour extraction
 │   │   ├── algorithms/
-│   │   │   ├── classification.py      # 15 classification algorithms
-│   │   │   ├── regression.py          # 13 regression algorithms
-│   │   │   ├── clustering.py          # 5 clustering algorithms
-│   │   │   ├── dim_reduction.py       # 5 dimensionality reduction algorithms
-│   │   │   ├── datasets.py            # 12 dataset generators
-│   │   │   └── metrics.py             # Metrics, CV, learning curves, sensitivity
+│   │   │   ├── classification.py           # 15 classification algorithms
+│   │   │   ├── regression.py               # 13 regression algorithms
+│   │   │   ├── clustering.py               # 5 clustering algorithms
+│   │   │   ├── dim_reduction.py            # 5 dimensionality reduction algorithms
+│   │   │   ├── datasets.py                 # Synthetic dataset generators + registry bridge
+│   │   │   ├── metrics.py                  # Metrics, CV, learning curves, sensitivity
+│   │   │   ├── explainers/                 # Prediction, learning, metric explainers
+│   │   │   └── generators/                 # Data generator studio
+│   │   ├── datasets/
+│   │   │   ├── registry.py                 # Central dataset registry
+│   │   │   ├── metadata.py                 # DatasetEntry dataclass
+│   │   │   ├── loaders.py                  # Register all datasets
+│   │   │   ├── classification/             # 14 classification dataset loaders
+│   │   │   ├── regression/                 # 7 regression dataset loaders
+│   │   │   └── clustering/                 # 3 clustering dataset loaders
 │   │   ├── models/
-│   │   │   └── schemas.py             # Pydantic request/response models (240 lines)
+│   │   │   └── schemas.py                  # Pydantic request/response models
 │   │   └── routers/
-│   │       ├── classification.py      # Classification endpoints (8 routes)
-│   │       ├── regression.py          # Regression endpoints (5 routes)
-│   │       ├── clustering.py          # Clustering endpoints (3 routes)
-│   │       ├── dim_reduction.py       # Dim-reduction endpoints (2 routes)
-│   │       ├── datasets.py            # CSV upload, custom points, recommendations
-│   │       ├── health.py              # Health check
-│   │       └── streaming.py           # WebSocket training animation
-│   ├── tests/                         # 12 test files (pytest + httpx)
+│   │       ├── classification.py           # Classification endpoints
+│   │       ├── regression.py               # Regression endpoints
+│   │       ├── clustering.py               # Clustering endpoints
+│   │       ├── dim_reduction.py            # Dim-reduction endpoints
+│   │       ├── datasets.py                 # CSV upload, custom points, v2 dataset API
+│   │       ├── explain.py                  # Prediction & metric explanations
+│   │       ├── training.py                 # Training playground & wrong predictions
+│   │       ├── compare.py                  # Hyperparameter comparison, race, benchmark
+│   │       ├── tools.py                    # PCA explorer, code gen, AI assistant
+│   │       ├── streaming.py                # WebSocket training animation + tree builder
+│   │       └── health.py                   # Health check
+│   ├── tests/                              # 41 tests (pytest + httpx)
 │   ├── Dockerfile
 │   ├── requirements.txt
 │   └── pyproject.toml
@@ -347,42 +367,54 @@ Confluence/
 ├── frontend/
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── page.tsx               # Landing page
-│   │   │   ├── app/page.tsx           # Main visualizer (477 lines)
-│   │   │   └── algorithms/page.tsx    # Algorithm encyclopedia
+│   │   │   ├── page.tsx                    # Landing page
+│   │   │   ├── app/page.tsx                # Main visualizer
+│   │   │   ├── algorithms/page.tsx         # Algorithm encyclopedia
+│   │   │   └── resources/page.tsx          # ML Roadmap
 │   │   ├── components/
-│   │   │   ├── canvas/                # Canvas2D renderers (7 files)
-│   │   │   ├── comparison/            # Side-by-side comparison mode
-│   │   │   ├── controls/              # Algorithm panel, sliders, upload
-│   │   │   ├── landing/               # Landing page animations
-│   │   │   ├── layout/                # Navbar, footer
-│   │   │   ├── metrics/               # 9 metric visualization components
-│   │   │   ├── streaming/             # WebSocket training viz
-│   │   │   ├── taxonomy/              # Boundary taxonomy explorer
-│   │   │   ├── three/                 # 3D scene (Three.js)
-│   │   │   └── ui/                    # URL state, theme toggle
+│   │   │   ├── canvas/                     # Canvas2D renderers (7 files)
+│   │   │   ├── comparison/                 # Side-by-side, hyperparam, race, benchmark
+│   │   │   ├── controls/                   # Algorithm panel, dataset selector, sliders
+│   │   │   ├── explain/                    # Prediction explainer, tree builder, learning mode
+│   │   │   ├── training/                   # Training playground, confusion matrix, ROC/PR
+│   │   │   ├── tools/                      # PCA explorer, code gen, AI assistant
+│   │   │   ├── metrics/                    # 9 metric visualization components
+│   │   │   ├── streaming/                  # WebSocket training viz
+│   │   │   ├── taxonomy/                   # Boundary taxonomy explorer
+│   │   │   ├── three/                      # 3D scene (Three.js)
+│   │   │   ├── landing/                    # Landing page animations
+│   │   │   ├── layout/                     # Navbar, footer
+│   │   │   └── ui/                         # URL state, theme toggle
 │   │   └── lib/
-│   │       ├── api/client.ts          # Axios API client + typed functions
-│   │       ├── api/types.ts           # Auto-generated OpenAPI types
-│   │       ├── store/index.ts         # Zustand store (38 algorithms)
-│   │       └── taxonomy/index.ts      # Boundary taxonomy definitions
+│   │       ├── api/client.ts               # Axios API client + typed functions
+│   │       ├── api/types.ts                # Auto-generated OpenAPI types
+│   │       ├── store/index.ts              # Zustand store (38 algorithms, 24 datasets)
+│   │       └── taxonomy/index.ts           # Boundary taxonomy definitions
 │   ├── Dockerfile
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── next.config.ts
 │
 ├── docs/
-│   ├── deployment.md                  # Full deployment guide
-│   ├── API.md                         # API reference
-│   ├── ARCHITECTURE.md                # System architecture
-│   └── DEVELOPMENT.md                 # Developer guide
+│   ├── deployment.md                       # Full deployment guide
+│   ├── API.md                              # API reference
+│   ├── ARCHITECTURE.md                     # System architecture
+│   └── DEVELOPMENT.md                      # Developer guide
 │
-├── docker-compose.yml                 # 3-service orchestration
-├── Makefile                           # Build commands
-├── CONTRIBUTING.md                    # Contribution guidelines
-├── .env.example                       # Environment variable template
-├── .nvmrc                             # Node.js 20
-└── .python-version                    # Python 3.11
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── new_algorithm.md                # Algorithm request template
+│   │   ├── new_dataset.md                  # Dataset request template
+│   │   └── feature_request.md              # Feature request template
+│   └── PULL_REQUEST_TEMPLATE.md            # PR template with checklist
+│
+├── plans/                                  # Implementation plans (6 phases)
+├── docker-compose.yml                      # 3-service orchestration
+├── Makefile                                # Build commands
+├── CONTRIBUTING.md                         # Contribution guidelines with templates
+├── .env.example                            # Environment variable template
+├── .nvmrc                                  # Node.js 20
+└── .python-version                         # Python 3.11
 ```
 
 ---
@@ -465,13 +497,49 @@ Confluence/
 | `linearly-separable` | Linearly separable | 2 | Baseline linear |
 | `checkerboard` | Checkerboard pattern | 2 | Piecewise boundaries |
 
-### Real-World (3)
+### Classification — Real-World (11)
 
-| Dataset | Features | Classes | Source |
-|---------|----------|---------|--------|
-| `iris` | petal length, petal width | 3 | Fisher's Iris |
-| `wine` | alcohol, proline | 3 | UCI Wine |
-| `breast-cancer` | mean radius, mean texture | 2 | Wisconsin Breast Cancer |
+| Dataset | Features | Classes | Category | Source |
+|---------|----------|---------|----------|--------|
+| `iris` | petal length, petal width | 3 | General | Fisher's Iris |
+| `iris-full` | 4 features | 3 | General | Fisher's Iris |
+| `wine` | alcohol, proline | 3 | General | UCI Wine |
+| `wine-full` | 13 features | 3 | General | UCI Wine |
+| `breast-cancer` | radius, texture | 2 | Healthcare | Wisconsin BC |
+| `breast-cancer-full` | 30 features | 2 | Healthcare | Wisconsin BC |
+| `digits-2d` | PCA-projected | 10 | General | sklearn Digits |
+| `digits-full` | 64 pixel features | 10 | General | sklearn Digits |
+| `titanic` | age, fare, sex, class | 2 | General | Synthetic |
+| `penguins` | bill length, flipper | 3 | General | Synthetic |
+| `heart-disease` | age, chol, HR | 2 | Healthcare | Synthetic |
+
+### Classification — Extended (4)
+
+| Dataset | Features | Classes | Category |
+|---------|----------|---------|----------|
+| `adult-income` | age, education, hours | 2 | Finance |
+| `mushroom` | cap, gill, stem | 2 | General |
+| `wine-quality` | acidity, alcohol | 2 | General |
+
+### Regression (7)
+
+| Dataset | Features | Category | Source |
+|---------|----------|----------|--------|
+| `california-housing` | income, age | Housing | sklearn |
+| `california-housing-full` | 8 features | Housing | sklearn |
+| `diabetes` | BMI, S5 | Healthcare | sklearn |
+| `diabetes-full` | 10 features | Healthcare | sklearn |
+| `bike-sharing` | temp, humidity, hour | Business | Synthetic |
+| `insurance` | age, BMI, smoker | Finance | Synthetic |
+| `concrete` | cement, water, age | Housing | Synthetic |
+
+### Clustering (3)
+
+| Dataset | Features | Clusters | Category |
+|---------|----------|----------|----------|
+| `mall-customers` | income, spending | 4 | Business |
+| `wholesale-customers` | fresh, milk, grocery | 3 | Business |
+| `seeds` | area, perimeter, compactness | 3 | General |
 
 ### Regression-Specific (1)
 
@@ -479,10 +547,23 @@ Confluence/
 |---------|-------------|
 | `sine` | sin(x) · cos(y) surface |
 
+### Data Generators (7)
+
+| Generator | Description |
+|-----------|-------------|
+| `spiral` | Interleaving spiral arms |
+| `xor` | XOR pattern distribution |
+| `gaussian` | Gaussian blob clusters |
+| `moons` | Interleaving half circles |
+| `circles` | Concentric circles |
+| `linearly-separable` | Linearly separable |
+| `swiss-roll` | Rolled manifold |
+
 ### Custom Data
 
 - **CSV upload** — drag-and-drop any CSV, map columns to features/target
 - **Custom points** — click on canvas to place points with class labels
+- **Data Generator Studio** — generate datasets with configurable parameters
 
 ---
 
@@ -552,44 +633,52 @@ POST /api/datasets/custom                 → CustomPointsResponse
 POST /api/datasets/recommend              → RecommendResponse
 ```
 
-### Request/Response Examples
+#### Datasets V2 (4 endpoints)
 
-#### Predict Classification
-
-```bash
-curl -X POST http://localhost:8000/api/classification/predict \
-  -H "Content-Type: application/json" \
-  -d '{
-    "algorithm": "random-forest",
-    "dataset_name": "moons",
-    "hyperparameters": { "n_estimators": 100 },
-    "resolution": 100,
-    "noise": 0.3,
-    "n_samples": 300
-  }'
+```
+GET  /api/datasets/v2/datasets            → DatasetListV2Response
+GET  /api/datasets/v2/datasets/{name}     → DatasetDetailV2Response
+GET  /api/datasets/v2/categories          → CategoryListResponse
+POST /api/datasets/v2/generate            → GeneratorResponse
 ```
 
-Response:
-```json
-{
-  "grid": [[0.98, 0.97, ...], ...],
-  "contour_lines": [[[50.2, 30.1], [50.3, 30.2], ...]],
-  "points": { "X": [[1.2, -0.5], ...], "y": [0, 1, ...] },
-  "algorithm": "random-forest",
-  "cache_hit": false,
-  "grid_bounds": { "x_min": -3.5, "x_max": 3.5, "y_min": -3.5, "y_max": 3.5 }
-}
+#### Explain (3 endpoints)
+
+```
+POST /api/explain/prediction              → ExplainPredictionResponse
+POST /api/explain/metric                  → ExplainMetricResponse
+POST /api/explain/learning-tip            → LearningTipResponse
 ```
 
-### Input Constraints
+#### Training (1 endpoint + 2 WebSockets)
 
-| Field | Min | Max | Default |
-|-------|-----|-----|---------|
-| `resolution` | 1 | 200 | 100 |
-| `n_samples` | 10 | 5000 | 300 |
-| `noise` | 0 | 5 | 0.5 |
-| `n_components` | 2 | 3 | 2 |
-| `n_folds` | 3 | 10 | 5 |
+```
+POST /api/training/wrong-predictions      → WrongPredictionsResponse
+WS   /ws/training-playground              → Training frames with loss/weights
+WS   /ws/tree-build                       → Tree construction steps
+```
+
+#### Compare (2 endpoints + 1 WebSocket)
+
+```
+POST /api/compare/hyperparameter-comparison → HyperparamComparisonResponse
+POST /api/compare/benchmark               → BenchmarkResponse
+WS   /ws/compare/race                     → Algorithm race frames
+```
+
+#### Tools (3 endpoints)
+
+```
+POST /api/tools/pca-explore               → PCAResponse
+POST /api/tools/generate-code             → CodeResponse
+POST /api/tools/assistant                 → AssistantResponse
+```
+
+#### Streaming (1 WebSocket)
+
+```
+WS   /ws/stream                           → Training animation frames
+```
 
 ### Interactive API Docs
 
@@ -609,6 +698,10 @@ Response:
 | `REDIS_URL` | Backend | No | `redis://localhost:6379` | Redis URL (gracefully degrades) |
 | `LOG_LEVEL` | Backend | No | `INFO` | Logging level |
 | `NEXT_PUBLIC_API_URL` | Frontend | Yes | `http://localhost:8000` | Backend API URL |
+| `NEXT_PUBLIC_WS_URL` | Frontend | No | `ws://localhost:8000` | WebSocket URL |
+| `LLM_PROVIDER` | Backend | No | — | LLM provider (`openai`) |
+| `LLM_API_KEY` | Backend | No | — | LLM API key |
+| `LLM_MODEL` | Backend | No | `gpt-4o-mini` | LLM model name |
 
 ### Copy Environment Template
 
@@ -625,7 +718,7 @@ cp .env.example .env
 ```bash
 make typecheck      # Frontend TypeScript type checking
 make lint           # Frontend ESLint
-make test-backend   # Backend pytest (12 test files)
+make test-backend   # Backend pytest (41 tests)
 make install        # Install all dependencies
 ```
 
@@ -685,28 +778,19 @@ Cache TTL: **1 hour** (configurable). Redis is optional — the app works withou
 
 ### Async ML Execution
 
-All CPU-bound ML operations are wrapped in `asyncio.to_thread()` to prevent blocking the event loop:
-
-```python
-prob_grid, _ = await asyncio.to_thread(
-    fit_and_predict_grid,
-    request.algorithm, request.hyperparameters, X, y, xx, yy
-)
-```
-
-### Resource Limits (Docker)
-
-| Service | Memory | CPUs |
-|---------|--------|------|
-| Frontend | 512MB | 1.0 |
-| Backend | 1GB | 2.0 |
-| Redis | 256MB | 0.5 |
+All CPU-bound ML operations are wrapped in `asyncio.to_thread()` to prevent blocking the event loop.
 
 ---
 
 ## Contributing
 
-See **[CONTRIBUTING.md](CONTRIBUTING.md)** for development setup, code quality standards, and guidelines for adding new algorithms.
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for development setup, code quality standards, and detailed templates for adding new algorithms, datasets, and visualizations.
+
+### Community Templates
+
+- **[New Algorithm Request](.github/ISSUE_TEMPLATE/new_algorithm.md)** — Suggest a new algorithm
+- **[New Dataset Request](.github/ISSUE_TEMPLATE/new_dataset.md)** — Suggest a new dataset
+- **[Feature Request](.github/ISSUE_TEMPLATE/feature_request.md)** — Suggest a feature
 
 ---
 
@@ -718,6 +802,6 @@ MIT
 
 <div align="center">
 
-**[Getting Started](#-getting-started)** · **[Architecture](#-architecture)** · **[API Reference](#-api-reference)** · **[Contributing](CONTRIBUTING.md)**
+**[Getting Started](#-getting-started)** · **[Features](#-features)** · **[Architecture](#-architecture)** · **[API Reference](#-api-reference)** · **[Contributing](CONTRIBUTING.md)**
 
 </div>
