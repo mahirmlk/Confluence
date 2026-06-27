@@ -16,6 +16,7 @@ import { DataGeneratorStudio } from "@/components/controls/DataGeneratorStudio";
 import { PredictionExplainer, LearningModeToggle, MetricExplainerModal, TreeBuilder } from "@/components/explain";
 import { TrainingPlayground, WrongPredictionExplorer } from "@/components/training";
 import { HyperparameterComparison, AlgorithmRace, BenchmarkSuite } from "@/components/compare";
+import { PCAExplorer, CodeGenerator, AIAssistant } from "@/components/tools";
 import { explainPrediction, type ExplainPredictionResponse } from "@/lib/api/client";
 import { ErrorBoundary } from "@/components/canvas/ErrorBoundary";
 import { MetricsDashboard } from "@/components/metrics/MetricsDashboard";
@@ -59,7 +60,7 @@ import { useUrlState, ShareButton, ExportButton, ThemeToggle } from "@/component
 
 const queryClient = new QueryClient();
 
-type Tab = "explore" | "compare" | "taxonomy" | "stream" | "playground" | "help";
+type Tab = "explore" | "compare" | "taxonomy" | "stream" | "playground" | "tools" | "help";
 type DataSource = "synthetic" | "upload" | "custom" | "inline" | "generator";
 type AnalysisPanel = "metrics" | "cv" | "coefficients" | "learning" | "decision" | "elbow" | "recommend" | "explain" | "tree-build" | "metric-explain";
 
@@ -515,13 +516,18 @@ function AppContent() {
             <ThemeToggle />
           </div>
           <div className="flex flex-wrap gap-1 mb-6 border border-border rounded-lg p-1">
-            {(["explore", "compare", "taxonomy", "stream", "playground", "help"] as Tab[]).map((t) => (
+            {(["explore", "compare", "taxonomy", "stream", "playground", "tools", "help"] as Tab[]).map((t) => (
               <button key={t} onClick={() => setTab(t)} className={`flex-1 px-2 py-1.5 rounded text-xs font-medium transition-colors ${tab === t ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"}`}>
-                {t === "explore" ? "Explore" : t === "compare" ? "Compare" : t === "taxonomy" ? "Taxonomy" : t === "stream" ? "Stream" : t === "playground" ? "Train" : "Help"}
+                {t === "explore" ? "Explore" : t === "compare" ? "Compare" : t === "taxonomy" ? "Taxonomy" : t === "stream" ? "Stream" : t === "playground" ? "Train" : t === "tools" ? "Tools" : "Help"}
               </button>
             ))}
           </div>
           {(tab === "explore" || tab === "stream" || tab === "playground") && <AlgorithmPanel />}
+          {tab === "tools" && (
+            <div className="p-4 space-y-4">
+              <CodeGenerator algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} />
+            </div>
+          )}
           {tab === "stream" && (
             <div className="mt-4 px-4">
               <div className="text-[10px] text-muted-foreground bg-muted/50 rounded-md p-2">
@@ -569,6 +575,21 @@ function AppContent() {
                 noise={noise}
                 nSamples={nSamples}
               />
+            </div>
+          )}
+          {tab === "tools" && (
+            <div className="p-8 max-w-4xl mx-auto space-y-8">
+              <PCAExplorer datasetName={datasetName} noise={noise} nSamples={nSamples} />
+              <div className="border-t border-border pt-8">
+                <div className="grid grid-cols-2 gap-8">
+                  <div>
+                    <CodeGenerator algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} />
+                  </div>
+                  <div className="h-96">
+                    <AIAssistant algorithm={algorithm} datasetName={datasetName} />
+                  </div>
+                </div>
+              </div>
             </div>
           )}
           {tab === "help" && (

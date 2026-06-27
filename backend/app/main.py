@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from .routers import health, classification, regression, clustering, dim_reduction, streaming, datasets, explain, training, compare
+from .routers import health, classification, regression, clustering, dim_reduction, streaming, datasets, explain, training, compare, tools
 from .cache import close_redis
 from .datasets.loaders import register_all_datasets
 
@@ -117,6 +117,7 @@ app.include_router(datasets.router)
 app.include_router(explain.router)
 app.include_router(training.router)
 app.include_router(compare.router)
+app.include_router(tools.router)
 
 
 @app.get("/")

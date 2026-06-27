@@ -372,3 +372,58 @@ export async function runBenchmark(request: {
   const { data } = await api.post("/api/compare/benchmark", request);
   return data;
 }
+
+// --- Tools APIs ---
+
+export interface PCAResponse {
+  embedding: number[][];
+  labels: number[];
+  feature_names: string[];
+  n_components: number;
+  total_variance_explained: number;
+  variance_per_component: number[];
+  cumulative_variance: number[];
+  all_variance: number[];
+  feature_contributions: Array<{
+    pc: number;
+    variance_explained: number;
+    contributions: Array<{ feature: string; loading: number; abs_loading: number }>;
+  }>;
+}
+
+export interface CodeResponse {
+  code: string;
+  language: string;
+}
+
+export interface AssistantResponse {
+  response: string;
+  source: string;
+}
+
+export async function pcaExplore(request: {
+  dataset_name: string;
+  n_components?: number;
+  noise?: number;
+  n_samples?: number;
+}): Promise<PCAResponse> {
+  const { data } = await api.post("/api/tools/pca-explore", request);
+  return data;
+}
+
+export async function generateCode(request: {
+  algorithm: string;
+  dataset_name: string;
+  hyperparameters?: Record<string, number>;
+}): Promise<CodeResponse> {
+  const { data } = await api.post("/api/tools/generate-code", request);
+  return data;
+}
+
+export async function assistantChat(request: {
+  message: string;
+  context?: Record<string, unknown>;
+}): Promise<AssistantResponse> {
+  const { data } = await api.post("/api/tools/assistant", request);
+  return data;
+}
