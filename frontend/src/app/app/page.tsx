@@ -13,6 +13,8 @@ import { ClusteringCanvas } from "@/components/canvas/ClusteringCanvas";
 import { DimReductionCanvas } from "@/components/canvas/DimReductionCanvas";
 import { PointEditor } from "@/components/canvas/PointEditor";
 import { DataGeneratorStudio } from "@/components/controls/DataGeneratorStudio";
+import { PredictionExplainer, LearningModeToggle, MetricExplainerModal, TreeBuilder } from "@/components/explain";
+import { explainPrediction, type ExplainPredictionResponse } from "@/lib/api/client";
 import { ErrorBoundary } from "@/components/canvas/ErrorBoundary";
 import { MetricsDashboard } from "@/components/metrics/MetricsDashboard";
 import { RegressionMetricsDashboard } from "@/components/metrics/RegressionMetricsDashboard";
@@ -57,7 +59,7 @@ const queryClient = new QueryClient();
 
 type Tab = "explore" | "compare" | "taxonomy" | "stream" | "help";
 type DataSource = "synthetic" | "upload" | "custom" | "inline" | "generator";
-type AnalysisPanel = "metrics" | "cv" | "coefficients" | "learning" | "decision" | "elbow" | "recommend";
+type AnalysisPanel = "metrics" | "cv" | "coefficients" | "learning" | "decision" | "elbow" | "recommend" | "explain" | "tree-build" | "metric-explain";
 
 interface CustomPoint { x: number; y: number; label: number; }
 
@@ -78,6 +80,9 @@ function ExploreView() {
   const [activePanel, setActivePanel] = useState<AnalysisPanel | null>(null);
   const [customPoints, setCustomPoints] = useState<CustomPoint[]>([]);
   const [showPointEditor, setShowPointEditor] = useState(false);
+  const [explainResult, setExplainResult] = useState<ExplainPredictionResponse | null>(null);
+  const [learningMode, setLearningMode] = useState(false);
+  const [metricExplainTarget, setMetricExplainTarget] = useState<{ name: string; value: number } | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const fetchPrediction = useCallback(async () => {
@@ -201,8 +206,8 @@ function ExploreView() {
     useAppStore.getState().setDatasetName(name);
   };
 
-  const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!showPointEditor || !result) return;
+  const handleCanvasClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!result) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const px = e.clientX - rect.left;
     const py = e.clientY - rect.top;
@@ -218,7 +223,23 @@ function ExploreView() {
     const { x_min, x_max, y_min, y_max } = bounds;
     const dataX = (px / w) * (x_max - x_min) + x_min;
     const dataY = ((h - py) / h) * (y_max - y_min) + y_min;
-    fetchDecisionPath([dataX, dataY]);
+
+    if (learningMode && family === "classification") {
+      try {
+        const res = await explainPrediction({
+          algorithm,
+          dataset_name: datasetName,
+          hyperparameters,
+          point: [dataX, dataY],
+          noise,
+          n_samples: nSamples,
+        });
+        setExplainResult(res);
+        setActivePanel("explain");
+      } catch (err) { console.error(err); }
+    } else if (showPointEditor) {
+      fetchDecisionPath([dataX, dataY]);
+    }
   };
 
   const showMetricsBtn = family === "classification" || family === "regression" || family === "clustering";
@@ -270,6 +291,13 @@ function ExploreView() {
             <button onClick={fetchCV} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">CV</button>
             <button onClick={fetchCoef} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Coefficients</button>
             <button onClick={fetchLC} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Learning Curve</button>
+            <LearningModeToggle
+              enabled={learningMode}
+              onToggle={setLearningMode}
+            />
+            {algorithm === "decision-tree" && (
+              <button onClick={() => setActivePanel("tree-build")} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Tree Builder</button>
+            )}
           </>
         )}
 
@@ -407,7 +435,7 @@ function ExploreView() {
             <div className="absolute top-4 left-4 w-72 bg-card border border-border rounded-lg p-4 max-h-[80vh] overflow-y-auto z-20 shadow-lg">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-semibold text-foreground uppercase tracking-wide">
-                  {activePanel === "metrics" ? "Metrics" : activePanel === "cv" ? "Cross-Validation" : activePanel === "coefficients" ? "Coefficients" : activePanel === "learning" ? "Learning Curve" : activePanel === "decision" ? "Decision Path" : activePanel === "elbow" ? "Elbow Plot" : "Recommend"}
+                  {activePanel === "metrics" ? "Metrics" : activePanel === "cv" ? "Cross-Validation" : activePanel === "coefficients" ? "Coefficients" : activePanel === "learning" ? "Learning Curve" : activePanel === "decision" ? "Decision Path" : activePanel === "elbow" ? "Elbow Plot" : activePanel === "explain" ? "Prediction Explanation" : activePanel === "tree-build" ? "Tree Builder" : "Recommend"}
                 </span>
                 <button onClick={() => setActivePanel(null)} className="text-xs text-muted-foreground hover:text-foreground">x</button>
               </div>
@@ -419,6 +447,15 @@ function ExploreView() {
               {activePanel === "learning" && lcResult && <LearningCurvePlot trainSizes={lcResult.train_sizes} trainScores={lcResult.train_scores} validationScores={lcResult.validation_scores} />}
               {activePanel === "decision" && dpResult && <DecisionPathView path={dpResult.path} prediction={dpResult.prediction} modelType={dpResult.model_type} />}
               {activePanel === "elbow" && elbowResult && <ElbowPlot kValues={elbowResult.k_values} inertias={elbowResult.inertias} silhouettes={elbowResult.silhouettes} />}
+              {activePanel === "explain" && explainResult && <PredictionExplainer result={explainResult} />}
+              {activePanel === "tree-build" && (
+                <TreeBuilder
+                  datasetName={datasetName}
+                  hyperparameters={hyperparameters}
+                  noise={noise}
+                  nSamples={nSamples}
+                />
+              )}
               {activePanel === "recommend" && <RecommendPanel onAlgorithmSelect={(name) => { setAlgorithm(name); setActivePanel(null); }} />}
             </div>
           )}
@@ -431,6 +468,18 @@ function ExploreView() {
           </div>
         )}
       </div>
+
+      {/* Metric Explainer Modal */}
+      {metricExplainTarget && (
+        <MetricExplainerModal
+          metric={metricExplainTarget.name}
+          value={metricExplainTarget.value}
+          algorithm={algorithm}
+          datasetName={datasetName}
+          hyperparameters={hyperparameters}
+          onClose={() => setMetricExplainTarget(null)}
+        />
+      )}
     </div>
   );
 }

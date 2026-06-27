@@ -205,3 +205,118 @@ async def stream_training(websocket: WebSocket):
             await websocket.close()
         except Exception:
             pass
+
+
+def _extract_tree_structure(model, feature_names: list[str]) -> dict:
+    tree = model.tree_
+
+    def build_node(node_id):
+        if tree.children_left[node_id] == tree.children_right[node_id]:
+            value = tree.value[node_id].tolist()[0]
+            return {
+                "id": int(node_id),
+                "type": "leaf",
+                "prediction": int(np.argmax(value)),
+                "samples": int(tree.n_node_samples[node_id]),
+                "gini": round(float(tree.impurity[node_id]), 4),
+                "class_counts": [int(v) for v in value],
+            }
+        feature_idx = tree.feature[node_id]
+        fname = feature_names[feature_idx] if feature_idx < len(feature_names) else f"f{feature_idx}"
+        return {
+            "id": int(node_id),
+            "type": "split",
+            "feature": fname,
+            "feature_idx": int(feature_idx),
+            "threshold": round(float(tree.threshold[node_id]), 4),
+            "gini": round(float(tree.impurity[node_id]), 4),
+            "samples": int(tree.n_node_samples[node_id]),
+            "left": build_node(tree.children_left[node_id]),
+            "right": build_node(tree.children_right[node_id]),
+        }
+
+    return build_node(0)
+
+
+@router.websocket("/ws/tree-build")
+async def stream_tree_build(websocket: WebSocket):
+    from ..algorithms.datasets import generate_dataset
+    from ..algorithms.classification import CLASSIFICATION_ALGORITHMS
+    from ..datasets.registry import DatasetRegistry
+
+    await websocket.accept()
+    try:
+        data = await websocket.receive_json()
+        if not isinstance(data, dict):
+            await websocket.send_json({"type": "error", "message": "Invalid message format"})
+            return
+
+        dataset_name = data.get("dataset_name", "blobs")
+        max_depth = min(int(data.get("max_depth", 5)), 15)
+        noise = float(data.get("noise", 0.5))
+        n_samples = min(int(data.get("n_samples", 300)), 5000)
+        params = data.get("hyperparameters", {})
+
+        X, y = await asyncio.to_thread(generate_dataset, dataset_name, n_samples=n_samples, noise=noise)
+
+        feature_names = [f"Feature {i+1}" for i in range(X.shape[1])]
+        if DatasetRegistry.exists(dataset_name):
+            entry = DatasetRegistry.get(dataset_name)
+            feature_names = entry.feature_names
+
+        x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+        y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+        resolution = min(int(data.get("resolution", 80)), 100)
+        xx, yy = np.meshgrid(
+            np.linspace(x_min, x_max, resolution),
+            np.linspace(y_min, y_max, resolution),
+        )
+        grid_points = np.column_stack([xx.ravel(), yy.ravel()])
+
+        for depth in range(1, max_depth + 1):
+            from sklearn.tree import DecisionTreeClassifier
+            model = DecisionTreeClassifier(max_depth=depth, random_state=42)
+            await asyncio.to_thread(model.fit, X, y)
+
+            probas = await asyncio.to_thread(model.predict_proba, grid_points)
+            if probas.shape[1] == 2:
+                grid = probas[:, 1].reshape(xx.shape)
+            else:
+                grid = probas.argmax(axis=1).astype(float).reshape(xx.shape)
+
+            tree_structure = _extract_tree_structure(model, feature_names)
+
+            train_acc = float(np.mean(model.predict(X) == y))
+
+            await websocket.send_json({
+                "type": "step",
+                "depth": depth,
+                "max_depth": max_depth,
+                "tree": tree_structure,
+                "grid": grid.tolist(),
+                "grid_bounds": {
+                    "x_min": float(x_min), "x_max": float(x_max),
+                    "y_min": float(y_min), "y_max": float(y_max),
+                },
+                "metrics": {
+                    "train_accuracy": round(train_acc, 4),
+                    "n_leaves": int(model.get_n_leaves()),
+                    "n_nodes": int(model.tree_.node_count),
+                },
+            })
+            await asyncio.sleep(0.3)
+
+        await websocket.send_json({"type": "done"})
+    except WebSocketDisconnect:
+        pass
+    except Exception as e:
+        logger.exception("WebSocket tree-build error")
+        try:
+            await websocket.send_json({"type": "error", "message": "An error occurred during tree construction"})
+        except Exception:
+            pass
+    finally:
+        try:
+            await websocket.close()
+        except Exception:
+            pass

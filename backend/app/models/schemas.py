@@ -287,3 +287,56 @@ class GeneratorResponse(BaseModel):
     generator: str
     n_samples: int
     n_classes: int
+
+
+# --- Explain Schemas ---
+
+class ExplainPredictionRequest(BaseModel):
+    algorithm: str = Field(min_length=1, max_length=50)
+    dataset_name: str = Field(min_length=1, max_length=50)
+    hyperparameters: dict = Field(default={}, max_length=20)
+    point: list[float]
+    noise: float = Field(default=0.5, ge=0, le=5)
+    n_samples: int = Field(default=300, ge=10, le=5000)
+
+
+class ExplainPredictionResponse(BaseModel):
+    prediction: int
+    probabilities: list[float]
+    explanation: dict
+
+
+class ExplainMetricRequest(BaseModel):
+    metric: str = Field(min_length=1, max_length=50)
+    algorithm: str = Field(min_length=1, max_length=50)
+    dataset_name: str = Field(min_length=1, max_length=50)
+    hyperparameters: dict = Field(default={}, max_length=20)
+    noise: float = Field(default=0.5, ge=0, le=5)
+    n_samples: int = Field(default=300, ge=10, le=5000)
+
+
+class ExplainMetricResponse(BaseModel):
+    metric: str
+    explanation: dict
+
+
+class LearningTipRequest(BaseModel):
+    algorithm: str = Field(min_length=1, max_length=50)
+    element: str = Field(min_length=1, max_length=50)
+    hyperparameters: dict = Field(default={}, max_length=20)
+    value: Optional[float] = None
+
+
+class LearningTipResponse(BaseModel):
+    tip: str
+    element: str
+    algorithm: str
+
+
+class TreeBuildRequest(BaseModel):
+    algorithm: str = Field(min_length=1, max_length=50)
+    dataset_name: str = Field(min_length=1, max_length=50)
+    hyperparameters: dict = Field(default={}, max_length=20)
+    max_depth: int = Field(default=5, ge=1, le=15)
+    noise: float = Field(default=0.5, ge=0, le=5)
+    n_samples: int = Field(default=300, ge=10, le=5000)

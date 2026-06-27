@@ -244,3 +244,71 @@ export async function generateDatasetV2(request: {
   const { data } = await api.post("/api/datasets/v2/generate", request);
   return data;
 }
+
+// --- Explain APIs ---
+
+export interface ExplainPredictionResponse {
+  prediction: number;
+  probabilities: number[];
+  explanation: {
+    path?: Array<Record<string, unknown>>;
+    contributions?: Array<Record<string, unknown>>;
+    feature_importance?: Array<Record<string, unknown>>;
+    neighbors?: Array<Record<string, unknown>>;
+    model_type: string;
+    [key: string]: unknown;
+  };
+}
+
+export interface ExplainMetricResponse {
+  metric: string;
+  explanation: {
+    value?: number;
+    formula?: string;
+    calculation?: string;
+    explanation?: string;
+    breakdown_by_class?: Array<Record<string, unknown>>;
+    details?: Array<Record<string, unknown>>;
+    [key: string]: unknown;
+  };
+}
+
+export interface LearningTipResponse {
+  tip: string;
+  element: string;
+  algorithm: string;
+}
+
+export async function explainPrediction(request: {
+  algorithm: string;
+  dataset_name: string;
+  hyperparameters?: Record<string, number>;
+  point: number[];
+  noise?: number;
+  n_samples?: number;
+}): Promise<ExplainPredictionResponse> {
+  const { data } = await api.post("/api/explain/prediction", request);
+  return data;
+}
+
+export async function explainMetric(request: {
+  metric: string;
+  algorithm: string;
+  dataset_name: string;
+  hyperparameters?: Record<string, number>;
+  noise?: number;
+  n_samples?: number;
+}): Promise<ExplainMetricResponse> {
+  const { data } = await api.post("/api/explain/metric", request);
+  return data;
+}
+
+export async function getLearningTip(request: {
+  algorithm: string;
+  element: string;
+  hyperparameters?: Record<string, number>;
+  value?: number;
+}): Promise<LearningTipResponse> {
+  const { data } = await api.post("/api/explain/learning-tip", request);
+  return data;
+}
