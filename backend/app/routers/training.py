@@ -223,6 +223,11 @@ async def training_playground(ws: WebSocket):
 
         X, y = await asyncio.to_thread(generate_dataset, dataset_name, n_samples=n_samples, noise=noise)
 
+        if X.shape[1] > 2:
+            from sklearn.decomposition import PCA
+            pca = PCA(n_components=2, random_state=42)
+            X = pca.fit_transform(X)
+
         stream_fn = TRAINING_ALGORITHMS.get(algorithm)
         if not stream_fn:
             await ws.send_json({"type": "error", "message": f"Not available for {algorithm}. Available: {list(TRAINING_ALGORITHMS.keys())}"})
