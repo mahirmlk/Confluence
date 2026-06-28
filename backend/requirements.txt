@@ -4,6 +4,7 @@ scikit-learn==1.6.1
 numpy==2.2.1
 scipy==1.15.0
 scikit-image==0.25.0
+pandas==2.2.3
 pydantic==2.10.4
 redis==5.2.1
 websockets==14.1
