@@ -218,38 +218,39 @@ const ROADMAP: RoadmapTopic[] = [
       papers: [],
     },
   },
-  {
-    id: "platforms", title: "Recommended Learning Platforms", category: "Resources",
-    difficulty: "beginner",
-    description: "Curated collection of documentation, interactive courses, and YouTube channels for continuous learning in machine learning and data science.",
-    keyConcepts: ["Documentation", "Interactive Learning", "YouTube Channels", "Online Courses"],
-    confluenceLinks: [],
-    relatedAlgorithms: [],
-    resources: {
-      documentation: [
-        { title: "scikit-learn Documentation", url: "https://scikit-learn.org/stable/documentation.html" },
-        { title: "PyTorch Documentation", url: "https://pytorch.org/docs/stable/" },
-        { title: "TensorFlow Documentation", url: "https://www.tensorflow.org/guide" },
-        { title: "NumPy Documentation", url: "https://numpy.org/doc/" },
-        { title: "Pandas Documentation", url: "https://pandas.pydata.org/docs/" },
-      ],
-      youtube: [
-        { title: "3Blue1Brown", url: "https://www.youtube.com/c/3blue1brown" },
-        { title: "StatQuest with Josh Starmer", url: "https://www.youtube.com/c/joshstarmer" },
-        { title: "MIT OpenCourseWare", url: "https://www.youtube.com/c/MITOpenCourseWare" },
-        { title: "Stanford Online", url: "https://www.youtube.com/c/stanfordonline" },
-        { title: "DeepLearning.AI", url: "https://www.youtube.com/c/deeplearningai" },
-        { title: "Krish Naik", url: "https://www.youtube.com/c/krishnaik06" },
-        { title: "CampusX", url: "https://www.youtube.com/c/Campusx-official" },
-        { title: "freeCodeCamp.org", url: "https://www.youtube.com/c/Freecodecamp" },
-        { title: "Harvard University", url: "https://www.youtube.com/c/HarvardUniversity" },
-      ],
-      university: [],
-      books: [],
-      papers: [],
-    },
-  },
 ];
+
+const PLATFORMS: RoadmapTopic = {
+  id: "platforms", title: "Recommended Learning Platforms", category: "Resources",
+  difficulty: "beginner",
+  description: "Curated collection of documentation, interactive courses, and YouTube channels for continuous learning in machine learning and data science.",
+  keyConcepts: ["Documentation", "Interactive Learning", "YouTube Channels", "Online Courses"],
+  confluenceLinks: [],
+  relatedAlgorithms: [],
+  resources: {
+    documentation: [
+      { title: "scikit-learn Documentation", url: "https://scikit-learn.org/stable/documentation.html" },
+      { title: "PyTorch Documentation", url: "https://pytorch.org/docs/stable/" },
+      { title: "TensorFlow Documentation", url: "https://www.tensorflow.org/guide" },
+      { title: "NumPy Documentation", url: "https://numpy.org/doc/" },
+      { title: "Pandas Documentation", url: "https://pandas.pydata.org/docs/" },
+    ],
+    youtube: [
+      { title: "3Blue1Brown", url: "https://www.youtube.com/c/3blue1brown" },
+      { title: "StatQuest with Josh Starmer", url: "https://www.youtube.com/c/joshstarmer" },
+      { title: "MIT OpenCourseWare", url: "https://www.youtube.com/c/MITOpenCourseWare" },
+      { title: "Stanford Online", url: "https://www.youtube.com/c/stanfordonline" },
+      { title: "DeepLearning.AI", url: "https://www.youtube.com/c/deeplearningai" },
+      { title: "Krish Naik", url: "https://www.youtube.com/c/krishnaik06" },
+      { title: "CampusX", url: "https://www.youtube.com/c/Campusx-official" },
+      { title: "freeCodeCamp.org", url: "https://www.youtube.com/c/Freecodecamp" },
+      { title: "Harvard University", url: "https://www.youtube.com/c/HarvardUniversity" },
+    ],
+    university: [],
+    books: [],
+    papers: [],
+  },
+};
 
 const CATEGORIES = [...new Set(ROADMAP.map((t) => t.category))];
 
@@ -450,6 +451,50 @@ export default function ResourcesPage() {
           </div>
         </div>
       </div>
+
+      {/* Recommended Learning Platforms — standalone section */}
+      <div className="max-w-7xl mx-auto px-6 pb-16">
+        <div className="border-t border-border pt-12">
+          <div className="flex items-center gap-3 mb-6">
+            <h2 className="text-2xl font-bold text-foreground">{PLATFORMS.title}</h2>
+            <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${DIFFICULTY_COLORS[PLATFORMS.difficulty]}`}>
+              {PLATFORMS.difficulty}
+            </span>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-6">{PLATFORMS.description}</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {PLATFORMS.resources.documentation.length > 0 && (
+              <div className="border border-border rounded-lg p-4">
+                <h3 className="text-xs font-semibold text-foreground mb-3">Documentation</h3>
+                <div className="space-y-2">
+                  {PLATFORMS.resources.documentation.map((r) => (
+                    <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
+                      className="block text-primary hover:underline text-xs">
+                      ↗ {r.title}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {PLATFORMS.resources.youtube.length > 0 && (
+              <div className="border border-border rounded-lg p-4 md:col-span-2 lg:col-span-2">
+                <h3 className="text-xs font-semibold text-foreground mb-3">YouTube Channels</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {PLATFORMS.resources.youtube.map((r) => (
+                    <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
+                      className="block text-primary hover:underline text-xs">
+                      ▶ {r.title}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <Footer />
     </div>
   );
