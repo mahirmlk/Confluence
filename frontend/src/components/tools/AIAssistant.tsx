@@ -34,7 +34,7 @@ export function AIAssistant({ algorithm, datasetName, metrics }: AIAssistantProp
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, loading]);
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || loading) return;
@@ -74,7 +74,7 @@ export function AIAssistant({ algorithm, datasetName, metrics }: AIAssistantProp
           <div className="space-y-1">
             {QUICK_QUESTIONS.map((q) => (
               <button key={q} onClick={() => sendMessage(q)}
-                className="w-full text-left px-2 py-1.5 rounded text-[10px] text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
+                className="w-full text-left px-2.5 py-1.5 rounded-md border border-border text-[10px] text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
                 {q}
               </button>
             ))}
@@ -85,21 +85,37 @@ export function AIAssistant({ algorithm, datasetName, metrics }: AIAssistantProp
       <div ref={chatRef} className="flex-1 overflow-y-auto space-y-3 mb-3 min-h-0">
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[85%] rounded-lg px-3 py-2 text-xs ${
+            {msg.role === "assistant" && (
+              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-2 mt-0.5">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                </svg>
+              </div>
+            )}
+            <div className={`max-w-[80%] px-3 py-2 text-xs leading-relaxed ${
               msg.role === "user"
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-foreground"
+                ? "bg-primary text-primary-foreground rounded-2xl rounded-br-md"
+                : "bg-muted text-foreground rounded-2xl rounded-bl-md"
             }`}>
-              <p className="leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+              <p className="whitespace-pre-wrap">{msg.content}</p>
               {msg.source && msg.source !== "error" && (
-                <div className="text-[9px] opacity-50 mt-1">{msg.source === "llm" ? "AI-powered" : "Built-in"}</div>
+                <div className="text-[9px] opacity-50 mt-1">
+                  {msg.source === "llm" ? "AI-powered" : "Built-in"}
+                </div>
               )}
             </div>
           </div>
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-muted rounded-lg px-3 py-2 text-xs text-muted-foreground animate-pulse">Thinking...</div>
+            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-2 mt-0.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+              </svg>
+            </div>
+            <div className="bg-muted rounded-2xl rounded-bl-md px-3 py-2">
+              <span className="shimmer text-xs">Thinking...</span>
+            </div>
           </div>
         )}
       </div>
@@ -110,11 +126,11 @@ export function AIAssistant({ algorithm, datasetName, metrics }: AIAssistantProp
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask a question..."
-          className="flex-1 px-3 py-2 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           disabled={loading}
         />
         <button type="submit" disabled={loading || !input.trim()}
-          className="px-3 py-2 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50">
+          className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors">
           Send
         </button>
       </form>
