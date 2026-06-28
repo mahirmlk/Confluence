@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { TreeVisualization } from "./TreeVisualization";
+import { WS_URL } from "@/lib/config";
 
 interface TreeStep {
   type: string;
@@ -33,7 +34,7 @@ export function TreeBuilder({ datasetName, hyperparameters, noise, nSamples }: T
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
 
-    const wsUrl = (process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000") + "/ws/tree-build";
+    const wsUrl = `${WS_URL}/ws/tree-build`;
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 

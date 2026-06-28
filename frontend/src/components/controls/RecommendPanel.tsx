@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useAppStore } from "@/lib/store";
+import { API_URL } from "@/lib/config";
 
 interface RecommendPanelProps {
   onAlgorithmSelect: (name: string) => void;
@@ -28,7 +29,6 @@ export function RecommendPanel({ onAlgorithmSelect }: RecommendPanelProps) {
   const fetchRecommendations = async () => {
     setLoading(true);
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       const res = await fetch(`${API_URL}/api/datasets/recommend`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

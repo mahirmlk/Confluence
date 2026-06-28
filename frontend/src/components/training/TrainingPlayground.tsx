@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { WS_URL } from "@/lib/config";
 
 interface TrainingPlaygroundProps {
   algorithm: string;
@@ -44,7 +45,7 @@ export function TrainingPlayground({ algorithm, datasetName, hyperparameters, no
 
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
-    const wsUrl = (process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000") + "/ws/training-playground";
+    const wsUrl = `${WS_URL}/ws/training-playground`;
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 

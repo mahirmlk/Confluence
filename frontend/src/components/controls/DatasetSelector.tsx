@@ -23,6 +23,7 @@ export function DatasetSelector({ onDatasetInfo }: DatasetSelectorProps) {
   const [source, setSource] = useState<DatasetSource>("synthetic");
   const [realDatasets, setRealDatasets] = useState<DatasetMetaV2[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const syntheticDatasets = FAMILY_DATASETS[family];
@@ -30,11 +31,16 @@ export function DatasetSelector({ onDatasetInfo }: DatasetSelectorProps) {
   useEffect(() => {
     if (source === "real-world") {
       setLoading(true);
+      setError(null);
       listDatasetsV2({ family })
         .then((res) => {
           setRealDatasets(res.datasets.filter((d) => d.source !== "synthetic"));
         })
-        .catch(() => setRealDatasets([]))
+        .catch((err) => {
+          console.error("Failed to load datasets:", err);
+          setRealDatasets([]);
+          setError("Could not load datasets. Check that the backend is running.");
+        })
         .finally(() => setLoading(false));
     }
   }, [source, family]);
@@ -131,6 +137,8 @@ export function DatasetSelector({ onDatasetInfo }: DatasetSelectorProps) {
           {/* Dataset List */}
           {loading ? (
             <div className="text-xs text-muted-foreground animate-pulse">Loading datasets...</div>
+          ) : error ? (
+            <div className="text-xs text-red-500 bg-red-50 dark:bg-red-950 rounded-md p-2">{error}</div>
           ) : (
             <div className="space-y-1 max-h-48 overflow-y-auto">
               {filteredRealDatasets.map((ds) => (

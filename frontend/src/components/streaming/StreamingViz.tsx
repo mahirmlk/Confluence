@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useCallback, useState } from "react";
+import { WS_URL } from "@/lib/config";
 
 interface ScrubberTimelineProps {
   currentStep: number;
@@ -108,9 +109,7 @@ export function StreamingViz({
     if (wsRef.current) wsRef.current.close();
     setStreamError(null);
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    const wsBase = API_URL.replace(/^http/, "ws");
-    const wsUrl = `${wsBase}/ws/stream`;
+    const wsUrl = `${WS_URL}/ws/stream`;
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 

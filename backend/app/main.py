@@ -24,7 +24,7 @@ ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
         "CORS_ORIGINS",
-        "http://localhost:3000"
+        "http://localhost:3000,https://confluence.website,https://www.confluence.website,https://confluence-visualization.vercel.app"
     ).split(",")
     if origin.strip()
 ]

@@ -108,6 +108,7 @@ class DimReductionResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: str
     version: str
+    uptime: float
 
 
 class DatasetInfo(BaseModel):

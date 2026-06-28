@@ -57,6 +57,7 @@ import {
   type DecisionPathResponse,
 } from "@/lib/api/client";
 import { useUrlState, ShareButton, ExportButton, ThemeToggle } from "@/components/ui/UrlState";
+import { API_URL } from "@/lib/config";
 
 const queryClient = new QueryClient();
 
@@ -171,7 +172,7 @@ function ExploreView() {
 
   const fetchElbow = useCallback(async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/clustering/elbow`, {
+      const res = await fetch(`${API_URL}/api/clustering/elbow`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ algorithm: "kmeans", dataset_name: datasetName, hyperparameters, noise, n_samples: nSamples }),
@@ -359,7 +360,6 @@ function ExploreView() {
                   const points = customPoints.map(p => [p.x, p.y]);
                   const labels = customPoints.map(p => p.label);
                   try {
-                    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
                     const res = await fetch(`${API_URL}/api/datasets/custom`, {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },

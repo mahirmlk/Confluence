@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { HeatmapCanvas } from "@/components/canvas/HeatmapCanvas";
 import { ALL_CLASSIFICATION_ALGORITHMS } from "./shared";
+import { WS_URL } from "@/lib/config";
 
 interface AlgorithmRaceProps {
   datasetName: string;
@@ -49,7 +50,7 @@ export function AlgorithmRace({ datasetName, noise, nSamples }: AlgorithmRacePro
     setRunning(true);
     setError(null);
 
-    const wsUrl = (process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000") + "/ws/compare/race";
+    const wsUrl = `${WS_URL}/api/compare/race`;
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 

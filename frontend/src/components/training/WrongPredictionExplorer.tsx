@@ -38,7 +38,7 @@ export function WrongPredictionExplorer({ algorithm, datasetName, hyperparameter
 
   useEffect(() => {
     setLoading(true);
-    api.post("/api/training/wrong-predictions", {
+    api.post("/wrong-predictions", {
       algorithm, dataset_name: datasetName, hyperparameters, noise, n_samples: nSamples,
     }).then((res) => setResult(res.data))
       .catch(() => setResult(null))

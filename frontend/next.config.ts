@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const wsBase = apiBase.replace(/^http/, "ws");
+
 const cspHeader = `
   default-src 'self';
   script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com;
@@ -10,7 +13,7 @@ const cspHeader = `
   base-uri 'self';
   form-action 'self';
   frame-ancestors 'none';
-  connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net ${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"};
+  connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net ${apiBase} ${wsBase};
   upgrade-insecure-requests;
 `
   .replace(/\n/g, "")
