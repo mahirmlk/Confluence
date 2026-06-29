@@ -215,7 +215,7 @@ export function ClusteringCanvas({
       ref={canvasRef}
       width={width}
       height={height}
-      className="rounded-lg border border-border"
+      className="rounded-lg border border-border max-w-full h-auto"
     />
   );
 }

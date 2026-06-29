@@ -67,6 +67,25 @@ type AnalysisPanel = "metrics" | "cv" | "coefficients" | "learning" | "decision"
 
 interface CustomPoint { x: number; y: number; label: number; }
 
+function useContainerSize(ref: React.RefObject<HTMLDivElement | null>) {
+  const [size, setSize] = useState({ width: 700, height: 600 });
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (width > 0 && height > 0) {
+          setSize({ width: Math.floor(width), height: Math.floor(height) });
+        }
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref]);
+  return size;
+}
+
 function ExploreView() {
   const { family, algorithm, hyperparameters, datasetName, noise, nSamples, setAlgorithm, uploadedDatasetId, customDatasetId } = useAppStore();
   const [result, setResult] = useState<PredictionResponse | RegressionResponse | ClusteringResponse | DimReductionResponse | null>(null);
@@ -89,6 +108,8 @@ function ExploreView() {
   const [metricExplainTarget, setMetricExplainTarget] = useState<{ name: string; value: number } | null>(null);
   const [showWrongPredictions, setShowWrongPredictions] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
+  const { width: containerWidth, height: containerHeight } = useContainerSize(canvasContainerRef);
 
   const fetchPrediction = useCallback(async () => {
     setLoading(true);
@@ -249,10 +270,13 @@ function ExploreView() {
 
   const showMetricsBtn = family === "classification" || family === "regression" || family === "clustering";
 
+  const canvasW = Math.min(containerWidth - 48, 700);
+  const canvasH = Math.min(containerHeight - 48, 600);
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Toolbar */}
-      <div className="flex items-center gap-2 p-3 border-b border-border bg-card/50 flex-wrap">
+      <div className="flex items-center gap-1.5 p-2 md:p-3 border-b border-border bg-card/50 flex-wrap">
         {/* Data source selector */}
         <div className="flex rounded-md border border-border overflow-hidden">
           {(["synthetic", "upload", "inline", "custom", "generator"] as DataSource[]).map((ds) => (
@@ -263,18 +287,18 @@ function ExploreView() {
                 if (ds === "custom") setShowPointEditor(true);
                 else setShowPointEditor(false);
               }}
-              className={`px-2.5 py-1 text-[10px] font-medium transition-colors ${
+              className={`px-2 md:px-2.5 py-1 text-[9px] md:text-[10px] font-medium transition-colors ${
                 dataSource === ds ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"
               }`}
             >
-              {ds === "synthetic" ? "Synthetic" : ds === "upload" ? "CSV" : ds === "inline" ? "Paste" : ds === "custom" ? "Draw" : "Generate"}
+              {ds === "synthetic" ? "Synth" : ds === "upload" ? "CSV" : ds === "inline" ? "Paste" : ds === "custom" ? "Draw" : "Gen"}
             </button>
           ))}
         </div>
 
-        <div className="w-px h-6 bg-border" />
+        <div className="w-px h-6 bg-border hidden sm:block" />
 
-        <button onClick={fetchPrediction} disabled={loading} className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors">
+        <button onClick={fetchPrediction} disabled={loading} className="px-2.5 md:px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-[10px] md:text-xs font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors">
           {loading ? "Computing..." : "Run"}
         </button>
 
@@ -285,7 +309,7 @@ function ExploreView() {
               else if (family === "regression") fetchRegMetrics();
               else fetchClustMetrics();
             }}
-            className="px-3 py-1.5 rounded-md border border-border text-foreground text-xs font-medium hover:bg-accent transition-colors"
+            className="px-2.5 md:px-3 py-1.5 rounded-md border border-border text-foreground text-[10px] md:text-xs font-medium hover:bg-accent transition-colors"
           >
             Metrics
           </button>
@@ -293,33 +317,33 @@ function ExploreView() {
 
         {family === "classification" && (
           <>
-            <button onClick={fetchCV} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">CV</button>
-            <button onClick={fetchCoef} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Coefficients</button>
-            <button onClick={fetchLC} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Learning Curve</button>
+            <button onClick={fetchCV} className="px-1.5 md:px-2 py-1.5 rounded-md border border-border text-foreground text-[9px] md:text-[10px] font-medium hover:bg-accent transition-colors hidden sm:inline-flex">CV</button>
+            <button onClick={fetchCoef} className="px-1.5 md:px-2 py-1.5 rounded-md border border-border text-foreground text-[9px] md:text-[10px] font-medium hover:bg-accent transition-colors hidden sm:inline-flex">Coef</button>
+            <button onClick={fetchLC} className="px-1.5 md:px-2 py-1.5 rounded-md border border-border text-foreground text-[9px] md:text-[10px] font-medium hover:bg-accent transition-colors hidden sm:inline-flex">LC</button>
             <LearningModeToggle
               enabled={learningMode}
               onToggle={setLearningMode}
             />
             {algorithm === "decision-tree" && (
-              <button onClick={() => setActivePanel("tree-build")} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Tree Builder</button>
+              <button onClick={() => setActivePanel("tree-build")} className="px-1.5 md:px-2 py-1.5 rounded-md border border-border text-foreground text-[9px] md:text-[10px] font-medium hover:bg-accent transition-colors hidden sm:inline-flex">Tree</button>
             )}
-            <button onClick={() => setShowWrongPredictions(true)} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Wrong</button>
+            <button onClick={() => setShowWrongPredictions(true)} className="px-1.5 md:px-2 py-1.5 rounded-md border border-border text-foreground text-[9px] md:text-[10px] font-medium hover:bg-accent transition-colors hidden sm:inline-flex">Wrong</button>
           </>
         )}
 
         {family === "regression" && (
           <>
-            <button onClick={fetchRegCV} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">CV</button>
-            <button onClick={fetchRegLC} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Learning Curve</button>
+            <button onClick={fetchRegCV} className="px-1.5 md:px-2 py-1.5 rounded-md border border-border text-foreground text-[9px] md:text-[10px] font-medium hover:bg-accent transition-colors hidden sm:inline-flex">CV</button>
+            <button onClick={fetchRegLC} className="px-1.5 md:px-2 py-1.5 rounded-md border border-border text-foreground text-[9px] md:text-[10px] font-medium hover:bg-accent transition-colors hidden sm:inline-flex">LC</button>
           </>
         )}
 
         {family === "clustering" && (
-          <button onClick={fetchElbow} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">Elbow</button>
+          <button onClick={fetchElbow} className="px-1.5 md:px-2 py-1.5 rounded-md border border-border text-foreground text-[9px] md:text-[10px] font-medium hover:bg-accent transition-colors hidden sm:inline-flex">Elbow</button>
         )}
 
         {(family === "classification" || family === "regression") && result && isClass(result) && (
-          <button onClick={() => setShow3D(!show3D)} className="px-2 py-1.5 rounded-md border border-border text-foreground text-[10px] font-medium hover:bg-accent transition-colors">
+          <button onClick={() => setShow3D(!show3D)} className="px-1.5 md:px-2 py-1.5 rounded-md border border-border text-foreground text-[9px] md:text-[10px] font-medium hover:bg-accent transition-colors">
             {show3D ? "2D" : "3D"}
           </button>
         )}
@@ -333,20 +357,20 @@ function ExploreView() {
         </div>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
         {/* Data source panels */}
         {dataSource === "upload" && (
-          <div className="w-72 border-r border-border bg-card p-4 overflow-y-auto">
+          <div className="w-full md:w-72 border-b md:border-b-0 md:border-r border-border bg-card p-4 overflow-y-auto max-h-[30vh] md:max-h-none flex-shrink-0">
             <UploadPanel onDatasetReady={handleCustomDatasetReady} />
           </div>
         )}
         {dataSource === "inline" && (
-          <div className="w-72 border-r border-border bg-card p-4 overflow-y-auto">
+          <div className="w-full md:w-72 border-b md:border-b-0 md:border-r border-border bg-card p-4 overflow-y-auto max-h-[30vh] md:max-h-none flex-shrink-0">
             <InlineDataEditor onDatasetReady={handleCustomDatasetReady} />
           </div>
         )}
         {dataSource === "custom" && (
-          <div className="w-72 border-r border-border bg-card p-4 overflow-y-auto">
+          <div className="w-full md:w-72 border-b md:border-b-0 md:border-r border-border bg-card p-4 overflow-y-auto max-h-[30vh] md:max-h-none flex-shrink-0">
             <PointEditor
               width={250}
               height={250}
@@ -377,7 +401,7 @@ function ExploreView() {
           </div>
         )}
         {dataSource === "generator" && (
-          <div className="w-72 border-r border-border bg-card p-4 overflow-y-auto">
+          <div className="w-full md:w-72 border-b md:border-b-0 md:border-r border-border bg-card p-4 overflow-y-auto max-h-[30vh] md:max-h-none flex-shrink-0">
             <DataGeneratorStudio
               onDatasetReady={(X, y, name) => {
                 useAppStore.getState().setDatasetName(name);
@@ -388,9 +412,13 @@ function ExploreView() {
         )}
 
         {/* Main canvas area */}
-        <div className="flex-1 flex items-center justify-center p-6 relative overflow-auto" onClick={handleCanvasClick}>
+        <div
+          ref={canvasContainerRef}
+          className="flex-1 flex items-center justify-center p-3 md:p-6 relative overflow-auto min-h-[300px]"
+          onClick={handleCanvasClick}
+        >
           {show3D && result && isClass(result) && (
-            <div className="w-full h-[600px] rounded-lg border border-border overflow-hidden">
+            <div className="w-full max-w-[700px] aspect-[7/6] rounded-lg border border-border overflow-hidden">
               <Scene3D grid={result.grid} points={result.points} />
             </div>
           )}
@@ -403,8 +431,8 @@ function ExploreView() {
                 contourLines={result.contour_lines}
                 points={result.points}
                 gridBounds={result.grid_bounds}
-                width={700}
-                height={600}
+                width={canvasW}
+                height={canvasH}
                 vizMetadata={"viz_metadata" in result ? (result as { viz_metadata?: { original_features: number; displayed_dimensions: number; scaled: boolean; pca_applied: boolean; explained_variance_ratio: number[] | null; total_variance_explained: number | null } }).viz_metadata : null}
               />
             </ErrorBoundary>
@@ -416,8 +444,8 @@ function ExploreView() {
                 grid={result.grid}
                 points={result.points}
                 gridBounds={result.grid_bounds}
-                width={700}
-                height={600}
+                width={canvasW}
+                height={canvasH}
                 colormap={regressionColormap}
                 vizMetadata={"viz_metadata" in result ? (result as { viz_metadata?: { original_features: number; displayed_dimensions: number; scaled: boolean; pca_applied: boolean; explained_variance_ratio: number[] | null; total_variance_explained: number | null } }).viz_metadata : null}
               />
@@ -429,15 +457,15 @@ function ExploreView() {
                 labelGrid={result.label_grid}
                 points={result.points}
                 gridBounds={result.grid_bounds}
-                width={700}
-                height={600}
+                width={canvasW}
+                height={canvasH}
                 vizMetadata={"viz_metadata" in result ? (result as { viz_metadata?: { original_features: number; displayed_dimensions: number; scaled: boolean; pca_applied: boolean; explained_variance_ratio: number[] | null; total_variance_explained: number | null } }).viz_metadata : null}
               />
             </ErrorBoundary>
           )}
           {!show3D && result && "embedding" in (result as Record<string, unknown>) && (
             <ErrorBoundary>
-              <DimReductionCanvas embedding={(result as DimReductionResponse).embedding} points={(result as DimReductionResponse).points} width={700} height={600} info={(result as DimReductionResponse).info} />
+              <DimReductionCanvas embedding={(result as DimReductionResponse).embedding} points={(result as DimReductionResponse).points} width={canvasW} height={canvasH} info={(result as DimReductionResponse).info} />
             </ErrorBoundary>
           )}
 
@@ -449,7 +477,7 @@ function ExploreView() {
             const meta = (result as { viz_metadata?: { original_features: number; pca_applied: boolean; explained_variance_ratio: number[] | null; total_variance_explained: number | null; scaled: boolean } }).viz_metadata;
             if (!meta) return null;
             return (
-              <div className="absolute bottom-4 right-4 bg-card/90 border border-border rounded-lg px-3 py-2 text-[10px] text-muted-foreground backdrop-blur-sm max-w-[200px]">
+              <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-card/90 border border-border rounded-lg px-2 py-1.5 md:px-3 md:py-2 text-[8px] md:text-[10px] text-muted-foreground backdrop-blur-sm max-w-[160px] md:max-w-[200px]">
                 <div className="space-y-0.5">
                   {meta.pca_applied && (
                     <div className="text-[#255EBA] font-medium">
@@ -468,7 +496,7 @@ function ExploreView() {
 
           {/* Analysis panels overlay */}
           {activePanel && (
-            <div className="absolute top-4 left-4 w-72 bg-card border border-border rounded-lg p-4 max-h-[80vh] overflow-y-auto z-20 shadow-lg">
+            <div className="absolute top-2 left-2 md:top-4 md:left-4 w-[calc(100%-16px)] md:w-72 bg-card border border-border rounded-lg p-3 md:p-4 max-h-[70vh] md:max-h-[80vh] overflow-y-auto z-20 shadow-lg">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-semibold text-foreground uppercase tracking-wide">
                   {activePanel === "metrics" ? "Metrics" : activePanel === "cv" ? "Cross-Validation" : activePanel === "coefficients" ? "Coefficients" : activePanel === "learning" ? "Learning Curve" : activePanel === "decision" ? "Decision Path" : activePanel === "elbow" ? "Elbow Plot" : activePanel === "explain" ? "Prediction Explanation" : activePanel === "tree-build" ? "Tree Builder" : "Recommend"}
@@ -499,7 +527,7 @@ function ExploreView() {
 
         {/* Right panel: recommend */}
         {dataSource === "synthetic" && (
-          <div className="w-56 border-l border-border bg-card p-4 overflow-y-auto">
+          <div className="hidden lg:block w-56 border-l border-border bg-card p-4 overflow-y-auto flex-shrink-0">
             <RecommendPanel onAlgorithmSelect={(name) => setAlgorithm(name)} />
           </div>
         )}
@@ -534,30 +562,58 @@ function ExploreView() {
 
 function AppContent() {
   const [tab, setTab] = useState<Tab>("explore");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { algorithm, hyperparameters, datasetName, resolution, noise, nSamples } = useAppStore();
   useUrlState();
+
+  const tabButtons = (
+    <div className="flex flex-wrap gap-0.5 mb-4 md:mb-6 border border-border rounded-lg p-0.5">
+      {(["explore", "compare", "taxonomy", "stream", "playground", "tools", "help"] as Tab[]).map((t) => (
+        <button key={t} onClick={() => { setTab(t); setSidebarOpen(false); }} className={`flex-1 px-1.5 md:px-2 py-1.5 rounded text-[10px] md:text-xs font-medium transition-colors ${tab === t ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"}`}>
+          {t === "explore" ? "Explore" : t === "compare" ? "Compare" : t === "taxonomy" ? "Taxonomy" : t === "stream" ? "Stream" : t === "playground" ? "Train" : t === "tools" ? "Tools" : "Help"}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <div className="flex flex-col h-screen bg-background">
       <AppNavbar />
       <FloatingAIAssistant algorithm={algorithm} datasetName={datasetName} />
-      <div className="flex flex-1 overflow-hidden">
-        <aside className="w-80 border-r border-border bg-card p-4 overflow-y-auto flex-shrink-0">
+      <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
+        {/* Mobile sidebar toggle */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="md:hidden fixed bottom-4 left-4 z-50 w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
+          aria-label="Toggle sidebar"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {sidebarOpen ? (
+              <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>
+            ) : (
+              <><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></>
+            )}
+          </svg>
+        </button>
+
+        {/* Sidebar - desktop always visible, mobile overlay */}
+        <aside className={`
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          md:translate-x-0
+          fixed md:static inset-y-0 left-0 z-40
+          w-80 md:w-80
+          border-r border-border bg-card p-4 overflow-y-auto flex-shrink-0
+          transition-transform duration-300 ease-in-out
+        `}>
           <div className="flex items-center gap-2 mb-4 px-1">
             <ShareButton />
             <ThemeToggle />
           </div>
-          <div className="flex flex-wrap gap-1 mb-6 border border-border rounded-lg p-1">
-            {(["explore", "compare", "taxonomy", "stream", "playground", "tools", "help"] as Tab[]).map((t) => (
-              <button key={t} onClick={() => setTab(t)} className={`flex-1 px-2 py-1.5 rounded text-xs font-medium transition-colors ${tab === t ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"}`}>
-                {t === "explore" ? "Explore" : t === "compare" ? "Compare" : t === "taxonomy" ? "Taxonomy" : t === "stream" ? "Stream" : t === "playground" ? "Train" : t === "tools" ? "Tools" : "Help"}
-              </button>
-            ))}
-          </div>
+          {tabButtons}
           {(tab === "explore" || tab === "stream" || tab === "playground") && <AlgorithmPanel />}
           {tab === "tools" && (
-            <div className="p-4 space-y-4">
-              <CodeGenerator algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} />
+            <div className="p-4 text-xs text-muted-foreground">
+              Use the tools panel on the right to explore PCA, generate code, and ask AI questions.
             </div>
           )}
           {tab === "stream" && (
@@ -571,13 +627,21 @@ function AppContent() {
           {tab === "help" && <HelpPanel />}
         </aside>
 
+        {/* Mobile sidebar backdrop */}
+        {sidebarOpen && (
+          <div
+            className="md:hidden fixed inset-0 bg-black/50 z-30"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         <main className="flex-1 overflow-auto bg-background">
           {tab === "explore" && <ExploreView />}
-          {tab === "taxonomy" && <div className="p-8"><TaxonomyExplorer /></div>}
+          {tab === "taxonomy" && <div className="p-4 md:p-8"><TaxonomyExplorer /></div>}
           {tab === "compare" && (
-            <div className="p-8 space-y-8">
+            <div className="p-4 md:p-8 space-y-6 md:space-y-8">
               <ComparisonMode />
-              <div className="border-t border-border pt-8">
+              <div className="border-t border-border pt-6 md:pt-8">
                 <HyperparameterComparison
                   algorithm={algorithm}
                   datasetName={datasetName}
@@ -585,21 +649,21 @@ function AppContent() {
                   nSamples={nSamples}
                 />
               </div>
-              <div className="border-t border-border pt-8">
+              <div className="border-t border-border pt-6 md:pt-8">
                 <AlgorithmRace datasetName={datasetName} noise={noise} nSamples={nSamples} />
               </div>
-              <div className="border-t border-border pt-8">
+              <div className="border-t border-border pt-6 md:pt-8">
                 <BenchmarkSuite />
               </div>
             </div>
           )}
           {tab === "stream" && (
-            <div className="flex items-center justify-center p-8">
+            <div className="flex items-center justify-center p-4 md:p-8">
               <StreamingViz algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} resolution={resolution} noise={noise} nSamples={nSamples} width={600} height={600} />
             </div>
           )}
           {tab === "playground" && (
-            <div className="p-8 max-w-4xl mx-auto">
+            <div className="p-4 md:p-8 max-w-4xl mx-auto">
               <TrainingPlayground
                 algorithm={algorithm}
                 datasetName={datasetName}
@@ -610,14 +674,14 @@ function AppContent() {
             </div>
           )}
           {tab === "tools" && (
-            <div className="p-8 max-w-4xl mx-auto space-y-8">
+            <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-6 md:space-y-8">
               <PCAExplorer datasetName={datasetName} noise={noise} nSamples={nSamples} />
-              <div className="border-t border-border pt-8">
-                <div className="grid grid-cols-2 gap-8">
+              <div className="border-t border-border pt-6 md:pt-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                   <div>
                     <CodeGenerator algorithm={algorithm} datasetName={datasetName} hyperparameters={hyperparameters} />
                   </div>
-                  <div className="h-96">
+                  <div className="h-72 md:h-96">
                     <AIAssistant algorithm={algorithm} datasetName={datasetName} />
                   </div>
                 </div>
@@ -625,7 +689,7 @@ function AppContent() {
             </div>
           )}
           {tab === "help" && (
-            <div className="flex-1 flex items-center justify-center p-8">
+            <div className="flex-1 flex items-center justify-center p-4 md:p-8">
               <div className="text-center max-w-md">
                 <div className="text-4xl mb-4">?</div>
                 <h2 className="text-lg font-semibold text-foreground mb-2">Confluence Help</h2>

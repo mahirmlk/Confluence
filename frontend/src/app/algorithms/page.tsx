@@ -653,10 +653,10 @@ function SearchBar({ onSelect }: { onSelect: (name: string) => void }) {
 function AlgorithmCard({ algo, id }: { algo: AlgorithmEntry; id?: string }) {
   const DiagramComponent = algo.diagram;
   return (
-    <div id={id} className="border border-border bg-card rounded-none mb-12 scroll-mt-24">
+      <div id={id} className="border border-border bg-card rounded-none mb-12 scroll-mt-24">
       {/* Header */}
-      <div className="px-8 py-6 border-b border-border flex items-center gap-4">
-        <h3 className="text-2xl font-bold font-montserrat text-foreground">{algo.label}</h3>
+      <div className="px-4 md:px-8 py-4 md:py-6 border-b border-border flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+        <h3 className="text-xl md:text-2xl font-bold font-montserrat text-foreground">{algo.label}</h3>
         <span
           className="px-3 py-1 text-xs font-mono font-semibold uppercase tracking-wider rounded-none border"
           style={{
@@ -670,14 +670,14 @@ function AlgorithmCard({ algo, id }: { algo: AlgorithmEntry; id?: string }) {
       </div>
 
       {/* Diagram */}
-      <div className="px-8 py-8 bg-[#EBF0FA] border-b border-border">
+      <div className="px-4 md:px-8 py-6 md:py-8 bg-[#EBF0FA] border-b border-border">
         <div className="max-w-xl mx-auto">
           <DiagramComponent />
         </div>
       </div>
 
         {/* Theory */}
-        <div className="px-8 py-8">
+        <div className="px-4 md:px-8 py-6 md:py-8">
           <h4 className="text-sm font-bold font-mono uppercase tracking-widest text-muted-foreground mb-4">
             Theory
           </h4>
@@ -690,7 +690,7 @@ function AlgorithmCard({ algo, id }: { algo: AlgorithmEntry; id?: string }) {
           </div>
 
           {/* Example */}
-          <div className="mt-6 px-5 py-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-none">
+          <div className="mt-6 px-4 md:px-5 py-3 md:py-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-none">
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 block mb-2">
               Real-World Example
             </span>
@@ -698,7 +698,7 @@ function AlgorithmCard({ algo, id }: { algo: AlgorithmEntry; id?: string }) {
           </div>
 
         {/* Formula */}
-        <div className="mt-6 px-5 py-4 bg-accent/50 border border-border rounded-none">
+        <div className="mt-6 px-4 md:px-5 py-3 md:py-4 bg-accent/50 border border-border rounded-none">
           <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground block mb-2">
             Key Formula
           </span>
@@ -751,8 +751,8 @@ function FamilySection({
   id: string;
 }) {
   return (
-    <section id={id} className="py-16 border-t border-border">
-      <div className="max-w-4xl mx-auto px-6">
+    <section id={id} className="py-12 md:py-16 border-t border-border">
+      <div className="max-w-4xl mx-auto px-4 md:px-6">
         <div className="mb-10">
           <h2 className="text-3xl font-bold font-montserrat text-foreground mb-3">{title}</h2>
           <p className="text-muted-foreground leading-relaxed">{subtitle}</p>
@@ -785,18 +785,18 @@ export default function AlgorithmsPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-28 pb-16 border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 text-center">
+      <section className="pt-24 md:pt-28 pb-12 md:pb-16 border-b border-border">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-none border border-border bg-card text-xs text-muted-foreground mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
             31 algorithms from scratch
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight leading-tight mb-4 font-montserrat">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight leading-tight mb-4 font-montserrat">
             Machine Learning Algorithms
             <br />
             <span className="text-muted-foreground">from First Principles</span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Every algorithm explained with theory, math, and visual intuition.
             Understand what each model optimizes, how it learns, and where it works.
           </p>
@@ -857,8 +857,8 @@ export default function AlgorithmsPage() {
       />
 
       {/* CTA */}
-      <section className="py-20 border-t border-border bg-[#EBF0FA]">
-        <div className="max-w-4xl mx-auto px-6 text-center">
+      <section className="py-16 md:py-20 border-t border-border bg-[#EBF0FA]">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
           <h2 className="text-2xl font-bold font-montserrat text-foreground mb-3">
             Ready to see them in action?
           </h2>

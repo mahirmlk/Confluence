@@ -271,7 +271,7 @@ export default function ResourcesPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <div className="relative w-full h-[400px] mt-16 overflow-hidden">
+      <div className="relative w-full h-[280px] md:h-[400px] mt-16 overflow-hidden">
         <img 
           src="/resources-hero.png" 
           alt="Machine Learning Resources" 
@@ -279,7 +279,7 @@ export default function ResourcesPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 font-montserrat uppercase tracking-wide drop-shadow-lg">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 font-montserrat uppercase tracking-wide drop-shadow-lg">
             Some of Machine Learning Resources
           </h1>
           <p className="text-gray-200 max-w-2xl mx-auto text-lg drop-shadow-md">
@@ -481,7 +481,7 @@ export default function ResourcesPage() {
             {PLATFORMS.resources.youtube.length > 0 && (
               <div className="border border-border rounded-lg p-4 md:col-span-2 lg:col-span-2">
                 <h3 className="text-xs font-semibold text-foreground mb-3">YouTube Channels</h3>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {PLATFORMS.resources.youtube.map((r) => (
                     <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
                       className="block text-primary hover:underline text-xs">

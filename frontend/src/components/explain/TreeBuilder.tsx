@@ -179,7 +179,7 @@ export function TreeBuilder({ datasetName, hyperparameters, noise, nSamples }: T
       {error && <div className="text-xs text-red-500">{error}</div>}
 
       {stepData && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Tree Diagram */}
           <div className="border border-border rounded-lg p-3">
             <div className="text-[10px] text-muted-foreground mb-2">Tree Structure</div>

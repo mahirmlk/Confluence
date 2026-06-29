@@ -67,7 +67,7 @@ export function ConfusionMatrix({ matrix }: ConfusionMatrixProps) {
   return (
     <div className="flex flex-col items-center">
       <h3 className="text-sm font-medium text-foreground mb-2">Confusion Matrix</h3>
-      <canvas ref={canvasRef} className="border border-border rounded" />
+      <canvas ref={canvasRef} className="border border-border rounded max-w-full h-auto" />
     </div>
   );
 }

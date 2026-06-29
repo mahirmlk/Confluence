@@ -134,7 +134,7 @@ export function PCAExplorer({ datasetName, noise, nSamples }: PCAExplorerProps) 
 
       {result && (
         <>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="border border-border rounded-lg p-2">
               <div className="text-[10px] text-muted-foreground mb-1">PCA Projection</div>
               <canvas ref={canvasRef} width={250} height={200} className="w-full" />
@@ -145,7 +145,7 @@ export function PCAExplorer({ datasetName, noise, nSamples }: PCAExplorerProps) 
             </div>
           </div>
 
-          <div className="flex gap-4 text-xs">
+          <div className="flex flex-wrap gap-2 md:gap-4 text-xs">
             <div className="px-2 py-1 rounded bg-muted">
               <span className="text-muted-foreground">Total Variance: </span>
               <span className="font-mono font-semibold">{(result.total_variance_explained * 100).toFixed(1)}%</span>
@@ -164,7 +164,7 @@ export function PCAExplorer({ datasetName, noise, nSamples }: PCAExplorerProps) 
               <div className="space-y-1">
                 {result.feature_contributions[0].contributions.slice(0, 6).map((c, i) => (
                   <div key={i} className="flex items-center gap-2">
-                    <span className="w-24 truncate text-muted-foreground">{c.feature}</span>
+                    <span className="w-16 md:w-24 truncate text-muted-foreground">{c.feature}</span>
                     <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                       <div className={`h-full rounded-full ${c.loading >= 0 ? "bg-blue-500" : "bg-red-500"}`}
                         style={{ width: `${c.abs_loading * 100}%` }} />

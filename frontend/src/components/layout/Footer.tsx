@@ -76,12 +76,12 @@ export function Footer() {
         }}
         className="py-10 px-6"
       >
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
           <div>
-            <p className="text-xs font-mono uppercase tracking-[0.2em] text-white/60 mb-1">
+            <p className="text-[10px] md:text-xs font-mono uppercase tracking-[0.2em] text-white/60 mb-1">
               Interactive ML Platform
             </p>
-            <h2 className="text-xl md:text-2xl font-bold text-white font-montserrat">
+            <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-white font-montserrat">
               Understand machine learning visually.
             </h2>
           </div>
@@ -95,8 +95,8 @@ export function Footer() {
       </div>
 
       {/* Main grid */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
           {/* Brand column */}
           <div className="md:col-span-1">
             <p className="text-sm text-[#4C73B9] leading-relaxed mb-6">

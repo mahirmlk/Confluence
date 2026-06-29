@@ -66,7 +66,7 @@ export function FloatingAIAssistant({ algorithm = "logistic-regression", dataset
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {isOpen && (
-        <div className="mb-4 w-80 h-96 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="mb-4 w-[calc(100vw-3rem)] max-w-80 h-96 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">

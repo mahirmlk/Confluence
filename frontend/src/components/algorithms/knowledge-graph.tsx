@@ -34,7 +34,7 @@ export function AlgorithmKnowledgeGraph() {
   const [hoveredFamily, setHoveredFamily] = useState<number | null>(null);
 
   return (
-    <div className="max-w-6xl mx-auto px-6">
+    <div className="max-w-6xl mx-auto px-4 md:px-6">
       {/* Header */}
       <div className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-bold font-montserrat text-foreground tracking-tight mb-4 uppercase tracking-wide">

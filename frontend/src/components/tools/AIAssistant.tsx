@@ -120,7 +120,7 @@ export function AIAssistant({ algorithm, datasetName, metrics }: AIAssistantProp
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
         <input
           type="text"
           value={input}

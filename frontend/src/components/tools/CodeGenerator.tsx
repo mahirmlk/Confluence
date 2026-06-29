@@ -49,7 +49,7 @@ export function CodeGenerator({ algorithm, datasetName, hyperparameters }: CodeG
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-sm font-medium text-foreground">Code Generator</h3>
         <div className="flex gap-1">
           <button onClick={handleCopy}

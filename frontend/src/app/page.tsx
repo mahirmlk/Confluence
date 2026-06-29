@@ -236,7 +236,7 @@ function FeaturesSection() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12 mt-12 items-stretch">
+    <div className="flex flex-col lg:flex-row gap-6 md:gap-12 mt-8 md:mt-12 items-stretch">
       {/* Left Column: Feature Selector */}
       <div className="flex-1 flex flex-col gap-4">
         {FEATURES.map((feature, i) => (
@@ -261,7 +261,7 @@ function FeaturesSection() {
       </div>
 
       {/* Right Column: Visual Diagram Display */}
-      <div className="flex-1 flex items-center justify-center bg-card border border-border/80 p-8 shadow-2xl relative min-h-[460px] rounded-none">
+      <div className="flex-1 flex items-center justify-center bg-card border border-border/80 p-4 md:p-8 shadow-2xl relative min-h-[300px] md:min-h-[460px] rounded-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
         <div className="w-full h-full flex items-center justify-center">
           {renderDiagram(activeFeature)}
@@ -277,7 +277,7 @@ export default function LandingPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative min-h-screen pt-28 pb-16 overflow-hidden flex flex-col justify-center">
+      <section className="relative min-h-[80vh] md:min-h-screen pt-24 md:pt-28 pb-12 md:pb-16 overflow-hidden flex flex-col justify-center">
         {/* Full-cover background image */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -295,13 +295,13 @@ export default function LandingPage() {
         {/* Blue glow echoing the image */}
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(37,94,186,0.12) 0%, transparent 70%)", zIndex: 1 }} />
 
-        <div className="relative max-w-7xl mx-auto px-6 text-center pt-8" style={{ zIndex: 2 }}>
+        <div className="relative max-w-7xl mx-auto px-4 md:px-6 text-center pt-4 md:pt-8" style={{ zIndex: 2 }}>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-none border border-[#C8D3E8] bg-white/80 text-xs text-[#4C73B9] mb-6 backdrop-blur-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
             38 algorithms · 24 datasets · AI-powered explanations
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold text-foreground tracking-tight leading-tight mb-4 font-montserrat">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-foreground tracking-tight leading-tight mb-4 font-montserrat">
             See How Machine
             <br />
             Learning{" "}
@@ -310,13 +310,13 @@ export default function LandingPage() {
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed font-sans">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed font-sans">
             An interactive ML education platform powered by real scikit-learn computation.
             Explore decision boundaries, explain predictions, race algorithms, and learn
             with 24 real-world datasets.
           </p>
 
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/app"
               className="px-8 py-3.5 rounded-none border border-[#DDE3EE] bg-transparent text-[#FFFFFF] text-sm font-semibold hover:bg-[#255EBA] hover:border-[#255EBA] transition-all"
@@ -338,10 +338,10 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="py-24 border-t border-border">
-        <div className="max-w-7xl mx-auto px-6">
+      <section id="features" className="py-16 md:py-24 border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-montserrat uppercase tracking-wide">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4 font-montserrat uppercase tracking-wide">
               Built for Understanding
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -369,10 +369,10 @@ export default function LandingPage() {
       </section>
 
       {/* Architecture */}
-      <section id="architecture" className="py-24 border-t border-border">
-        <div className="max-w-7xl mx-auto px-6">
+      <section id="architecture" className="py-16 md:py-24 border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-montserrat uppercase tracking-wide">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4 font-montserrat uppercase tracking-wide">
               Production-Grade Architecture
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -386,9 +386,9 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 border-t border-border">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-montserrat uppercase tracking-wide">
+      <section className="py-16 md:py-24 border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 text-center">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4 font-montserrat uppercase tracking-wide">
             Ready to Explore?
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">

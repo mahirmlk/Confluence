@@ -233,7 +233,7 @@ export function TrainingPlayground({ algorithm, datasetName, hyperparameters, no
       {error && <div className="text-xs text-red-500">{error}</div>}
 
       {frame && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="border border-border rounded-lg p-2">
             <div className="text-[10px] text-muted-foreground mb-1">Decision Boundary</div>
             <canvas ref={canvasRef} className="w-full aspect-square rounded" style={{ imageRendering: "pixelated" }} />

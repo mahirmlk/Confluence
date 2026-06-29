@@ -110,7 +110,7 @@ export function AlgorithmRace({ datasetName, noise, nSamples }: AlgorithmRacePro
 
       {sorted.length > 0 && (
         <>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {sorted.map((r, i) => (
               <div key={r.algorithm} className={`border rounded-lg p-2 space-y-1 ${
                 i === 0 ? "border-primary ring-1 ring-primary/20" : "border-border"

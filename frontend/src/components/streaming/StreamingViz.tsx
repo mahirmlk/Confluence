@@ -199,7 +199,7 @@ export function StreamingViz({
       <div className="text-[10px] text-muted-foreground">
         Supported: AdaBoost, Gradient Boosting, Random Forest, SGD, Decision Tree, MLP
       </div>
-      <canvas ref={canvasRef} width={width} height={height} className="rounded-lg border border-border" />
+      <canvas ref={canvasRef} width={width} height={height} className="rounded-lg border border-border max-w-full h-auto" />
       {totalSteps > 0 && (
         <ScrubberTimeline
           currentStep={currentStep}

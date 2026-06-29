@@ -77,7 +77,7 @@ export function ROCCurve({ fpr, tpr, auc }: ROCCurveProps) {
   return (
     <div className="flex flex-col items-center">
       <h3 className="text-sm font-medium text-foreground mb-2">ROC Curve</h3>
-      <canvas ref={canvasRef} className="border border-border rounded" />
+      <canvas ref={canvasRef} className="border border-border rounded max-w-full h-auto" />
     </div>
   );
 }

@@ -76,7 +76,7 @@ export function CrossValidationView({ folds, meanAccuracy, stdAccuracy }: CrossV
           {meanAccuracy.toFixed(3)} ± {stdAccuracy.toFixed(3)}
         </div>
       </div>
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
         {folds.map((fold) => (
           <div key={fold.fold} className="flex flex-col items-center gap-1">
             <FoldCanvas grid={fold.grid} contourLines={fold.contour_lines} />

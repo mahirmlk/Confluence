@@ -98,9 +98,9 @@ export function ComparisonMode() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center gap-2">
         <h2 className="text-lg font-semibold text-foreground">Comparison Mode</h2>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 ml-auto">
           <button
             onClick={() => setSyncZoom(!syncZoom)}
             className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${
@@ -154,7 +154,7 @@ export function ComparisonMode() {
       )}
 
       {!showOverlay && (
-        <div className={`grid gap-4 ${slots.length <= 2 ? "grid-cols-2" : "grid-cols-2"}`}>
+        <div className={`grid gap-4 grid-cols-1 sm:grid-cols-2`}>
           {slots.map((slot, index) => {
             const algoConfig = ALGORITHMS.find((a) => a.name === slot.algorithm);
             const families: Array<{ value: string; label: string }> = [
