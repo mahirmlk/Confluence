@@ -351,7 +351,7 @@ export const HeatmapCanvas = forwardRef<HTMLCanvasElement, HeatmapCanvasProps>(f
       ref={canvasRef}
       width={width}
       height={height}
-      className="rounded-lg border border-border max-w-full h-auto"
+      className="rounded-lg border border-border block"
       style={{ imageRendering: "auto" }}
     />
   );

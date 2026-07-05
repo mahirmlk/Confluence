@@ -67,22 +67,14 @@ type AnalysisPanel = "metrics" | "cv" | "coefficients" | "learning" | "decision"
 
 interface CustomPoint { x: number; y: number; label: number; }
 
-function useContainerSize(ref: React.RefObject<HTMLDivElement | null>) {
-  const [size, setSize] = useState({ width: 700, height: 600 });
+function useWindowSize() {
+  const [size, setSize] = useState({ width: typeof window !== "undefined" ? window.innerWidth : 1200, height: typeof window !== "undefined" ? window.innerHeight : 800 });
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        if (width > 0 && height > 0) {
-          setSize({ width: Math.floor(width), height: Math.floor(height) });
-        }
-      }
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [ref]);
+    const update = () => setSize({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener("resize", update);
+    update();
+    return () => window.removeEventListener("resize", update);
+  }, []);
   return size;
 }
 
@@ -109,7 +101,7 @@ function ExploreView() {
   const [showWrongPredictions, setShowWrongPredictions] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
-  const { width: containerWidth, height: containerHeight } = useContainerSize(canvasContainerRef);
+  const { width: winW, height: winH } = useWindowSize();
 
   const fetchPrediction = useCallback(async () => {
     setLoading(true);
@@ -234,11 +226,15 @@ function ExploreView() {
 
   const handleCanvasClick = async (e: React.MouseEvent<HTMLDivElement>) => {
     if (!result) return;
-    const rect = e.currentTarget.getBoundingClientRect();
+    const canvasEl = canvasRef.current;
+    if (!canvasEl) return;
+    const rect = canvasEl.getBoundingClientRect();
     const px = e.clientX - rect.left;
     const py = e.clientY - rect.top;
     const w = rect.width;
     const h = rect.height;
+
+    if (px < 0 || px > w || py < 0 || py > h) return;
 
     let bounds: { x_min: number; x_max: number; y_min: number; y_max: number } | null = null;
     if (isClass(result)) bounds = result.grid_bounds;
@@ -270,8 +266,16 @@ function ExploreView() {
 
   const showMetricsBtn = family === "classification" || family === "regression" || family === "clustering";
 
-  const canvasW = Math.min(containerWidth - 48, 700);
-  const canvasH = Math.min(containerHeight - 48, 600);
+  // sidebar=320px on desktop, right panel=224px when synthetic, padding=48px each axis
+  // navbar≈45px, toolbar≈50px
+  const sidebarW = winW >= 768 ? 320 : 0;
+  const rightPanelW = winW >= 1024 ? 224 : 0;
+  const navbarH = 48;  // h-12 = 48px
+  const toolbarH = 56; // p-3 top+bottom + ~32px buttons
+  const padX = 48;
+  const padY = 48;
+  const canvasW = Math.max(200, winW - sidebarW - rightPanelW - padX);
+  const canvasH = Math.max(200, winH - navbarH - toolbarH - padY);
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -414,7 +418,7 @@ function ExploreView() {
         {/* Main canvas area */}
         <div
           ref={canvasContainerRef}
-          className="flex-1 flex items-center justify-center p-3 md:p-6 relative overflow-auto min-h-[300px]"
+          className="flex-1 flex items-center justify-center p-3 md:p-6 relative overflow-hidden min-h-0"
           onClick={handleCanvasClick}
         >
           {show3D && result && isClass(result) && (
