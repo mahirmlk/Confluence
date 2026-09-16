@@ -3,90 +3,110 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
+const NAV_LINKS = [
+  { href: "/#features", label: "Features" },
+  { href: "/#algorithms", label: "Algorithms" },
+  { href: "/#resources", label: "Resources" },
+  { href: "/#architecture", label: "Architecture" },
+];
+
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 10);
     };
-
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
       document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
+    };
   }, [mobileOpen]);
 
-  const navLinks = [
-    { href: "/#features", label: "Features" },
-    { href: "/algorithms", label: "Algorithms" },
-    { href: "/resources", label: "Resources" },
-    { href: "/#architecture", label: "Architecture" },
-  ];
-
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-instrument-serif ${
-        isScrolled
-          ? "border-b border-border bg-background/80 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 bg-background transition-colors duration-200 ${
+        isScrolled ? "border-b border-border" : "border-b border-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="text-xl font-bold text-foreground tracking-wider font-montserrat uppercase">Confluence</span>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:bg-background focus:px-4 focus:py-2 focus:text-sm"
+      >
+        Skip to content
+      </a>
+      <nav
+        aria-label="Primary"
+        className="mx-auto flex h-16 w-full max-w-[1500px] items-center justify-between px-7"
+      >
+        <Link
+          href="/"
+          className="font-display text-[15px] font-extrabold tracking-[-0.01em] text-foreground"
+        >
+          CONFLUENCE
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8 text-lg">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="text-muted-foreground hover:text-foreground transition-colors">
+        <div className="hidden items-center gap-7 md:flex">
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="nav-link font-ui text-[0.9rem] font-[450] tracking-[-0.015em] text-muted-foreground hover:text-foreground"
+            >
               {link.label}
             </Link>
           ))}
           <Link
             href="/app"
-            className="px-5 py-2 rounded-none border border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background transition-colors"
+            className="font-ui inline-flex min-h-[42px] items-center border border-[#1b1b1b] bg-transparent px-[18px] text-[0.9rem] font-medium tracking-[-0.015em] text-foreground transition-colors duration-160 hover:bg-[#111111] hover:text-white"
+            style={{ borderRadius: 3 }}
           >
             Launch Tool
           </Link>
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile toggle */}
         <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5"
-          aria-label="Toggle menu"
+          type="button"
+          onClick={() => setMobileOpen((v) => !v)}
+          aria-expanded={mobileOpen}
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
         >
-          <span className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`} />
-          <span className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`} />
-          <span className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+          <span
+            className={`block h-px w-5 bg-foreground transition-transform duration-200 ${
+              mobileOpen ? "translate-y-[3.5px] rotate-45" : ""
+            }`}
+          />
+          <span
+            className={`block h-px w-5 bg-foreground transition-transform duration-200 ${
+              mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""
+            }`}
+          />
         </button>
-      </div>
+      </nav>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-background/95 backdrop-blur-xl z-40">
-          <div className="flex flex-col items-center gap-6 pt-12 text-lg">
-            {navLinks.map((link) => (
+        <div className="border-t border-border bg-background md:hidden">
+          <nav
+            aria-label="Mobile"
+            className="flex flex-col gap-1 px-7 py-6"
+          >
+            {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="font-ui border-b border-border py-3 text-base text-muted-foreground transition-colors hover:text-foreground"
               >
                 {link.label}
               </Link>
@@ -94,13 +114,14 @@ export function Navbar() {
             <Link
               href="/app"
               onClick={() => setMobileOpen(false)}
-              className="px-8 py-3 rounded-none border border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background transition-colors"
+              className="font-ui mt-4 inline-flex min-h-[48px] items-center justify-center border border-[#1b1b1b] text-base font-medium text-foreground transition-colors hover:bg-[#111111] hover:text-white"
+              style={{ borderRadius: 3 }}
             >
               Launch Tool
             </Link>
-          </div>
+          </nav>
         </div>
       )}
-    </nav>
+    </header>
   );
 }
