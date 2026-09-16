@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Inter, Instrument_Serif, Montserrat } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Inter_Tight } from "next/font/google";
 import { constructMetadata, viewport as viewportConfig } from "@/lib/seo/config";
 import { JsonLd } from "@/lib/seo/json-ld";
 import { Analytics } from "@/components/Analytics";
@@ -17,17 +17,14 @@ const geistMono = Geist_Mono({
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  weight: ["400"],
+const interTight = Inter_Tight({
+  variable: "--font-inter-tight",
   subsets: ["latin"],
-});
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata = constructMetadata();
@@ -42,7 +39,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${instrumentSerif.variable} ${montserrat.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${interTight.variable} h-full antialiased`}
     >
       <head>
         <JsonLd />

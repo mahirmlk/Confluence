@@ -1,43 +1,66 @@
 @import "tailwindcss";
 
 :root {
-  /* ── Light (default) ── */
-  --background:         #F5F7FC;   /* Cool off-white page bg */
-  --foreground:         #0D1B35;   /* Deep navy text */
-  --primary:            #255EBA;   /* Brand blue */
-  --primary-foreground: #FFFFFF;
-  --secondary:          #DDE3EE;   /* Pale blue-grey surfaces */
-  --secondary-foreground:#0D1B35;
-  --border:             #C8D3E8;   /* Soft blue-grey border */
-  --muted-foreground:   #4C73B9;   /* Mid-blue muted text */
-  --card:               #FFFFFF;   /* Pure white cards */
-  --card-foreground:    #0D1B35;
-  --accent:             #E8EDF8;   /* Very light blue accent */
-  --accent-foreground:  #255EBA;
+  /* ── Light (default): neutral editorial system (design.md §4) ── */
+  --background:         #ffffff;   /* Pure white page */
+  --surface:            #fafafa;   /* Soft grey surface */
+  --surface-2:          #f5f5f5;   /* Secondary surface */
+  --foreground:         #171719;   /* Almost-black text */
+  --foreground-soft:    #303035;
+  --primary:            #111111;   /* Near-black accent */
+  --primary-foreground: #ffffff;
+  --secondary:          #f5f5f5;
+  --secondary-foreground:#171719;
+  --border:             #e8e8e8;   /* Default thin border */
+  --border-strong:      #d8d8d8;
+  --muted-foreground:   #6f6f73;   /* Secondary text */
+  --muted-2:            #929296;
+  --card:               #ffffff;
+  --card-foreground:    #171719;
+  --accent:             #f5f5f5;
+  --accent-foreground:  #171719;
   --destructive:        #dc2626;
-  --ring:               #4C73B9;
-  --radius:             0rem;      /* Sharp corners throughout */
+  --ring:               #171719;
+  --radius:             4px;       /* Small-radius vocabulary */
+
+  /* ── Data colors: ONLY inside ML visualizations, never page chrome ── */
+  --data-blue:          #2563eb;
+  --data-cyan:          #0891b2;
+  --data-green:         #16a34a;
+  --data-amber:         #d97706;
+  --data-red:           #dc2626;
+  --data-purple:        #7c3aed;
+
+  /* ── Motion ── */
+  --ease-standard:      cubic-bezier(.2,.7,.2,1);
+  --ease-soft:          cubic-bezier(.22,1,.36,1);
 }
 
 .dark {
-  --background:         #0D1B35;
-  --foreground:         #F5F7FC;
-  --primary:            #4C73B9;
-  --primary-foreground: #FFFFFF;
-  --secondary:          #1a2a4a;
-  --secondary-foreground:#F5F7FC;
-  --border:             #2a3a5a;
-  --muted-foreground:   #7B9FD4;
-  --card:               #142240;
-  --card-foreground:    #F5F7FC;
-  --accent:             #1a2a4a;
-  --accent-foreground:  #4C73B9;
-  --destructive:        #dc2626;
-  --ring:               #7B9FD4;
+  --background:         #0a0a0b;
+  --surface:            #101013;
+  --surface-2:          #17171a;
+  --foreground:         #f4f4f5;
+  --foreground-soft:    #d4d4d8;
+  --primary:            #f4f4f5;
+  --primary-foreground: #0a0a0b;
+  --secondary:          #17171a;
+  --secondary-foreground:#f4f4f5;
+  --border:             #232326;
+  --border-strong:      #333338;
+  --muted-foreground:   #a1a1aa;
+  --muted-2:            #71717a;
+  --card:               #101013;
+  --card-foreground:    #f4f4f5;
+  --accent:             #17171a;
+  --accent-foreground:  #f4f4f5;
+  --destructive:        #ef4444;
+  --ring:               #e4e4e7;
 }
 
 @theme inline {
   --color-background:         var(--background);
+  --color-surface:            var(--surface);
   --color-foreground:         var(--foreground);
   --color-primary:            var(--primary);
   --color-primary-foreground: var(--primary-foreground);
@@ -55,17 +78,225 @@
   --radius-md:  calc(var(--radius) - 2px);
   --radius-lg:  var(--radius);
   --radius-xl:  calc(var(--radius) + 4px);
-  --font-sans:             var(--font-geist-sans);
-  --font-mono:             var(--font-geist-mono);
+  /* Type system (design.md §2–3): Inter = display, Geist = UI/body,
+     Inter Tight = global baseline, system mono = technical metadata.
+     Montserrat / Instrument Serif aliases keep legacy classes rendering. */
+  --font-sans:             var(--font-inter-tight);
+  --font-heading:          var(--font-inter);
+  --font-display:          var(--font-inter);
+  --font-body:             var(--font-geist-sans);
+  --font-ui:               var(--font-geist-sans);
+  --font-mono:             ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-inter:            var(--font-inter);
-  --font-instrument-serif: var(--font-instrument-serif);
-  --font-montserrat:       var(--font-montserrat);
+  --font-instrument-serif: var(--font-inter);
+  --font-montserrat:       var(--font-inter);
+  --ease-standard: cubic-bezier(.2,.7,.2,1);
+  --ease-soft:     cubic-bezier(.22,1,.36,1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-inter-tight), var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #171719;
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* ── Landing redesign system (design.md) ── */
+
+.page-shell {
+  width: min(100% - 3rem, 1500px);
+  margin-inline: auto;
+}
+
+/* Display headline: Inter 800, tight tracking, tight leading */
+.hero-title {
+  font-family: var(--font-inter), var(--font-inter-tight), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.075em;
+  line-height: 0.88;
+  text-wrap: balance;
+  color: var(--foreground);
+  font-size: clamp(4.75rem, 8vw, 8.25rem);
+}
+
+@media (max-width: 1199px) {
+  .hero-title {
+    font-size: clamp(3.5rem, 11vw, 6.25rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-title {
+    font-size: clamp(3.25rem, 15vw, 5rem);
+    line-height: 0.9;
+    letter-spacing: -0.065em;
+  }
+}
+
+/* Section display headings: strong but secondary to the hero */
+.section-title {
+  font-family: var(--font-inter), var(--font-inter-tight), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  text-wrap: balance;
+  color: var(--foreground);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.hero-copy {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: clamp(1.05rem, 1.45vw, 1.35rem);
+  line-height: 1.55;
+  letter-spacing: -0.015em;
+  color: #6f6f6f;
+  max-width: 38rem;
+}
+
+/* Small neutral status badge — the only pill allowed */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+
+.eyebrow__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #16a34a;
+  flex-shrink: 0;
+}
+
+/* Technical metadata label */
+.mono-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* Glass headline treatment: soft sheen gradient glyphs + faint depth.
+   Padding bleed keeps glyph overshoot (e.g. the G) from clipping. */
+.hero-glass {
+  display: inline-block;
+  padding: 0.08em 0.1em 0.12em 0.03em;
+  margin: -0.08em -0.1em -0.12em -0.03em;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-glass--solid {
+  background-image: linear-gradient(180deg, #2b2b31 0%, #060608 55%, #232329 100%);
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5))
+    drop-shadow(0 10px 22px rgba(0, 0, 0, 0.08));
+}
+
+.hero-glass--fade {
+  background-image: linear-gradient(180deg, #78787f 0%, #52525b 60%, #4b4b53 100%);
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.55))
+    drop-shadow(0 10px 22px rgba(0, 0, 0, 0.06));
+}
+
+.hero-line--raised {
+  transform: translateY(-10px);
+}
+
+/* Navigation underline micro-interaction */
+.nav-link {
+  position: relative;
+  transition: color 160ms var(--ease-standard);
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms var(--ease-standard);
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Scroll reveal: fade + 8–16px rise, alive not animated */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 600ms var(--ease-soft),
+    transform 600ms var(--ease-soft);
+  will-change: opacity, transform;
+}
+
+.reveal--visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Row arrow nudge */
+.row-arrow {
+  transition: transform 180ms var(--ease-standard);
+}
+
+a:hover > .row-arrow,
+button:hover > .row-arrow,
+.group:hover .row-arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Landing-page data constellation */
