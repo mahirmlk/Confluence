@@ -39,6 +39,10 @@ const nextConfig: NextConfig = {
           value: "max-age=63072000; includeSubDomains; preload",
         },
         { key: "Content-Security-Policy", value: cspHeader },
+        {
+          key: "Link",
+          value: '</llms.txt>; rel="describedby"; type="text/markdown"',
+        },
       ],
     },
     {
