@@ -1,0 +1,26 @@
+# Confluence
+
+> Confluence is a free, open-source, interactive machine-learning visualization platform. It runs real scikit-learn models (38 algorithms, 25 datasets) in the browser so learners can see decision boundaries, training behavior, metrics, and explanations instead of reading static math.
+
+Confluence is built with Next.js, FastAPI, and scikit-learn, and is MIT-licensed. The fastest way to understand any concept here is to open the visualizer and run the model.
+
+## Visualize
+
+- [Interactive visualizer](https://confluence.website/app): Run real models, compare algorithms, inspect metrics and explanations.
+- [Algorithm encyclopedia](https://confluence.website/algorithms): 38 algorithms across classification, regression, clustering, and dimensionality reduction, each with theory and visuals.
+- [Learning roadmap](https://confluence.website/resources): Seven layers from linear algebra to deployment, each pairing readings and videos with the exact visualizer tool to practice on.
+
+## Learn
+
+- [Linear Algebra](https://confluence.website/resources): Vectors, eigenvalues, and decomposition — the language every model computes in.
+- [Statistics & Probability](https://confluence.website/resources): Distributions, hypothesis testing, and Bayesian thinking for interpreting results.
+- [Optimization](https://confluence.website/resources): Gradient descent, loss functions, and convergence — how models learn.
+- [Feature Engineering](https://confluence.website/resources): Scaling, encoding, selection, and dimensionality reduction.
+- [Evaluation](https://confluence.website/resources): Accuracy, precision, recall, F1, confusion matrices, ROC curves, cross-validation.
+- [Model Selection](https://confluence.website/resources): Comparing algorithms and tuning hyperparameters.
+- [Deployment](https://confluence.website/resources): Serialization, APIs, monitoring, and MLOps.
+
+## Reference
+
+- [Essential reading](https://confluence.website/resources): Dive into Deep Learning, Distill, fast.ai, Understanding Deep Learning.
+- [Source code](https://github.com/mahirmlk): The full open-source repository.
