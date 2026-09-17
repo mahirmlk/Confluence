@@ -3,6 +3,7 @@ import { constructMetadata, viewport as viewportConfig } from "@/lib/seo/config"
 import { JsonLd } from "@/lib/seo/json-ld";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import "./globals.css";
+import "./mobile.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

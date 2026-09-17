@@ -1,0 +1,71 @@
+/* ── Mobile-only polish (max-width: 767px). Desktop styles untouched. ── */
+
+@media (max-width: 767px) {
+  /* Prevent iOS auto-zoom on focus: all text inputs >= 16px on mobile */
+  input[type="text"],
+  input[type="search"],
+  input[type="number"],
+  input[type="email"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Keep mono metadata readable but compact */
+  .mono-label {
+    font-size: 0.62rem;
+  }
+
+  /* Page gutters: slightly tighter than desktop page-shell */
+  .page-shell {
+    width: min(100% - 2rem, 1500px);
+  }
+
+  /* Landing lists: prevent cramped 3-col rows on 360px */
+  .mobile-row-tight {
+    grid-template-columns: 32px minmax(0, 1fr) 24px !important;
+    gap: 0.6rem !important;
+  }
+
+  /* Horizontal snap rails (filter pills, tab bars) */
+  .mobile-snap-x {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .mobile-snap-x::-webkit-scrollbar {
+    display: none;
+  }
+  .mobile-snap-x > * {
+    scroll-snap-align: start;
+  }
+
+  /* Visualizer bottom-sheet analysis panel */
+  .mobile-sheet {
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-height: 72dvh !important;
+    border-radius: 16px 16px 0 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+  }
+
+  /* Larger touch targets for sliders on mobile */
+  .mobile-slider [data-orientation="horizontal"] {
+    height: 2.5rem;
+  }
+
+  /* Canvas: allow vertical page scroll, keep horizontal gestures for viz */
+  .mobile-canvas-wrap {
+    touch-action: pan-y;
+  }
+
+  /* Safe-area padding for fixed mobile chrome */
+  .mobile-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
