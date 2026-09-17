@@ -5,28 +5,22 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Confluence - Interactive ML Visualization",
     short_name: "Confluence",
     description:
-      "Interactive ML visualization platform with real scikit-learn computation. Explore 38 algorithms across classification, regression, clustering, and dimensionality reduction.",
+      "Learn machine learning by running real models on real datasets and seeing what they actually do. Free and open source.",
     start_url: "/",
     display: "standalone",
     orientation: "any",
-    background_color: "#F5F7FC",
-    theme_color: "#255EBA",
+    background_color: "#ffffff",
+    theme_color: "#171719",
     icons: [
       {
-        src: "/confluence-logo.png",
+        src: "/icon-192.png",
         sizes: "192x192",
         type: "image/png",
       },
       {
-        src: "/confluence-logo.png",
+        src: "/icon-512.png",
         sizes: "512x512",
         type: "image/png",
-      },
-      {
-        src: "/confluence-logo.png",
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "maskable",
       },
     ],
   };
