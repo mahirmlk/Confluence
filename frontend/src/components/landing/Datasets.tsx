@@ -54,7 +54,7 @@ export function Datasets() {
       aria-labelledby="datasets-heading"
       className="border-t border-border bg-surface"
     >
-      <div className="page-shell grid gap-12 py-16 md:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div className="page-shell grid gap-12 py-16 max-md:py-12 md:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div className="lg:sticky lg:top-24 lg:self-start">
           <Reveal>
             <p className="mono-label">Datasets</p>

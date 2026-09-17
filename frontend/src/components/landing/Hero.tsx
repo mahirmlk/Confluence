@@ -19,7 +19,7 @@ export function Hero() {
       </svg>
 
       <div className="page-shell relative">
-        <div className="grid items-center gap-8 max-md:gap-10 max-md:pt-24 max-md:pb-12 pt-32 pb-16 md:pt-36 md:pb-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <div className="grid items-center gap-12 max-md:gap-10 max-md:pt-24 max-md:pb-12 pt-32 pb-16 md:pt-36 md:pb-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           {/* Left: heading, avatars, actions */}
           <div>
             <h1 id="hero-heading" className="hero-title">

@@ -86,7 +86,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-border bg-background">
-      <div className="page-shell pt-16 md:pt-20">
+      <div className="page-shell pt-16 max-md:pt-12 md:pt-20">
         <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
           {/* Brand + status */}
           <div>

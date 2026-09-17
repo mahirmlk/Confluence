@@ -1,6 +1,15 @@
-/* ── Mobile-only polish (max-width: 767px). Desktop styles untouched. ── */
+/* ── Mobile-only layer (max-width: 767px). Desktop styles untouched. ── */
+/* Everything in this file lives inside the media query below, so the
+   desktop (web app) rendering cannot change. Phones get the same design
+   language — same components, order, colors — re-set in a phone frame. */
 
 @media (max-width: 767px) {
+  /* No sideways scrolling on phones, ever */
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   /* Prevent iOS auto-zoom on focus: all text inputs >= 16px on mobile */
   input[type="text"],
   input[type="search"],
@@ -11,9 +20,40 @@
     font-size: 16px !important;
   }
 
-  /* Keep mono metadata readable but compact */
-  .mono-label {
-    font-size: 0.62rem;
+  /* Media never overflows a 360px viewport */
+  img,
+  svg,
+  canvas,
+  pre,
+  table {
+    max-width: 100%;
+  }
+  pre {
+    overflow-x: auto;
+  }
+  code {
+    overflow-wrap: anywhere;
+  }
+
+  /* ── Type scale: same typefaces, phone-sized ── */
+  .hero-title {
+    font-size: 2.65rem !important;
+    line-height: 0.94 !important;
+    letter-spacing: -0.055em !important;
+  }
+  .section-title {
+    font-size: 2rem !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.04em !important;
+  }
+  .hero-copy {
+    font-size: 1rem !important;
+  }
+
+  /* Mono metadata may wrap instead of pushing the layout sideways */
+  .mono-label,
+  .eyebrow {
+    white-space: normal !important;
   }
 
   /* Page gutters: slightly tighter than desktop page-shell */
@@ -21,10 +61,50 @@
     width: min(100% - 2rem, 1500px);
   }
 
+  /* Two-column landing wrappers already stack on mobile; tighten the gap */
+  .page-shell.grid {
+    gap: 2rem !important;
+  }
+
   /* Landing lists: prevent cramped 3-col rows on 360px */
   .mobile-row-tight {
     grid-template-columns: 32px minmax(0, 1fr) 24px !important;
     gap: 0.6rem !important;
+  }
+
+  /* Datasets rows: name + task badge wrap instead of squeezing */
+  #datasets li > div {
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+  }
+  #datasets li h3 {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* Architecture timeline: slimmer rail gutter, full-width cards */
+  #architecture li {
+    grid-template-columns: 40px minmax(0, 1fr) !important;
+    gap: 0.65rem !important;
+    padding-left: 1.25rem !important;
+  }
+
+  /* Product preview run-summary values wrap instead of overflowing */
+  #main dl dd {
+    overflow-wrap: anywhere;
+    text-align: right;
+    min-width: 0;
+  }
+
+  /* Footer giant wordmark: fit the word on screen instead of clipping */
+  footer div[aria-hidden="true"] p {
+    font-size: 10.5vw !important;
+    letter-spacing: -0.03em !important;
+  }
+
+  /* Calmer scroll-reveal on phones */
+  .reveal {
+    transform: translateY(8px);
   }
 
   /* Horizontal snap rails (filter pills, tab bars) */

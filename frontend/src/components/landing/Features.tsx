@@ -43,7 +43,7 @@ const FEATURES = [
 export function Features() {
   return (
     <section id="features" aria-labelledby="features-heading" className="border-t border-border bg-white">
-      <div className="page-shell py-16 md:py-24">
+      <div className="page-shell py-16 max-md:py-12 md:py-24">
         <Reveal>
           <p className="mono-label">Features</p>
           <h2 id="features-heading" className="section-title mt-5 max-w-3xl">
