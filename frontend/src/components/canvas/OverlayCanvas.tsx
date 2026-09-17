@@ -90,7 +90,7 @@ export function OverlayCanvas({
       ref={canvasRef}
       width={width}
       height={height}
-      className="rounded-lg border border-border block"
+      className="rounded-lg border border-border block max-w-full h-auto"
     />
   );
 }

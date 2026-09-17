@@ -22,18 +22,18 @@ export function ScrubberTimeline({
     <div className="flex items-center gap-3 w-full">
       <button
         onClick={onPlayPause}
-        className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs hover:bg-primary/90 transition-colors"
+        className="w-8 h-8 max-md:w-11 max-md:h-11 max-md:min-w-[44px] max-md:min-h-[44px] rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs hover:bg-primary/90 transition-colors"
       >
         {isPlaying ? "||" : ">"}
       </button>
-      <div className="flex-1">
+      <div className="flex-1 flex items-center">
         <input
           type="range"
           min={1}
           max={totalSteps}
           value={currentStep}
           onChange={(e) => onStepChange(parseInt(e.target.value))}
-          className="w-full h-1.5 bg-secondary rounded-full appearance-none cursor-pointer accent-primary"
+          className="w-full h-1.5 max-md:h-10 bg-secondary rounded-full appearance-none cursor-pointer accent-primary"
         />
       </div>
       <span className="text-xs font-mono text-muted-foreground w-16 text-right">
@@ -178,12 +178,12 @@ export function StreamingViz({
   };
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2">
+    <div className="space-y-3 max-md:space-y-4">
+      <div className="flex items-center gap-2 flex-wrap">
         <button
           onClick={startStream}
           disabled={connected}
-          className="px-3 py-1.5 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+          className="px-3 py-1.5 max-md:px-4 max-md:py-2.5 max-md:min-h-[44px] rounded-md text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
         >
           {connected ? "Streaming..." : "Start Training Animation"}
         </button>

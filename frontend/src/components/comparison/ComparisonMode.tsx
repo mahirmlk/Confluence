@@ -135,9 +135,9 @@ export function ComparisonMode() {
       </div>
 
       {showOverlay && (
-        <div className="flex justify-center">
-          <div className="space-y-2">
-            <div className="text-xs text-center text-muted-foreground">
+        <div className="flex justify-center overflow-x-auto">
+          <div className="space-y-2 max-w-full">
+            <div className="text-xs text-center text-muted-foreground px-2">
               Blue = {ALGORITHMS.find(a => a.name === slots[0].algorithm)?.label ?? slots[0].algorithm} &nbsp;|&nbsp;
               Red = {ALGORITHMS.find(a => a.name === slots[1].algorithm)?.label ?? slots[1].algorithm}
             </div>
@@ -239,7 +239,7 @@ export function ComparisonMode() {
                   <select
                     value={slot.family}
                     onChange={(e) => updateSlot(index, { family: e.target.value, algorithm: "" })}
-                    className="flex-1 rounded border border-border bg-background px-1 py-0.5 text-[10px] text-foreground"
+                    className="flex-1 rounded border border-border bg-background px-1 py-0.5 max-md:min-h-[44px] max-md:text-[16px] text-[10px] text-foreground"
                   >
                     {families.map((f) => (
                       <option key={f.value} value={f.value}>{f.label}</option>
@@ -248,7 +248,7 @@ export function ComparisonMode() {
                   <select
                     value={slot.algorithm}
                     onChange={(e) => updateSlot(index, { algorithm: e.target.value })}
-                    className="flex-1 rounded border border-border bg-background px-1 py-0.5 text-[10px] text-foreground"
+                    className="flex-1 rounded border border-border bg-background px-1 py-0.5 max-md:min-h-[44px] max-md:text-[16px] text-[10px] text-foreground"
                   >
                     {filteredAlgos.map((a) => (
                       <option key={a.name} value={a.name}>{a.label}</option>
