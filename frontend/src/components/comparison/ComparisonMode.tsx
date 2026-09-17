@@ -235,7 +235,7 @@ export function ComparisonMode() {
                     x
                   </button>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1 max-md:flex-wrap">
                   <select
                     value={slot.family}
                     onChange={(e) => updateSlot(index, { family: e.target.value, algorithm: "" })}
@@ -257,15 +257,17 @@ export function ComparisonMode() {
                   <button
                     onClick={() => fetchSlot(index)}
                     disabled={slot.loading}
-                    className="px-2 py-0.5 rounded bg-primary text-primary-foreground text-[10px] disabled:opacity-50"
+                    className="px-2 py-0.5 max-md:px-3 max-md:py-2 max-md:min-h-[44px] max-md:flex-1 rounded bg-primary text-primary-foreground text-[10px] max-md:text-[12px] disabled:opacity-50"
                   >
                     {slot.loading ? "..." : "Run"}
                   </button>
                 </div>
                 {syncZoom ? (
-                  <InteractiveCanvas width={300} height={300} transform={transform} onTransformChange={setTransform}>
-                    {() => canvasContent}
-                  </InteractiveCanvas>
+                  <div className="max-w-full overflow-x-auto flex justify-center">
+                    <InteractiveCanvas width={300} height={300} transform={transform} onTransformChange={setTransform}>
+                      {() => canvasContent}
+                    </InteractiveCanvas>
+                  </div>
                 ) : canvasContent}
               </div>
             );
