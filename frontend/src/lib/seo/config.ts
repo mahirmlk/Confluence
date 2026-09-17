@@ -4,7 +4,7 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://confluence.website";
 const SITE_NAME = "Confluence";
 const SITE_DESCRIPTION =
-  "Interactive ML visualization platform with real scikit-learn computation. Explore 38 algorithms across classification, regression, clustering, and dimensionality reduction.";
+  "Learn machine learning by running real models on real datasets and seeing what they actually do. Free and open source.";
 
 export const siteConfig = {
   name: SITE_NAME,
@@ -71,26 +71,31 @@ export function constructMetadata({
     applicationName: siteConfig.name,
     robots: noIndex
       ? { index: false, follow: false }
-      : { index: true, follow: true },
+      : {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+        },
     alternates: {
       canonical: canonicalUrl,
     },
     icons: {
       icon: [
-        { url: "/confluence-logo.png", sizes: "any" },
-        { url: "/favicon.svg", type: "image/svg+xml" },
+        { url: "/favicon.ico" },
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       ],
       apple: [
-        { url: "/confluence-logo.png", sizes: "180x180", type: "image/png" },
+        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
       ],
       other: [
         {
-          url: "/confluence-logo.png",
+          url: "/icon-192.png",
           sizes: "192x192",
           type: "image/png",
         },
         {
-          url: "/confluence-logo.png",
+          url: "/icon-512.png",
           sizes: "512x512",
           type: "image/png",
         },
