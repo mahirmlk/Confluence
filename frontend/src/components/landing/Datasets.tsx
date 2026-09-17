@@ -54,7 +54,7 @@ export function Datasets() {
       aria-labelledby="datasets-heading"
       className="border-t border-border bg-surface"
     >
-      <div className="page-shell grid gap-12 py-16 max-md:py-12 md:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div className="page-shell grid gap-12 py-16 max-md:py-20 md:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div className="lg:sticky lg:top-24 lg:self-start">
           <Reveal>
             <p className="mono-label">Datasets</p>
@@ -101,7 +101,7 @@ export function Datasets() {
                     i === DATASETS.length - 1 ? "border-b" : ""
                   }`}
                 >
-                  <div className="flex items-baseline justify-between gap-4">
+                  <div className="flex items-baseline justify-between gap-4 max-md:flex-col max-md:items-start max-md:gap-1">
                     <h3 className="font-ui text-[1.15rem] font-semibold tracking-[-0.01em] text-foreground">
                       {d.name}
                     </h3>

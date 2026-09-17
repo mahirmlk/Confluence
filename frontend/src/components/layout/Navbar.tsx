@@ -59,7 +59,7 @@ export function Navbar() {
       </a>
       <nav
         aria-label="Primary"
-        className="mx-auto flex h-14 w-full max-w-[1120px] items-center px-6"
+        className="mx-auto flex h-14 max-md:h-16 w-full max-w-[1120px] items-center px-6"
       >
         <Link
           href="/"
@@ -119,15 +119,15 @@ export function Navbar() {
           onClick={() => setMobileOpen((v) => !v)}
           aria-expanded={mobileOpen}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          className="ml-auto flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
+          className="ml-auto flex h-10 w-10 max-md:h-11 max-md:w-11 flex-col items-center justify-center gap-1.5 md:hidden"
         >
           <span
-            className={`block h-px w-5 bg-foreground transition-transform duration-200 ${
+            className={`block h-px w-5 max-md:w-6 bg-foreground transition-transform duration-200 ${
               mobileOpen ? "translate-y-[3.5px] rotate-45" : ""
             }`}
           />
           <span
-            className={`block h-px w-5 bg-foreground transition-transform duration-200 ${
+            className={`block h-px w-5 max-md:w-6 bg-foreground transition-transform duration-200 ${
               mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""
             }`}
           />
@@ -161,7 +161,7 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="font-ui border-b border-black/[0.08] py-3 text-[15px] text-foreground/80 transition-colors hover:text-foreground"
+                className="font-ui border-b border-black/[0.08] py-3 max-md:min-h-[48px] max-md:flex max-md:items-center text-[15px] text-foreground/80 transition-colors hover:text-foreground"
               >
                 {link.label}
               </Link>

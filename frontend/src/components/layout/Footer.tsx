@@ -93,7 +93,7 @@ export function Footer() {
             <p className="font-display text-[15px] font-extrabold tracking-[-0.01em] text-foreground">
               CONFLUENCE
             </p>
-            <p className="font-ui mt-4 max-w-xs text-[0.9rem] leading-relaxed text-muted-foreground">
+            <p className="font-ui mt-4 max-w-xs text-[0.9rem] max-md:text-base leading-relaxed text-muted-foreground">
               An interactive visualization platform powered by real
               scikit-learn computation. Explore decision boundaries, compare
               algorithms, and watch models train step by step.
@@ -110,7 +110,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="flex h-9 w-9 items-center justify-center border border-border text-muted-foreground transition-colors duration-150 hover:border-[#1b1b1b] hover:text-foreground"
+                  className="flex h-9 w-9 max-md:h-11 max-md:w-11 items-center justify-center border border-border text-muted-foreground transition-colors duration-150 hover:border-[#1b1b1b] hover:text-foreground"
                   style={{ borderRadius: 4 }}
                 >
                   {s.icon}
@@ -129,7 +129,7 @@ export function Footer() {
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="font-ui text-[0.9rem] text-muted-foreground transition-colors duration-150 hover:text-foreground"
+                        className="font-ui text-[0.9rem] max-md:text-base text-muted-foreground transition-colors duration-150 hover:text-foreground"
                       >
                         {link.label}
                       </Link>
