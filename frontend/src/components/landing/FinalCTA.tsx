@@ -9,13 +9,6 @@ export function FinalCTA() {
     <section aria-labelledby="final-cta-heading" className="bg-[#0b0b0c]">
       <div className="page-shell border-x border-white/15">
         <div className="px-6 py-16 md:px-12 md:py-24">
-          <Reveal>
-            <p className="font-mono inline-flex items-center gap-3 border border-white/25 px-4 py-2 text-[11px] font-medium tracking-[0.18em] text-white/70 uppercase">
-              <span aria-hidden="true" className="inline-block h-1.5 w-1.5 bg-white" />
-              38 algorithms · 24 datasets — verified live
-            </p>
-          </Reveal>
-
           <Reveal delay={100}>
             <h2
               id="final-cta-heading"
@@ -36,13 +29,13 @@ export function FinalCTA() {
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/app"
-                className="font-mono inline-flex h-[54px] items-center justify-center bg-white px-9 text-[13px] font-semibold tracking-[0.22em] text-[#0b0b0c] uppercase transition-colors duration-150 hover:bg-[#e4e4e4]"
+                className="font-mono inline-flex h-[54px] items-center justify-center bg-white px-9 text-[13px] font-semibold tracking-[0.22em] text-[#0b0b0c] uppercase transition-all duration-150 hover:bg-[#e4e4e4] active:scale-[0.99]"
               >
                 Launch visualizer
               </Link>
               <Link
                 href="/algorithms"
-                className="font-mono inline-flex h-[54px] items-center justify-center border border-white/30 px-9 text-[13px] font-semibold tracking-[0.22em] text-white uppercase transition-colors duration-150 hover:border-white hover:bg-white hover:text-[#0b0b0c]"
+                className="font-mono inline-flex h-[54px] items-center justify-center border border-white/30 px-9 text-[13px] font-semibold tracking-[0.22em] text-white uppercase transition-all duration-150 hover:border-white hover:bg-white hover:text-[#0b0b0c] active:scale-[0.99]"
               >
                 Browse algorithms
               </Link>
