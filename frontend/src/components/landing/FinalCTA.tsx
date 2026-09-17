@@ -12,7 +12,7 @@ export function FinalCTA() {
           <Reveal delay={100}>
             <h2
               id="final-cta-heading"
-              className="font-display mt-8 max-md:mt-6 max-w-5xl text-[clamp(3rem,7vw,7rem)] max-md:text-[2.55rem] font-extrabold tracking-[-0.04em] max-md:tracking-[-0.03em] text-white"
+              className="font-display mt-8 max-w-5xl text-[clamp(3rem,7vw,7rem)] font-extrabold tracking-[-0.04em] text-white"
               style={{ lineHeight: 0.95 }}
             >
               Understand the model. Don&rsquo;t just run it.

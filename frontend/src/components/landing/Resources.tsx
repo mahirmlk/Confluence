@@ -41,7 +41,7 @@ export function Resources() {
       aria-labelledby="resources-heading"
       className="border-t border-border bg-white"
     >
-      <div className="page-shell py-16 max-md:py-20 md:py-24">
+      <div className="page-shell py-16 max-md:py-16 md:py-24">
         <Reveal>
           <p className="mono-label">Resources</p>
           <h2 id="resources-heading" className="section-title mt-5 max-w-3xl">

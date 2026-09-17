@@ -48,7 +48,7 @@ export function Algorithms() {
       aria-labelledby="algorithms-heading"
       className="border-t border-border bg-white"
     >
-      <div className="page-shell py-16 max-md:py-20 md:py-24">
+      <div className="page-shell py-16 max-md:py-16 md:py-24">
         <Reveal>
           <div className="grid items-end gap-10 lg:grid-cols-[1fr_320px]">
             <div>

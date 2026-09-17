@@ -38,23 +38,25 @@
   /* ── 1. Container: consistent 24px gutters via base .page-shell ── */
   /* (base .page-shell is already min(100% - 3rem); nothing to override) */
 
-  /* ── 2. Type system: editorial scale for phones ── */
+  /* ── 2. Type system: compact editorial scale for phones ──
+     Research-backed mobile scale: H1 36–44px display, H2 ≈28px,
+     H3 ≈20px, body 16px/1.6, relaxed tracking for small sizes. */
   .hero-title {
-    font-size: clamp(3.25rem, 15vw, 5rem);
-    line-height: 0.88;
-    letter-spacing: -0.065em;
+    font-size: clamp(2.25rem, 10vw, 3rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
   }
   .hero-copy {
-    font-size: 1.0625rem;
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: 1.6;
     letter-spacing: -0.01em;
     color: #666666;
     max-width: 100%;
   }
   .section-title {
-    font-size: 2.5rem;
-    line-height: 0.98;
-    letter-spacing: -0.045em;
+    font-size: 1.75rem;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
   }
   .mono-label {
     font-size: 0.7rem;
@@ -72,15 +74,15 @@
 
   /* Features: compact editorial rows, never cards */
   #features div.group {
-    padding-block: 2.25rem;
+    padding-block: 1.5rem;
   }
   #features h3 {
-    font-size: 1.6rem;
+    font-size: 1.25rem;
     letter-spacing: -0.02em;
   }
   #features h3 + p {
-    font-size: 1.0625rem;
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   /* Landing algorithm / roadmap rows: roomy tap rows, no squeeze */
@@ -113,9 +115,16 @@
     min-width: 0;
   }
 
-  /* Footer wordmark: fit the word on screen instead of clipping it */
+  /* Final CTA: strong but phone-proportioned closer */
+  #final-cta-heading {
+    font-size: 2rem !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.03em !important;
+  }
+
+  /* Footer wordmark: quiet brand echo, not a shout */
   footer div[aria-hidden="true"] p {
-    font-size: 10.5vw !important;
+    font-size: 9vw !important;
     letter-spacing: -0.03em !important;
   }
 

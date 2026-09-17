@@ -19,7 +19,7 @@ export function Hero() {
       </svg>
 
       <div className="page-shell relative">
-        <div className="grid items-center gap-12 max-md:gap-10 max-md:pt-24 max-md:pb-12 pt-32 pb-16 md:pt-36 md:pb-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <div className="grid items-center gap-12 max-md:gap-8 max-md:pt-24 max-md:pb-12 pt-32 pb-16 md:pt-36 md:pb-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           {/* Left: heading, avatars, actions */}
           <div>
             <h1 id="hero-heading" className="hero-title">
@@ -28,12 +28,12 @@ export function Hero() {
               <span className="hero-title__secondary inline-block">Made Visible.</span>
             </h1>
 
-            <p className="hero-copy mt-6">
+            <p className="hero-copy mt-6 max-md:mt-4">
               A hands-on way to learn ml, experiment with models, mess with
               the parameters, and watch the results change in real time.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 max-md:w-full sm:flex-row">
+            <div className="mt-8 max-md:mt-6 flex flex-col gap-3 max-md:gap-2.5 max-md:w-full sm:flex-row">
               <Link
                 href="/app"
                 className="font-ui inline-flex h-12 max-md:min-h-[48px] max-md:w-full items-center justify-center border border-[#151515] bg-[#151515] px-[22px] text-[0.95rem] font-medium text-white transition-all duration-150 hover:bg-[#2a2a2a] active:scale-[0.99]"

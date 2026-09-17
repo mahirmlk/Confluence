@@ -68,7 +68,7 @@ export function ProductPreview() {
   const [[x1, y1], [x2, y2]] = BOUNDARY_LINE;
   return (
     <section aria-label="Product preview" className="border-t border-border bg-white">
-      <div className="page-shell py-16 max-md:py-20 md:py-24">
+      <div className="page-shell py-16 max-md:py-16 md:py-24">
         <Reveal>
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <p className="mono-label">Live product preview</p>
