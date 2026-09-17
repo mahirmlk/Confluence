@@ -50,14 +50,31 @@ export function Algorithms() {
     >
       <div className="page-shell py-16 md:py-24">
         <Reveal>
-          <p className="mono-label">Algorithms</p>
-          <h2 id="algorithms-heading" className="section-title mt-5 max-w-4xl">
-            Algorithms, without the black box.
-          </h2>
-          <p className="font-ui mt-5 max-w-2xl text-[1.05rem] leading-relaxed text-muted-foreground">
-            Every model runs for real, server-side. Filter by family or search
-            to find the one you want to take apart.
-          </p>
+          <div className="grid items-end gap-10 lg:grid-cols-[1fr_320px]">
+            <div>
+              <p className="mono-label">Algorithms</p>
+              <h2 id="algorithms-heading" className="section-title mt-5 max-w-4xl">
+                Algorithms, without the black box.
+              </h2>
+              <p className="font-ui mt-5 max-w-2xl text-[1.05rem] leading-relaxed text-muted-foreground">
+                Every model runs for real, server-side. Filter by family or search
+                to find the one you want to take apart.
+              </p>
+            </div>
+            <figure className="m-0 hidden border border-border bg-white p-4 lg:block">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/illustrations/algorithms-visual.svg"
+                alt="Schematic taxonomy diagram grouping algorithm families around machine learning"
+                className="h-auto w-full"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption className="sr-only">
+                Conceptual taxonomy only. Node positions carry no measured meaning.
+              </figcaption>
+            </figure>
+          </div>
         </Reveal>
 
         <Reveal delay={100}>
@@ -71,7 +88,7 @@ export function Algorithms() {
                     type="button"
                     onClick={() => setFamily(f.id)}
                     aria-pressed={active}
-                    className={`font-ui h-10 border px-4 text-[0.85rem] font-medium transition-colors duration-150 ${
+                    className={`font-ui h-10 border px-4 text-[0.85rem] font-medium transition-all duration-150 active:scale-[0.97] ${
                       active
                         ? "border-[#151515] bg-[#151515] text-white"
                         : "border-border bg-white text-muted-foreground hover:border-[#1b1b1b] hover:text-foreground"

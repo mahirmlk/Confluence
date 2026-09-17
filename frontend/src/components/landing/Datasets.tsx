@@ -76,6 +76,19 @@ export function Datasets() {
                 →
               </span>
             </Link>
+            <figure className="m-0 mt-10 border border-border bg-white p-4 md:p-5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/illustrations/datasets-visual.svg"
+                alt="Schematic data-topology diagram with clustered points, one outlier, and one selected target"
+                className="h-auto w-full"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption className="sr-only">
+                Conceptual data distribution only. Point counts are illustrative, not dataset statistics.
+              </figcaption>
+            </figure>
           </Reveal>
         </div>
 
@@ -105,7 +118,7 @@ export function Datasets() {
           </ul>
           <Reveal>
             <p className="font-mono mt-6 text-[11px] tracking-[0.1em] text-muted-foreground uppercase">
-              + 18 more in the visualizer
+              + 19 more in the visualizer
             </p>
           </Reveal>
         </div>

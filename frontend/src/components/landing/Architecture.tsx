@@ -6,7 +6,7 @@ const STEPS = [
     n: "01",
     label: "Dataset",
     description: "Real and synthetic datasets, projected to 2D for the canvas.",
-    tech: "24 datasets",
+    tech: "25 datasets",
   },
   {
     n: "02",
