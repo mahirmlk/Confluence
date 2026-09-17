@@ -19,13 +19,13 @@ router = APIRouter(prefix="/api/compare", tags=["compare"])
 # --- Hyperparameter Comparison ---
 
 class HyperparamConfig(BaseModel):
-    params: dict = Field(default={})
+    params: dict = Field(default={}, max_length=20)
 
 
 class HyperparamComparisonRequest(BaseModel):
     algorithm: str = Field(min_length=1, max_length=50)
     dataset_name: str = Field(min_length=1, max_length=50)
-    configs: list[dict]
+    configs: list[dict] = Field(max_length=12)
     noise: float = Field(default=0.5, ge=0, le=5)
     n_samples: int = Field(default=300, ge=10, le=5000)
     resolution: int = Field(default=80, ge=10, le=150)
@@ -75,7 +75,7 @@ async def compare_hyperparameters(request: HyperparamComparisonRequest):
 # --- Algorithm Race ---
 
 class RaceRequest(BaseModel):
-    algorithms: list[str]
+    algorithms: list[str] = Field(max_length=10)
     dataset_name: str = Field(min_length=1, max_length=50)
     noise: float = Field(default=0.5, ge=0, le=5)
     n_samples: int = Field(default=300, ge=10, le=5000)
@@ -91,7 +91,7 @@ async def algorithm_race(ws: WebSocket):
             await ws.send_json({"type": "error", "message": "Invalid format"})
             return
 
-        algorithms = data.get("algorithms", [])
+        algorithms = data.get("algorithms", [])[:10]
         dataset_name = data.get("dataset_name", "blobs")
         noise = float(data.get("noise", 0.5))
         n_samples = min(int(data.get("n_samples", 300)), 5000)
@@ -156,8 +156,8 @@ async def algorithm_race(ws: WebSocket):
 # --- Benchmark Suite ---
 
 class BenchmarkRequest(BaseModel):
-    algorithms: list[str]
-    datasets: list[str]
+    algorithms: list[str] = Field(max_length=10)
+    datasets: list[str] = Field(max_length=8)
     n_samples: int = Field(default=300, ge=10, le=5000)
     noise: float = Field(default=0.5, ge=0, le=5)
 

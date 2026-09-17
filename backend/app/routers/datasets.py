@@ -67,8 +67,8 @@ class CustomPointsResponse(BaseModel):
 
 class RecommendRequest(BaseModel):
     dataset_name: str
-    n_samples: int = 300
-    noise: float = 0.5
+    n_samples: int = Field(default=300, ge=10, le=5000)
+    noise: float = Field(default=0.5, ge=0, le=5)
     session_id: Optional[str] = None
 
 
