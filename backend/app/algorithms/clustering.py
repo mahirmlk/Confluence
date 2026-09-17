@@ -3,6 +3,8 @@ from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering, SpectralClu
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.mixture import GaussianMixture
 
+from .sanitize import sanitize_params
+
 
 CLUSTERING_ALGORITHMS = {
     "kmeans": lambda params, n_clusters: KMeans(n_clusters=n_clusters, random_state=42, n_init=10),
@@ -22,7 +24,8 @@ def fit_and_predict_clustering(
     xx: np.ndarray,
     yy: np.ndarray,
 ) -> tuple[np.ndarray, dict]:
-    n_clusters = int(params.get("n_clusters", 3))
+    params = sanitize_params(params)
+    n_clusters = min(max(int(params.get("n_clusters", 3)), 2), 50)
 
     if algorithm_name not in CLUSTERING_ALGORITHMS:
         raise ValueError(f"Unknown algorithm: {algorithm_name}")

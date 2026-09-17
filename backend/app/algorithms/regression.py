@@ -36,6 +36,20 @@ REGRESSION_ALGORITHMS = {
     ),
 }
 
+from .sanitize import sanitize_params
+
+
+def _guarded(factory):
+    def build(params):
+        return factory(sanitize_params(params if isinstance(params, dict) else {}))
+
+    return build
+
+
+REGRESSION_ALGORITHMS = {
+    name: _guarded(factory) for name, factory in REGRESSION_ALGORITHMS.items()
+}
+
 
 def fit_and_predict_grid_regression(
     algorithm_name: str,

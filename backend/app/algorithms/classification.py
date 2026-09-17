@@ -63,6 +63,20 @@ CLASSIFICATION_ALGORITHMS = {
     ),
 }
 
+from .sanitize import sanitize_params
+
+
+def _guarded(factory):
+    def build(params):
+        return factory(sanitize_params(params if isinstance(params, dict) else {}))
+
+    return build
+
+
+CLASSIFICATION_ALGORITHMS = {
+    name: _guarded(factory) for name, factory in CLASSIFICATION_ALGORITHMS.items()
+}
+
 
 def fit_and_predict_grid(
     algorithm_name: str,

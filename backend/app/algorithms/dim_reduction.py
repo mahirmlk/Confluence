@@ -26,7 +26,7 @@ def fit_and_reduce(
         info["components"] = model.components_.tolist()
 
     elif algorithm_name == "tsne":
-        perplexity = min(int(params.get("perplexity", 30)), X.shape[0] - 1)
+        perplexity = min(max(int(params.get("perplexity", 30)), 1), 200, X.shape[0] - 1)
         model = TSNE(n_components=n_components, perplexity=perplexity, random_state=42)
         X_reduced = model.fit_transform(X_scaled)
         info["kl_divergence"] = float(model.kl_divergence_)
@@ -34,7 +34,7 @@ def fit_and_reduce(
     elif algorithm_name == "umap":
         try:
             import umap
-            n_neighbors = int(params.get("n_neighbors", 15))
+            n_neighbors = min(max(int(params.get("n_neighbors", 15)), 2), 200)
             reducer = umap.UMAP(n_components=n_components, n_neighbors=n_neighbors, random_state=42)
             X_reduced = reducer.fit_transform(X_scaled)
         except ImportError:
@@ -44,7 +44,7 @@ def fit_and_reduce(
 
     elif algorithm_name == "isomap":
         from sklearn.manifold import Isomap
-        n_neighbors = int(params.get("n_neighbors", 5))
+        n_neighbors = min(max(int(params.get("n_neighbors", 5)), 2), 200)
         model = Isomap(n_components=n_components, n_neighbors=n_neighbors)
         X_reduced = model.fit_transform(X_scaled)
         info["reconstruction_error"] = float(model.reconstruction_error())
