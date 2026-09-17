@@ -20,14 +20,6 @@ interface WebSiteSchema {
     "@type": string;
     name: string;
   };
-  potentialAction: {
-    "@type": string;
-    target: {
-      "@type": string;
-      urlTemplate: string;
-    };
-    "query-input": string;
-  };
 }
 
 interface SoftwareApplicationSchema {
@@ -63,6 +55,8 @@ export function getOrganizationSchema(): OrganizationSchema {
 }
 
 export function getWebSiteSchema(): WebSiteSchema {
+  // Note: no SearchAction — /algorithms has no ?q= handler, and schema
+  // must mirror real functionality, never promise it.
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -73,19 +67,10 @@ export function getWebSiteSchema(): WebSiteSchema {
       "@type": "Organization",
       name: siteConfig.name,
     },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${siteConfig.url}/algorithms?q={search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
   };
 }
 
-export function getSoftwareAppSchema(): SoftwareApplicationSchema {
-  return {
+export function getSoftwareAppSchema(): SoftwareApplicationSchema {  return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: siteConfig.name,
@@ -99,6 +84,51 @@ export function getSoftwareAppSchema(): SoftwareApplicationSchema {
       priceCurrency: "USD",
     },
     version: "0.1.0",
+  };
+}
+
+export function getFaqSchema(items: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
+export function getBreadcrumbSchema(trail: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map((crumb, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: crumb.name,
+      item: `${siteConfig.url}${crumb.path}`,
+    })),
+  };
+}
+
+export function getItemListSchema(
+  name: string,
+  description: string,
+  items: { name: string; url: string }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    description,
+    numberOfItems: items.length,
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      url: item.url,
+    })),
   };
 }
 
