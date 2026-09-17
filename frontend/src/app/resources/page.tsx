@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import {
+  getBreadcrumbSchema,
+  getFaqSchema,
+} from "@/lib/seo/json-ld";
 
 interface ResourceLink {
   title: string;
@@ -252,248 +256,466 @@ const PLATFORMS: RoadmapTopic = {
   },
 };
 
+/** Essential long-form reading — every URL verified live before adding. */
+const ESSENTIALS: { title: string; detail: string; url: string }[] = [
+  { title: "Dive into Deep Learning", detail: "Interactive book · code plus math", url: "https://d2l.ai/" },
+  { title: "Distill", detail: "Interactive ML explanations · archive", url: "https://distill.pub/" },
+  { title: "fast.ai", detail: "Practical Deep Learning for Coders", url: "https://www.fast.ai/" },
+  { title: "Understanding Deep Learning", detail: "Free book · Prince", url: "https://udlbook.github.io/udlbook/" },
+];
+
+const FAQS: { q: string; a: string }[] = [
+  {
+    q: "Where do I start?",
+    a: "Start with the Fundamentals layer and go in order. Each layer assumes the ones before it, and every topic links straight into the visualizer so you can practice as you read.",
+  },
+  {
+    q: "Do I need the math first?",
+    a: "Enough to follow along, not a degree. Linear Algebra and Statistics give you the vocabulary; the visualizer shows you what the equations are describing.",
+  },
+  {
+    q: "How do the topics connect to Confluence?",
+    a: "Every layer lists the exact visualizer tools and algorithms to open next — for example, Optimization pairs with the Training Playground, and Evaluation pairs with the confusion matrix and ROC views.",
+  },
+  {
+    q: "Are these links really free?",
+    a: "Everything listed here is freely accessible: open docs, free courses, public lectures, and open-access books and papers.",
+  },
+];
+
 const CATEGORIES = [...new Set(ROADMAP.map((t) => t.category))];
 
-const DIFFICULTY_COLORS: Record<string, string> = {
-  beginner: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
-  intermediate: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300",
-  advanced: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
+const DIFFICULTY_DOT: Record<RoadmapTopic["difficulty"], string> = {
+  beginner: "bg-[#16a34a]",
+  intermediate: "bg-[#d97706]",
+  advanced: "bg-[#171719]",
 };
 
-export default function ResourcesPage() {
-  const [selectedTopic, setSelectedTopic] = useState<RoadmapTopic | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+function countLinks(t: RoadmapTopic) {
+  const r = t.resources;
+  return (
+    r.documentation.length +
+    r.youtube.length +
+    r.university.length +
+    r.books.length +
+    r.papers.length
+  );
+}
 
-  const filtered = selectedCategory ? ROADMAP.filter((t) => t.category === selectedCategory) : ROADMAP;
+const RESOURCE_GROUPS: { key: keyof ResourceSection; label: string }[] = [
+  { key: "documentation", label: "Documentation" },
+  { key: "youtube", label: "Videos" },
+  { key: "university", label: "Courses" },
+  { key: "books", label: "Books" },
+  { key: "papers", label: "Papers" },
+];
+
+function ExternalRow({ title, url }: ResourceLink) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="font-ui group flex items-center justify-between gap-4 border-t border-border py-3 transition-colors duration-150 hover:bg-surface"
+    >
+      <span className="text-[0.95rem] text-foreground">{title}</span>
+      <span aria-hidden="true" className="row-arrow shrink-0 pr-1 text-muted-foreground transition-colors group-hover:text-foreground">
+        ↗
+      </span>
+    </a>
+  );
+}
+
+export default function ResourcesPage() {
+  const [openId, setOpenId] = useState<string | null>(ROADMAP[0].id);
+  const [category, setCategory] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const stats = useMemo(() => {
+    const links =
+      ROADMAP.reduce((n, t) => n + countLinks(t), 0) +
+      countLinks(PLATFORMS) +
+      ESSENTIALS.length;
+    return { layers: ROADMAP.length, links, formats: 5 };
+  }, []);
+
+  const q = query.trim().toLowerCase();
+  const visible = ROADMAP.filter((t) => {
+    if (category && t.category !== category) return false;
+    if (!q) return true;
+    return (
+      t.title.toLowerCase().includes(q) ||
+      t.description.toLowerCase().includes(q) ||
+      t.category.toLowerCase().includes(q) ||
+      t.keyConcepts.some((c) => c.toLowerCase().includes(q))
+    );
+  });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-      
-      {/* Hero Section */}
-      <div className="relative w-full h-[280px] md:h-[400px] mt-16 overflow-hidden">
-        <img 
-          src="/resources-hero.png" 
-          alt="Machine Learning Resources" 
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 font-montserrat uppercase tracking-wide drop-shadow-lg">
-            Some of Machine Learning Resources
-          </h1>
-          <p className="text-gray-200 max-w-2xl mx-auto text-lg drop-shadow-md">
-            Explore curated learning paths from fundamentals to advanced topics. Each resource connects to
-            interactive Confluence tools where you can practice and experiment with real algorithms.
-          </p>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getFaqSchema(FAQS)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            getBreadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Resources", path: "/resources" },
+            ])
+          ),
+        }}
+      />
+
+      <main id="main">
+        {/* Hero — editorial, typographic */}
+        <section className="border-b border-border bg-white">
+          <div className="page-shell pt-28 pb-12 md:pt-36 md:pb-16">
+            <p className="mono-label">Learning roadmap</p>
+            <h1 className="section-title mt-5 max-w-3xl">
+              Learn the ideas behind the visuals.
+            </h1>
+            <p className="font-ui mt-5 max-w-2xl text-[1.05rem] leading-relaxed text-muted-foreground">
+              Seven layers, from linear algebra to deployment. Each one pairs
+              readings and videos with the exact visualizer tool to practice on.
+            </p>
+            <p className="font-mono mt-8 text-[11px] tracking-[0.12em] text-muted-foreground uppercase tabular-nums">
+              {stats.layers} layers · {stats.links} curated links · {stats.formats} formats
+            </p>
+            <p className="font-mono mt-2 text-[11px] tracking-[0.12em] text-muted-foreground uppercase">
+              Last updated · September 2026
+            </p>
+
+            <div className="relative mt-8 max-w-xl">
+              <label htmlFor="roadmap-search" className="sr-only">
+                Search the roadmap
+              </label>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+                className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground"
+              >
+                <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" />
+                <line x1="11" y1="11" x2="14.5" y2="14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <input
+                id="roadmap-search"
+                type="search"
+                autoComplete="off"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search layers, concepts…"
+                className="font-ui h-12 w-full border border-border bg-white pr-4 pl-11 text-[0.95rem] text-foreground transition-colors placeholder:text-muted-foreground focus:border-[#1b1b1b] focus:outline-none"
+                style={{ borderRadius: 10 }}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Sticky filter bar */}
+        <div className="sticky top-14 z-30 border-b border-border bg-white/80 backdrop-blur-xl">
+          <div className="page-shell flex items-center gap-2 overflow-x-auto py-3">
+            <div
+              className="flex items-center gap-1 bg-black/[0.04] p-1"
+              style={{ borderRadius: 999 }}
+              role="group"
+              aria-label="Filter by category"
+            >
+              {["All", ...CATEGORIES].map((c) => {
+                const value = c === "All" ? null : c;
+                const selected = category === value;
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setCategory(value)}
+                    aria-pressed={selected}
+                    className={`font-ui h-8 shrink-0 px-4 text-[0.85rem] font-medium whitespace-nowrap transition-all duration-150 ${
+                      selected
+                        ? "bg-white text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    style={{ borderRadius: 999 }}
+                  >
+                    {c}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="font-mono ml-auto hidden shrink-0 text-[11px] tracking-[0.1em] text-muted-foreground uppercase tabular-nums sm:block" aria-live="polite">
+              {visible.length} of {ROADMAP.length}
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-6 pt-12 pb-16">
+        {/* Roadmap layers */}
+        <section aria-label="Roadmap layers" className="bg-white">
+          <div className="page-shell py-12 md:py-16">
+            {visible.length === 0 && (
+              <p className="font-ui border-t border-border py-12 text-center text-muted-foreground">
+                Nothing matches this search.
+              </p>
+            )}
+            <ol>
+              {visible.map((topic, i) => {
+                const open = openId === topic.id;
+                return (
+                  <li
+                    key={topic.id}
+                    className={i === visible.length - 1 ? "border-b border-border" : ""}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setOpenId(open ? null : topic.id)}
+                      aria-expanded={open}
+                      className="group grid w-full grid-cols-[44px_1fr_auto] items-center gap-4 border-t border-border py-5 text-left transition-colors duration-150 hover:bg-surface md:py-6"
+                    >
+                      <span className="font-mono pl-1 text-[13px] text-muted-foreground tabular-nums">
+                        {String(ROADMAP.indexOf(topic) + 1).padStart(2, "0")}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="font-ui block truncate text-[1.2rem] font-semibold tracking-[-0.02em] text-foreground md:text-[1.45rem]">
+                          {topic.title}
+                        </span>
+                        <span className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                          <span className="font-mono inline-flex items-center gap-1.5 text-[11px] tracking-[0.1em] text-muted-foreground uppercase">
+                            <span aria-hidden="true" className={`inline-block h-1.5 w-1.5 rounded-full ${DIFFICULTY_DOT[topic.difficulty]}`} />
+                            {topic.difficulty}
+                          </span>
+                          <span className="font-mono text-[11px] tracking-[0.1em] text-muted-foreground uppercase">
+                            {topic.category}
+                          </span>
+                          <span className="font-mono text-[11px] tracking-[0.1em] text-muted-foreground tabular-nums">
+                            {countLinks(topic)} links
+                          </span>
+                        </span>
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={`pr-1 text-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+                      >
+                        ↓
+                      </span>
+                    </button>
 
-        {/* Category Filter */}
-        <div className="flex justify-center gap-2 mb-8">
-          <button onClick={() => setSelectedCategory(null)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${!selectedCategory ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}>
-            All
-          </button>
-          {CATEGORIES.map((cat) => (
-            <button key={cat} onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedCategory === cat ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}>
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Roadmap Flow */}
-        <div className="relative">
-          {/* Connection line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-border hidden lg:block" />
-
-          <div className="space-y-6">
-            {filtered.map((topic, i) => (
-              <div key={topic.id} className="relative pl-16">
-                {/* Step number */}
-                <div className="absolute left-4 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
-                  {i + 1}
-                </div>
-
-                <div
-                  className={`border rounded-lg p-6 cursor-pointer transition-all hover:shadow-md ${
-                    selectedTopic?.id === topic.id ? "border-primary shadow-md" : "border-border"
-                  }`}
-                  onClick={() => setSelectedTopic(selectedTopic?.id === topic.id ? null : topic)}
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-lg font-semibold text-foreground">{topic.title}</h2>
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${DIFFICULTY_COLORS[topic.difficulty]}`}>
-                      {topic.difficulty}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-muted text-muted-foreground text-[10px]">{topic.category}</span>
-                  </div>
-
-                  <p className="text-sm text-muted-foreground leading-relaxed">{topic.description}</p>
-
-                  {selectedTopic?.id === topic.id && (
-                    <div className="mt-4 space-y-4 text-sm">
-                      {/* Key Concepts */}
-                      <div>
-                        <h3 className="text-xs font-semibold text-foreground mb-2">Key Concepts:</h3>
-                        <div className="flex flex-wrap gap-1">
-                          {topic.keyConcepts.map((c) => (
-                            <span key={c} className="px-2 py-0.5 rounded bg-muted text-muted-foreground text-xs">{c}</span>
-                          ))}
+                    {open && (
+                      <div className="grid gap-8 pb-8 md:grid-cols-[1fr_1fr] md:gap-12 md:pl-[60px]">
+                        <div>
+                          <p className="font-ui max-w-xl leading-relaxed text-muted-foreground">
+                            {topic.description}
+                          </p>
+                          <div className="mt-4 flex flex-wrap gap-1.5">
+                            {topic.keyConcepts.map((c) => (
+                              <span
+                                key={c}
+                                className="font-mono border border-border bg-surface px-2.5 py-1 text-[11px] tracking-[0.04em] text-muted-foreground uppercase"
+                                style={{ borderRadius: 4 }}
+                              >
+                                {c}
+                              </span>
+                            ))}
+                          </div>
+                          {topic.confluenceLinks.length > 0 && (
+                            <div className="mt-6">
+                              <p className="mono-label">Practice in Confluence</p>
+                              <div className="mt-2">
+                                {topic.confluenceLinks.map((link) => (
+                                  <Link
+                                    key={link.label}
+                                    href={link.href}
+                                    className="font-ui group mt-1 flex items-center gap-2 text-[0.95rem] font-medium text-foreground"
+                                  >
+                                    {link.label}
+                                    <span aria-hidden="true" className="row-arrow">
+                                      →
+                                    </span>
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {topic.relatedAlgorithms.length > 0 && (
+                            <div className="mt-6">
+                              <p className="mono-label">Related algorithms</p>
+                              <div className="mt-2 flex flex-wrap gap-1.5">
+                                {topic.relatedAlgorithms.map((a) => (
+                                  <Link
+                                    key={a}
+                                    href={`/algorithms#algo-${a}`}
+                                    className="font-mono border border-[#1b1b1b] px-2.5 py-1 text-[11px] tracking-[0.04em] text-foreground transition-colors duration-150 hover:bg-[#151515] hover:text-white"
+                                    style={{ borderRadius: 4 }}
+                                  >
+                                    {a}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          {RESOURCE_GROUPS.map(
+                            (g) =>
+                              topic.resources[g.key].length > 0 && (
+                                <div key={g.key} className="mt-6 first:mt-0">
+                                  <p className="mono-label">{g.label}</p>
+                                  <div className="mt-1 border-b border-border">
+                                    {topic.resources[g.key].map((r) => (
+                                      <ExternalRow key={r.title} title={r.title} url={r.url} />
+                                    ))}
+                                  </div>
+                                </div>
+                              )
+                          )}
                         </div>
                       </div>
-
-                      {/* Confluence Links */}
-                      {topic.confluenceLinks.length > 0 && (
-                        <div>
-                          <h3 className="text-xs font-semibold text-foreground mb-2">Practice in Confluence:</h3>
-                          <div className="space-y-1">
-                            {topic.confluenceLinks.map((link) => (
-                              <Link key={link.label} href={link.href}
-                                className="block text-primary hover:underline text-xs">
-                                → {link.label}
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Related Algorithms */}
-                      {topic.relatedAlgorithms.length > 0 && (
-                        <div>
-                          <h3 className="text-xs font-semibold text-foreground mb-2">Related Algorithms:</h3>
-                          <div className="flex flex-wrap gap-1">
-                            {topic.relatedAlgorithms.map((a) => (
-                              <span key={a} className="px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-mono">{a}</span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Resources */}
-                      {topic.resources.documentation.length > 0 && (
-                        <div>
-                          <h3 className="text-xs font-semibold text-foreground mb-2">Documentation:</h3>
-                          <div className="space-y-1">
-                            {topic.resources.documentation.map((r) => (
-                              <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
-                                className="block text-primary hover:underline text-xs">
-                                ↗ {r.title}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {topic.resources.youtube.length > 0 && (
-                        <div>
-                          <h3 className="text-xs font-semibold text-foreground mb-2">YouTube Playlists:</h3>
-                          <div className="space-y-1">
-                            {topic.resources.youtube.map((r) => (
-                              <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
-                                className="block text-primary hover:underline text-xs">
-                                ▶ {r.title}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {topic.resources.university.length > 0 && (
-                        <div>
-                          <h3 className="text-xs font-semibold text-foreground mb-2">University Lectures:</h3>
-                          <div className="space-y-1">
-                            {topic.resources.university.map((r) => (
-                              <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
-                                className="block text-primary hover:underline text-xs">
-                                🎓 {r.title}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {topic.resources.books.length > 0 && (
-                        <div>
-                          <h3 className="text-xs font-semibold text-foreground mb-2">Books:</h3>
-                          <div className="space-y-1">
-                            {topic.resources.books.map((r) => (
-                              <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
-                                className="block text-primary hover:underline text-xs">
-                                📚 {r.title}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {topic.resources.papers.length > 0 && (
-                        <div>
-                          <h3 className="text-xs font-semibold text-foreground mb-2">Papers:</h3>
-                          <div className="space-y-1">
-                            {topic.resources.papers.map((r) => (
-                              <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
-                                className="block text-primary hover:underline text-xs">
-                                📄 {r.title}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Recommended Learning Platforms — standalone section */}
-      <div className="max-w-7xl mx-auto px-6 pb-16">
-        <div className="border-t border-border pt-12">
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-2xl font-bold text-foreground">{PLATFORMS.title}</h2>
-            <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${DIFFICULTY_COLORS[PLATFORMS.difficulty]}`}>
-              {PLATFORMS.difficulty}
-            </span>
+        {/* Essential reading */}
+        <section aria-labelledby="essentials-heading" className="border-t border-border bg-surface">
+          <div className="page-shell py-16 md:py-24">
+            <p className="mono-label">Essential reading</p>
+            <h2 id="essentials-heading" className="section-title mt-5 max-w-3xl">
+              Four texts worth your time.
+            </h2>
+            <p className="font-ui mt-5 max-w-2xl text-[1.05rem] leading-relaxed text-muted-foreground">
+              The highest-signal books and journals we know — each link
+              verified live before it earned a place here.
+            </p>
+            <ul className="mt-10">
+              {ESSENTIALS.map((e, i) => (
+                <li key={e.title} className={i === ESSENTIALS.length - 1 ? "border-b border-border" : ""}>
+                  <a
+                    href={e.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group grid grid-cols-[44px_1fr_auto] items-center gap-4 border-t border-border py-5 transition-colors duration-150 hover:bg-white md:py-6"
+                  >
+                    <span className="font-mono pl-1 text-[13px] text-muted-foreground tabular-nums">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="font-ui block truncate text-[1.15rem] font-semibold tracking-[-0.01em] text-foreground">
+                        {e.title}
+                      </span>
+                      <span className="font-mono mt-1 block text-[11px] tracking-[0.1em] text-muted-foreground uppercase">
+                        {e.detail}
+                      </span>
+                    </span>
+                    <span aria-hidden="true" className="row-arrow pr-1 text-foreground">
+                      ↗
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-6">{PLATFORMS.description}</p>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {PLATFORMS.resources.documentation.length > 0 && (
-              <div className="border border-border rounded-lg p-4">
-                <h3 className="text-xs font-semibold text-foreground mb-3">Documentation</h3>
-                <div className="space-y-2">
+        {/* Platforms */}
+        <section aria-labelledby="platforms-heading" className="border-t border-border bg-white">
+          <div className="page-shell py-16 md:py-24">
+            <p className="mono-label">Keep learning</p>
+            <h2 id="platforms-heading" className="section-title mt-5 max-w-3xl">
+              {PLATFORMS.title}.
+            </h2>
+            <p className="font-ui mt-5 max-w-2xl text-[1.05rem] leading-relaxed text-muted-foreground">
+              {PLATFORMS.description}
+            </p>
+            <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-16">
+              <div>
+                <p className="mono-label">Documentation</p>
+                <div className="mt-1 border-b border-border">
                   {PLATFORMS.resources.documentation.map((r) => (
-                    <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
-                      className="block text-primary hover:underline text-xs">
-                      ↗ {r.title}
-                    </a>
+                    <ExternalRow key={r.title} title={r.title} url={r.url} />
                   ))}
                 </div>
               </div>
-            )}
-
-            {PLATFORMS.resources.youtube.length > 0 && (
-              <div className="border border-border rounded-lg p-4 md:col-span-2 lg:col-span-2">
-                <h3 className="text-xs font-semibold text-foreground mb-3">YouTube Channels</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <p className="mono-label">YouTube channels</p>
+                <div className="mt-1 border-b border-border">
                   {PLATFORMS.resources.youtube.map((r) => (
-                    <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer"
-                      className="block text-primary hover:underline text-xs">
-                      ▶ {r.title}
-                    </a>
+                    <ExternalRow key={r.title} title={r.title} url={r.url} />
                   ))}
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
+
+        {/* FAQ */}
+        <section aria-labelledby="faq-heading" className="border-t border-border bg-white">
+          <div className="page-shell grid gap-10 py-16 md:py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+            <div>
+              <p className="mono-label">FAQ</p>
+              <h2 id="faq-heading" className="section-title mt-5">
+                Questions, answered.
+              </h2>
+            </div>
+            <div>
+              <ul>
+                {FAQS.map((f, i) => {
+                  const open = openFaq === i;
+                  return (
+                    <li key={f.q} className={i === FAQS.length - 1 ? "border-b border-border" : ""}>
+                      <button
+                        type="button"
+                        onClick={() => setOpenFaq(open ? null : i)}
+                        aria-expanded={open}
+                        className="font-ui flex w-full items-center justify-between gap-6 border-t border-border py-5 text-left text-[1.05rem] font-semibold tracking-[-0.01em] text-foreground"
+                      >
+                        {f.q}
+                        <span
+                          aria-hidden="true"
+                          className={`shrink-0 text-muted-foreground transition-transform duration-200 ${open ? "rotate-45" : ""}`}
+                        >
+                          +
+                        </span>
+                      </button>
+                      {open && (
+                        <p className="font-ui max-w-2xl pb-6 leading-relaxed text-muted-foreground">
+                          {f.a}
+                        </p>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section aria-labelledby="resources-cta-heading" className="border-t border-border bg-surface">
+          <div className="page-shell py-16 text-center md:py-24">
+            <h2 id="resources-cta-heading" className="section-title mx-auto max-w-3xl">
+              Reading is half of it. Run the other half.
+            </h2>
+            <p className="font-ui mx-auto mt-5 max-w-xl text-[1.05rem] leading-relaxed text-muted-foreground">
+              Every layer above maps to a tool waiting in the visualizer.
+            </p>
+            <Link
+              href="/app"
+              className="font-ui mt-8 inline-flex h-12 items-center justify-center border border-[#151515] bg-[#151515] px-[26px] text-[0.95rem] font-medium text-white transition-all duration-150 hover:bg-[#2a2a2a] active:scale-[0.99]"
+              style={{ borderRadius: 4 }}
+            >
+              Open the visualizer
+            </Link>
+          </div>
+        </section>
+      </main>
 
       <Footer />
     </div>
