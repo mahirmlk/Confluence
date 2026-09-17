@@ -5,6 +5,10 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import {
+  getBreadcrumbSchema,
+  getItemListSchema,
+} from "@/lib/seo/json-ld";
+import {
   LinearBoundaryDiagram,
   KNNDiagram,
   DecisionTreeDiagram,
@@ -783,6 +787,32 @@ export default function AlgorithmsPage() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            getItemListSchema(
+              "Machine Learning Algorithms",
+              "Interactive encyclopedia of machine learning algorithms with theory and visualizations.",
+              ALL_ALGORITHMS.map((a) => ({
+                name: a.label,
+                url: `https://confluence.website/algorithms#algo-${a.name}`,
+              }))
+            )
+          ),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            getBreadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Algorithms", path: "/algorithms" },
+            ])
+          ),
+        }}
+      />
 
       {/* Hero */}
       <section className="pt-24 md:pt-28 pb-12 md:pb-16 border-b border-border">
