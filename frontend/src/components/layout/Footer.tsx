@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { API_URL } from "@/lib/config";
 
 const FOOTER_COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
   {
@@ -63,6 +64,21 @@ const SOCIAL_LINKS = [
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const [systemOk, setSystemOk] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${API_URL}/health`, { cache: "no-store" })
+      .then((res) => {
+        if (!cancelled) setSystemOk(res.ok);
+      })
+      .catch(() => {
+        if (!cancelled) setSystemOk(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

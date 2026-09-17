@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono, Inter, Inter_Tight } from "next/font/google";
 import { constructMetadata, viewport as viewportConfig } from "@/lib/seo/config";
 import { JsonLd } from "@/lib/seo/json-ld";
-import { Analytics } from "@/components/Analytics";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,7 +46,7 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         {children}
-        <Analytics />
+        <GoogleAnalytics />
       </body>
     </html>
   );
