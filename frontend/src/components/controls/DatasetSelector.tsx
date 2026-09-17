@@ -99,7 +99,7 @@ export function DatasetSelector({ onDatasetInfo }: DatasetSelectorProps) {
           <select
             value={datasetName}
             onChange={(e) => handleSelect(e.target.value)}
-            className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+            className="w-full rounded-md border border-border bg-background px-3 py-2 max-md:min-h-[44px] max-md:text-[16px] text-sm text-foreground"
           >
             {syntheticDatasets.map((d) => (
               <option key={d} value={d}>{d}</option>

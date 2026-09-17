@@ -13,9 +13,9 @@ interface ClusteringMetricsDashboardProps {
 
 function MetricCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-3">
-      <div className="text-xs text-muted-foreground">{label}</div>
-      <div className="text-lg font-mono font-semibold text-foreground">{value.toFixed(4)}</div>
+    <div className="rounded-lg border border-border bg-card p-3 max-md:p-2.5 min-w-0">
+      <div className="text-xs max-md:text-[11px] text-muted-foreground break-words leading-tight">{label}</div>
+      <div className="text-lg max-md:text-base font-mono font-semibold text-foreground tabular-nums">{value.toFixed(4)}</div>
     </div>
   );
 }

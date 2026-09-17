@@ -171,7 +171,7 @@ export function UploadPanel({ onDatasetReady }: UploadPanelProps) {
             <select
               value={yColumn}
               onChange={(e) => setYColumn(e.target.value)}
-              className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground"
+              className="w-full rounded-md border border-border bg-background px-3 py-1.5 max-md:min-h-[44px] max-md:text-[16px] text-sm text-foreground"
             >
               {numericCols.filter(c => !xColumns.includes(c)).map((col) => (
                 <option key={col} value={col}>{col}</option>

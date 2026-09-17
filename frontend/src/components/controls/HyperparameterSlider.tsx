@@ -29,17 +29,17 @@ export function HyperparameterSlider({
         <span className="font-mono text-foreground">{formatValue(value)}</span>
       </div>
       <SliderPrimitive.Root
-        className="relative flex h-5 w-full touch-none select-none items-center"
+        className="relative flex h-5 max-md:h-10 w-full touch-none select-none items-center"
         value={[value]}
         min={min}
         max={max}
         step={step}
         onValueChange={([v]) => onChange(v)}
       >
-        <SliderPrimitive.Track className="relative h-1.5 grow rounded-full bg-secondary">
+        <SliderPrimitive.Track className="relative h-1.5 max-md:h-2 grow rounded-full bg-secondary">
           <SliderPrimitive.Range className="absolute h-full rounded-full bg-primary" />
         </SliderPrimitive.Track>
-        <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
+        <SliderPrimitive.Thumb className="block h-4 w-4 max-md:h-6 max-md:w-6 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
       </SliderPrimitive.Root>
     </div>
   );

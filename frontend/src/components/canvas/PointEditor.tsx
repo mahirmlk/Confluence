@@ -29,6 +29,7 @@ export function PointEditor({
 }: PointEditorProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeClass, setActiveClass] = useState(0);
+  const [eraseMode, setEraseMode] = useState(false);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -78,6 +79,34 @@ export function PointEditor({
 
   useEffect(() => { draw(); }, [draw]);
 
+  const addOrRemoveAt = useCallback((clientX: number, clientY: number, isErase: boolean) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const px = clientX - rect.left;
+    const py = clientY - rect.top;
+
+    const { x_min, x_max, y_min, y_max } = gridBounds;
+    const xRange = x_max - x_min;
+    const yRange = y_max - y_min;
+
+    // Map via bounding rect so CSS scaling stays correct on mobile
+    const dataX = (px / rect.width) * xRange + x_min;
+    const dataY = ((rect.height - py) / rect.height) * yRange + y_min;
+
+    if (isErase) {
+      const threshold = Math.max(xRange, yRange) * 0.05;
+      const closest = points.reduce<{ idx: number; dist: number } | null>((best, pt, idx) => {
+        const dist = Math.hypot(pt.x - dataX, pt.y - dataY);
+        if (dist < threshold && (!best || dist < best.dist)) return { idx, dist };
+        return best;
+      }, null);
+      if (closest) onPointsChange(points.filter((_, i) => i !== closest.idx));
+    } else {
+      onPointsChange([...points, { x: dataX, y: dataY, label: activeClass }]);
+    }
+  }, [points, activeClass, gridBounds, onPointsChange]);
+
   const handleClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -92,7 +121,7 @@ export function PointEditor({
     const dataX = (px / width) * xRange + x_min;
     const dataY = ((height - py) / height) * yRange + y_min;
 
-    if (e.button === 2) {
+    if (e.button === 2 || eraseMode) {
       e.preventDefault();
       const threshold = Math.max(xRange, yRange) * 0.03;
       const closest = points.reduce<{ idx: number; dist: number } | null>((best, pt, idx) => {
@@ -104,7 +133,7 @@ export function PointEditor({
     } else {
       onPointsChange([...points, { x: dataX, y: dataY, label: activeClass }]);
     }
-  }, [points, activeClass, gridBounds, width, height, onPointsChange]);
+  }, [points, activeClass, gridBounds, width, height, onPointsChange, eraseMode]);
 
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -137,11 +166,12 @@ export function PointEditor({
           {Array.from({ length: nClasses }, (_, i) => (
             <button
               key={i}
-              onClick={() => setActiveClass(i)}
-              className={`w-6 h-6 rounded-full border-2 transition-all ${
-                activeClass === i ? "border-foreground scale-110" : "border-transparent"
+              onClick={() => { setActiveClass(i); setEraseMode(false); }}
+              className={`w-6 h-6 max-md:w-8 max-md:h-8 rounded-full border-2 transition-all ${
+                activeClass === i && !eraseMode ? "border-foreground scale-110" : "border-transparent"
               }`}
               style={{ backgroundColor: CLASS_COLORS[i % CLASS_COLORS.length] }}
+              aria-label={`Class ${i}`}
             />
           ))}
         </div>
@@ -151,22 +181,41 @@ export function PointEditor({
         {points.length > 0 && (
           <button
             onClick={() => onPointsChange([])}
-            className="text-xs text-muted-foreground hover:text-destructive"
+            className="text-xs text-muted-foreground hover:text-destructive max-md:min-h-[44px] max-md:px-2"
           >
             Clear
           </button>
         )}
       </div>
+      {/* Mobile-only erase toggle — no right-click on touch devices */}
+      <div className="md:hidden">
+        <button
+          onClick={() => setEraseMode((v) => !v)}
+          aria-pressed={eraseMode}
+          className={`w-full px-3 py-2 rounded-md border text-xs font-medium transition-colors min-h-[44px] ${
+            eraseMode ? "bg-primary text-primary-foreground border-primary" : "border-border text-foreground"
+          }`}
+        >
+          {eraseMode ? "Erasing — tap a point to remove" : "Erase mode"}
+        </button>
+      </div>
       <canvas
         ref={canvasRef}
         width={width}
         height={height}
-        className="rounded-lg border border-border cursor-crosshair"
+        className="rounded-lg border border-border cursor-crosshair max-w-full h-auto touch-none"
         onClick={handleClick}
         onContextMenu={handleContextMenu}
+        onTouchStart={(e) => {
+          if (e.touches.length === 1) {
+            const t = e.touches[0];
+            addOrRemoveAt(t.clientX, t.clientY, eraseMode);
+          }
+        }}
       />
       <div className="text-[10px] text-muted-foreground text-center">
-        Left-click to add points, right-click to remove
+        <span className="hidden md:inline">Left-click to add points, right-click to remove</span>
+        <span className="md:hidden">Tap to add points{eraseMode ? " — tap a point to remove" : " — use Erase mode to remove"}</span>
       </div>
     </div>
   );

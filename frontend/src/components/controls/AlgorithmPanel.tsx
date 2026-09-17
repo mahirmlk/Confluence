@@ -54,13 +54,13 @@ export function AlgorithmPanel() {
   };
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6 p-4 max-md:p-3 mobile-slider">
       <div className="space-y-2">
         <label className="text-sm font-medium text-foreground">Algorithm Family</label>
         <select
           value={family}
           onChange={(e) => handleFamilyChange(e.target.value as AlgorithmFamily)}
-          className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+          className="w-full rounded-md border border-border bg-background px-3 py-2 max-md:min-h-[44px] max-md:text-[16px] text-sm text-foreground"
         >
           {FAMILY_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -73,7 +73,7 @@ export function AlgorithmPanel() {
         <select
           value={algorithm}
           onChange={(e) => handleAlgorithmChange(e.target.value)}
-          className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+          className="w-full rounded-md border border-border bg-background px-3 py-2 max-md:min-h-[44px] max-md:text-[16px] text-sm text-foreground"
         >
           {filteredAlgorithms.map((a) => (
             <option key={a.name} value={a.name}>{a.label}</option>

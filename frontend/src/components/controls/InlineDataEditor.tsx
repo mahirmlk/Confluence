@@ -90,7 +90,7 @@ export function InlineDataEditor({ onDatasetReady }: InlineDataEditorProps) {
         onChange={handleTextChange}
         onPaste={handlePaste}
         placeholder={"x1,x2,y\n1.5,2.3,0\n-0.5,1.2,1\n3.1,-0.8,0"}
-        className="w-full h-32 rounded-md border border-border bg-background px-3 py-2 text-xs font-mono text-foreground resize-none placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+        className="w-full h-32 rounded-md border border-border bg-background px-3 py-2 max-md:min-h-[48px] max-md:text-[16px] text-xs font-mono text-foreground resize-none placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
       />
 
       {preview && (

@@ -126,11 +126,11 @@ export function AIAssistant({ algorithm, datasetName, metrics }: AIAssistantProp
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask a question..."
-          className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          className="flex-1 px-3 py-2 max-md:min-h-[44px] max-md:text-[16px] rounded-lg border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           disabled={loading}
         />
         <button type="submit" disabled={loading || !input.trim()}
-          className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors">
+          className="px-3 py-2 max-md:min-h-[44px] rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors">
           Send
         </button>
       </form>

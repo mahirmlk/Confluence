@@ -64,9 +64,9 @@ export function FloatingAIAssistant({ algorithm = "logistic-regression", dataset
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 max-md:bottom-[calc(4.5rem+env(safe-area-inset-bottom))] right-6 max-md:right-4 z-50">
       {isOpen && (
-        <div className="mb-4 w-[calc(100vw-3rem)] max-w-80 h-96 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="mb-4 w-[calc(100vw-3rem)] max-w-80 h-96 max-md:h-[68dvh] max-md:max-h-[520px] bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">
@@ -145,11 +145,11 @@ export function FloatingAIAssistant({ algorithm = "logistic-regression", dataset
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask a question..."
-              className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+              className="flex-1 px-3 py-2 max-md:min-h-[44px] max-md:text-[16px] rounded-lg border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               disabled={loading}
             />
             <button type="submit" disabled={loading || !input.trim()}
-              className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors">
+              className="px-3 py-2 max-md:min-h-[44px] rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors">
               Send
             </button>
           </form>
