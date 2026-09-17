@@ -1,66 +1,71 @@
 import React from "react";
 import Link from "next/link";
 import { Reveal } from "./Reveal";
+import previewData from "./product-preview-data.json";
 
-/** Deterministic pseudo-random generator so SSR and client markup match. */
-function mulberry32(seed: number) {
-  return () => {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
+/**
+ * Product preview showing an example run — same layout and visual language
+ * as the visualizer, with shapes computed from a real fitted model
+ * (backend/scripts/generate_preview_data.py) so the example looks genuine.
+ * Labeled as an example throughout; live numbers only appear in /app.
+ */
+
+const {
+  boundary: BOUNDARY_LINE,
+  regions: REGIONS,
+  points: REAL_POINTS,
+  metrics: REAL_METRICS,
+  curve: REAL_CURVE,
+} = previewData as unknown as {
+  boundary: [[number, number], [number, number]];
+  regions: Record<string, [number, number][]>;
+  points: [number, number, number][];
+  metrics: { accuracy: number; f1: number; n_test: number };
+  curve: { points: [number, number][] };
+};
+
+function toSvgPoints(poly: [number, number][]) {
+  return poly.map(([x, y]) => `${x},${y}`).join(" ");
 }
 
-const BOUNDARY =
-  "M -20 268 C 90 250, 150 190, 235 178 C 320 166, 360 210, 430 170 C 490 138, 540 120, 600 96";
-
-function ScatterPoints() {
-  const rand = mulberry32(42);
-  const classA: { x: number; y: number }[] = [];
-  const classB: { x: number; y: number }[] = [];
-  // Class A clusters upper-left of the boundary, class B lower-right.
-  for (let i = 0; i < 42; i++) {
-    classA.push({ x: 40 + rand() * 380, y: 30 + rand() * 130 });
-    classB.push({ x: 150 + rand() * 380, y: 200 + rand() * 120 });
-  }
+function RealPoints() {
   return (
     <g>
-      {classA.map((p, i) => (
-        <circle key={`a-${i}`} cx={p.x} cy={p.y} r={4} fill="#2563eb" opacity={0.85} />
-      ))}
-      {classB.map((p, i) => (
-        <rect
-          key={`b-${i}`}
-          x={p.x - 3.5}
-          y={p.y - 3.5}
-          width={7}
-          height={7}
-          fill="#dc2626"
-          opacity={0.8}
-        />
-      ))}
+      {REAL_POINTS.map(([x, y, c], i) =>
+        c === 0 ? (
+          <circle key={`a-${i}`} cx={x} cy={y} r={4} fill="#2563eb" opacity={0.85} />
+        ) : (
+          <rect
+            key={`b-${i}`}
+            x={x - 3.5}
+            y={y - 3.5}
+            width={7}
+            height={7}
+            fill="#dc2626"
+            opacity={0.8}
+          />
+        )
+      )}
     </g>
   );
 }
 
-function LossSparkline() {
+function LearningCurve() {
+  const d = REAL_CURVE.points
+    .map(([x, y], i) => `${i === 0 ? "M" : "L"} ${x} ${y}`)
+    .join(" ");
+  const [lx, ly] = REAL_CURVE.points[REAL_CURVE.points.length - 1];
   return (
     <svg viewBox="0 0 200 56" className="h-14 w-full" aria-hidden="true">
-      <path
-        d="M 4 48 C 40 44, 70 30, 110 24 C 150 18, 175 12, 196 8"
-        fill="none"
-        stroke="#2563eb"
-        strokeWidth="2"
-      />
-      <circle cx="110" cy="24" r="3.5" fill="#2563eb" />
+      <path d={d} fill="none" stroke="#2563eb" strokeWidth="2" />
+      <circle cx={lx} cy={ly} r="3.5" fill="#2563eb" />
       <line x1="4" y1="52" x2="196" y2="52" stroke="#e8e8e8" strokeWidth="1" />
     </svg>
   );
 }
 
 export function ProductPreview() {
+  const [[x1, y1], [x2, y2]] = BOUNDARY_LINE;
   return (
     <section aria-label="Product preview" className="border-t border-border bg-white">
       <div className="page-shell py-16 md:py-24">
@@ -81,7 +86,7 @@ export function ProductPreview() {
 
         <Reveal delay={120}>
           <div
-            className="overflow-hidden border border-border bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03),0_8px_30px_rgba(0,0,0,0.05)]"
+            className="overflow-hidden border border-border bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03),0_8px_30px_rgba(0,0,0,0.05)] transition-colors duration-200 hover:border-[#c9c9c9]"
             style={{ borderRadius: 12 }}
           >
             {/* Browser chrome */}
@@ -96,7 +101,7 @@ export function ProductPreview() {
               </p>
               <p className="font-mono ml-auto hidden items-center gap-2 text-[11px] tracking-[0.1em] text-muted-foreground sm:flex">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#16a34a]" />
-                LIVE
+                EXAMPLE
               </p>
             </div>
 
@@ -106,7 +111,7 @@ export function ProductPreview() {
                 <svg
                   viewBox="0 0 560 360"
                   role="img"
-                  aria-label="Decision boundary visualization separating two classes of data points"
+                  aria-label="Example decision boundary visualization separating two classes of data points"
                   className="h-auto w-full border border-border bg-white"
                 >
                   <defs>
@@ -120,10 +125,29 @@ export function ProductPreview() {
                     </pattern>
                   </defs>
                   <rect width="560" height="360" fill="url(#preview-grid)" />
-                  <path d={`${BOUNDARY} L 600 360 L -20 360 Z`} fill="#2563eb" opacity={0.06} />
-                  <path d={`${BOUNDARY} L 600 -20 L -20 -20 Z`} fill="#dc2626" opacity={0.05} />
-                  <path d={BOUNDARY} fill="none" stroke="#171719" strokeWidth="2" />
-                  <ScatterPoints />
+                  {REGIONS.class0 && (
+                    <polygon
+                      points={toSvgPoints(REGIONS.class0)}
+                      fill="#2563eb"
+                      opacity={0.06}
+                    />
+                  )}
+                  {REGIONS.class1 && (
+                    <polygon
+                      points={toSvgPoints(REGIONS.class1)}
+                      fill="#dc2626"
+                      opacity={0.05}
+                    />
+                  )}
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="#171719"
+                    strokeWidth="2"
+                  />
+                  <RealPoints />
                 </svg>
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
                   <p className="font-mono text-[11px] tracking-[0.08em] text-muted-foreground">
@@ -139,13 +163,17 @@ export function ProductPreview() {
 
               <div className="flex flex-col p-5 md:p-6">
                 <p className="mono-label">Run summary</p>
-                <dl className="font-mono mt-5 space-y-3 text-xs">
+                <p className="font-ui mt-2 text-[13px] leading-relaxed text-muted-foreground">
+                  Example summary — open the visualizer to run it live and
+                  see your own numbers.
+                </p>
+                <dl className="font-mono mt-5 space-y-3 text-xs tabular-nums">
                   {[
                     ["ALGORITHM", "logistic-regression"],
                     ["DATASET", "breast-cancer"],
-                    ["SAMPLES", "569"],
-                    ["ACCURACY", "0.94"],
-                    ["F1-SCORE", "0.93"],
+                    ["SAMPLES", "300"],
+                    ["ACCURACY", REAL_METRICS.accuracy.toFixed(2)],
+                    ["F1-SCORE", REAL_METRICS.f1.toFixed(2)],
                   ].map(([k, v]) => (
                     <div key={k} className="flex items-center justify-between gap-4">
                       <dt className="tracking-[0.08em] text-muted-foreground">{k}</dt>
@@ -155,13 +183,13 @@ export function ProductPreview() {
                 </dl>
                 <div className="mt-6 border-t border-border pt-5">
                   <p className="font-mono mb-2 text-[11px] tracking-[0.08em] text-muted-foreground">
-                    TRAINING LOSS
+                    LEARNING CURVE
                   </p>
-                  <LossSparkline />
+                  <LearningCurve />
                 </div>
                 <Link
                   href="/app"
-                  className="font-ui mt-auto inline-flex h-12 items-center justify-center border border-[#151515] bg-[#151515] px-[22px] text-[0.95rem] font-medium text-white transition-colors duration-150 hover:bg-[#2a2a2a] max-lg:mt-8"
+                  className="font-ui mt-auto inline-flex h-12 items-center justify-center border border-[#151515] bg-[#151515] px-[22px] text-[0.95rem] font-medium text-white transition-all duration-150 hover:bg-[#2a2a2a] active:scale-[0.99] max-lg:mt-8"
                   style={{ borderRadius: 4 }}
                 >
                   Try it live
@@ -172,7 +200,7 @@ export function ProductPreview() {
             {/* Status strip */}
             <div className="border-t border-border bg-surface px-5 py-3">
               <p className="font-mono text-[11px] tracking-[0.12em] text-muted-foreground">
-                SCIKIT-LEARN · REAL COMPUTATION · 569 ROWS
+                SCIKIT-LEARN · EXAMPLE PREVIEW · 300 ROWS
               </p>
             </div>
           </div>
