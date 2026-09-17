@@ -2,12 +2,13 @@
 
 <br />
 
-<img src="docs/images/banner.svg" alt="Confluence — Machine Learning From First Principles" width="100%" />
+<img src="docs/images/banner.svg" alt="Confluence: Explore. Experiment. Understand Machine Learning." width="100%" />
 
 <br />
 
-An interactive, production-grade ML visualization and education platform backed by real scikit-learn computation.
-Explore **38 algorithms** across classification, regression, clustering, and dimensionality reduction — with **25 datasets** (13 real-world from Kaggle + 12 synthetic), real-time training animation, prediction explanations, algorithm comparison, and an AI assistant.
+Confluence is a hands-on way to learn machine learning. Pick an algorithm and a dataset, move the sliders, and watch the decision boundary change in front of you. Everything runs on real scikit-learn, so what you see is what the model actually does.
+
+38 algorithms across classification, regression, clustering, and dimensionality reduction. 25 datasets (13 real-world ones from Kaggle, 12 synthetic). Training animations, explanations for individual predictions, and side-by-side comparison.
 
 <br />
 
@@ -22,11 +23,11 @@ Explore **38 algorithms** across classification, regression, clustering, and dim
 
 <br />
 
-[Getting Started](#-getting-started) · [Features](#-features) · [Architecture](#-architecture) · [API Reference](#-api-reference) · [Algorithm Catalog](#-algorithm-catalog) · [Contributing](CONTRIBUTING.md)
+[Getting Started](#getting-started) · [Features](#features) · [Architecture](#architecture) · [API Reference](#api-reference) · [Algorithm Catalog](#algorithm-catalog) · [Contributing](CONTRIBUTING.md)
 
 <br />
 
-<img src="docs/images/hero.png" alt="Confluence — ML Algorithm Visualizer" width="100%" />
+<img src="docs/images/hero.png" alt="Confluence: ML Algorithm Visualizer" width="100%" />
 
 <br />
 
@@ -34,38 +35,37 @@ Explore **38 algorithms** across classification, regression, clustering, and dim
 
 </div>
 
-## Table of Contents
+## Table of contents
 
-- [Why Confluence?](#-why-confluence)
-- [Features](#-features)
-- [Algorithm Encyclopedia](#algorithm-encyclopedia)
-- [Getting Started](#-getting-started)
-- [Architecture](#-architecture)
-- [Project Structure](#-project-structure)
-- [Algorithm Catalog](#-algorithm-catalog)
-- [Dataset Catalog](#-dataset-catalog)
-- [API Reference](#-api-reference)
-- [Configuration](#-configuration)
-- [Verification & Testing](#-verification--testing)
-- [Tech Stack](#-tech-stack)
-- [Performance & Caching](#-performance--caching)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Why Confluence?](#why-confluence)
+- [Features](#features)
+- [Algorithm encyclopedia](#algorithm-encyclopedia)
+- [Getting started](#getting-started)
+- [Architecture](#architecture)
+- [Project structure](#project-structure)
+- [Algorithm catalog](#algorithm-catalog)
+- [Dataset catalog](#dataset-catalog)
+- [API reference](#api-reference)
+- [Configuration](#configuration)
+- [Verification & testing](#verification--testing)
+- [Tech stack](#tech-stack)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
 ## Why Confluence?
 
-Most ML visualization tools fall into two traps:
+Most ML visualization tools fall into one of two traps:
 
 | Trap | Example | Problem |
 |------|---------|---------|
 | **Toy and shallow** | TensorFlow Playground, CodePen demos | Client-side-only math, covers 3-4 algorithms, no regression/clustering/dim-reduction |
 | **Static and academic** | scikit-learn gallery, Distill.pub | Good math, zero interactivity, fixed datasets, no hyperparameter exploration |
 
-**Confluence closes the gap** — a unified, interactive ML education platform backed by genuine `scikit-learn`-class computation, spanning four algorithm families, with synchronized comparison, training-process animation, prediction explanations, and a geometric taxonomy of decision boundaries as the organizing idea.
+Confluence sits in the middle. It is one place to try things yourself, backed by real scikit-learn computation, covering all four algorithm families. You can compare models side by side, animate training step by step, and dig into why a boundary looks the way it does.
 
-### Core Differentiators
+### Core differentiators
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -75,8 +75,7 @@ Most ML visualization tools fall into two traps:
 │  4. Training Playground        Watch models learn step-by-step          │
 │  5. Explain Every Prediction   Decision paths, feature contributions    │
 │  6. Algorithm Race             Run multiple algorithms simultaneously   │
-│  7. 24 Real-World Datasets     Iris, Titanic, Housing, and more         │
-│  8. AI Assistant               Context-aware ML explanations            │
+│  7. 25 Datasets                 Iris, Titanic, Housing, and more         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -84,118 +83,112 @@ Most ML visualization tools fall into two traps:
 
 ## Features
 
-### Visualization Engine
-- **Decision boundaries** rendered as Canvas2D heatmaps with crisp contour overlays
-- **Real-time hyperparameter sliders** with debounced recompute (resolution 1-200)
-- **Probability gradients** — see confidence, not just class labels
-- **3D mode** via Three.js/react-three-fiber for GP uncertainty surfaces and embedding projections
-- **PCA projection** for high-dimensional datasets (>2 features) with explained variance labels
-- **Feature scaling** via StandardScaler for scale-sensitive algorithms (SVM, KNN, Logistic Regression, MLP)
-- **Axis labels** showing PC1/PC2 with variance percentages for PCA datasets
-- **Legend** with real dataset class names (e.g., Survived/Did Not Survive, Adelie/Chinstrap/Gentoo)
-- **Improved points** — larger radius, white outline, subtle transparency
-- **Decision boundary contrast** — shadow pass + white line for visibility across all regions
+### Visualization engine
+- Decision boundaries render as Canvas2D heatmaps with crisp contour overlays
+- Hyperparameter sliders update in real time, with debounced recompute (resolution 1-200)
+- Probability gradients, so you see confidence, not just class labels
+- 3D mode through Three.js/react-three-fiber for GP uncertainty surfaces and embedding projections
+- PCA projection for high-dimensional datasets (>2 features) with explained variance labels
+- Feature scaling through StandardScaler for scale-sensitive algorithms (SVM, KNN, Logistic Regression, MLP)
+- Axis labels showing PC1/PC2 with variance percentages for PCA datasets
+- Legend with real dataset class names (e.g., Survived/Did Not Survive, Adelie/Chinstrap/Gentoo)
+- Larger points with white outlines and subtle transparency
+- Decision boundary contrast: a shadow pass plus a white line, so boundaries stay visible in every region
 
-### Dataset Gallery (25 datasets)
-- **Synthetic**: blobs, moons, spirals, XOR, checkerboard, linearly separable
-- **Real-world (Kaggle)**: Titanic, Penguins, Heart Disease, Adult Income, Mushroom, Wine Quality, California Housing, Diabetes, Insurance, Concrete, Mall Customers, Wholesale Customers, Seeds
-- **sklearn built-in**: Iris, Wine, Breast Cancer, Digits, Diabetes, California Housing
-- **Categorized selector** with source toggle (Synthetic / Real World) and category filters
-- **Dataset info panel** showing story, stats, features, recommended algorithms
-- **Data Generator Studio** — generate spirals, XOR, gaussian, moons, circles, or draw custom datasets
+### Dataset gallery (25 datasets)
+- Synthetic: blobs, moons, spirals, XOR, checkerboard, linearly separable
+- Real-world (Kaggle): Titanic, Penguins, Heart Disease, Adult Income, Mushroom, Wine Quality, California Housing, Diabetes, Insurance, Concrete, Mall Customers, Wholesale Customers, Seeds
+- sklearn built-in: Iris, Wine, Breast Cancer, Digits, Diabetes, California Housing
+- Categorized selector with source toggle (Synthetic / Real World) and category filters
+- Dataset info panel with story, stats, features, and recommended algorithms
+- Data Generator Studio: generate spirals, XOR, gaussian, moons, circles, or draw custom datasets
 
-### Training Playground
-- **Animated training** — watch logistic regression learn via gradient descent, MLP weight updates, decision tree depth growth, KNN k-sweep, boosting rounds
-- **Loss curve** and **accuracy history** in real-time alongside the decision boundary
-- **Playback controls** — play, pause, step forward/back, scrubber timeline
+### Training playground
+- Animated training: watch logistic regression learn through gradient descent, MLP weight updates, decision tree depth growth, KNN k-sweep, boosting rounds
+- Loss curve and accuracy history in real time, next to the decision boundary
+- Playback controls: play, pause, step forward and back, scrubber timeline
 
-### Explain Every Prediction
-- **Click any point** to see: prediction, probability, and full explanation
-- **Decision path** for tree-based models (split feature, threshold, Gini at each node)
-- **Feature contributions** for linear models (weight × value per feature)
-- **Feature importance** for ensemble models
-- **Nearest neighbors** for KNN models
+### Explain every prediction
+- Click any point to see its prediction, probability, and full explanation
+- Decision path for tree-based models (split feature, threshold, Gini at each node)
+- Feature contributions for linear models (weight × value per feature)
+- Feature importance for ensemble models
+- Nearest neighbors for KNN models
 
-### Learning Mode
-- **Toggle ON** to get context-aware explanations when clicking the canvas
-- **Boundary explanations** — why the boundary is shaped this way
-- **Hyperparameter effects** — what changing C, max_depth, n_neighbors actually does
+### Learning mode
+- Toggle ON to get context-aware explanations when clicking the canvas
+- Boundary explanations: why the boundary is shaped this way
+- Hyperparameter effects: what changing C, max_depth, n_neighbors actually does
 
-### Metric Explanations
-- **Click any metric** (accuracy, precision, recall, F1) to see: formula, calculation, interpretation
-- **Per-class breakdown** showing where the model succeeds and fails
-- **Confusion matrix breakdown** with TP/TN/FP/FN labels
+### Metric explanations
+- Click any metric (accuracy, precision, recall, F1) to see formula, calculation, interpretation
+- Per-class breakdown showing where the model succeeds and fails
+- Confusion matrix breakdown with TP/TN/FP/FN labels
 
-### Algorithm Comparison
-- **Hyperparameter Comparison** — 4 configs side-by-side (e.g., max_depth 2, 5, 10, 20) with overfit detection
-- **Algorithm Race** — run multiple algorithms simultaneously via WebSocket, real-time leaderboard
-- **Benchmark Suite** — cross-algorithm, cross-dataset accuracy heatmap and speed ranking
-- **Side-by-side mode**: 2-4 algorithms on the same dataset with synchronized zoom/pan
+### Algorithm comparison
+- Hyperparameter comparison: 4 configs side by side (e.g., max_depth 2, 5, 10, 20) with overfit detection
+- Algorithm Race: run multiple algorithms at the same time over WebSocket, with a real-time leaderboard
+- Benchmark Suite: cross-algorithm, cross-dataset accuracy heatmap and speed ranking
+- Side-by-side mode puts 2-4 algorithms on the same dataset with synchronized zoom/pan
 
-### Interactive Visualizations
-- **Interactive Confusion Matrix** — click TP/TN/FP/FN to highlight those points on the canvas
-- **Interactive ROC Curve** — hover to see threshold, FPR, TPR at any point
-- **Interactive PR Curve** — hover to see threshold, precision, recall
-- **Wrong Prediction Explorer** — see expected class, predicted class, probability, decision path, nearest correct neighbors
+### Interactive visualizations
+- Interactive Confusion Matrix: click TP/TN/FP/FN to highlight those points on the canvas
+- Interactive ROC Curve: hover to see threshold, FPR, TPR at any point
+- Interactive PR Curve: hover to see threshold, precision, recall
+- Wrong Prediction Explorer: shows expected class, predicted class, probability, decision path, nearest correct neighbors
 
-### PCA Explorer
-- **Projection canvas** showing data in PC1 vs PC2 space
-- **Scree plot** with variance per component
-- **Feature loadings** showing which features contribute to each principal component
-- **Cumulative variance** explained
+### PCA explorer
+- Projection canvas showing data in PC1 vs PC2 space
+- Scree plot with variance per component
+- Feature loadings showing which features contribute to each principal component
+- Cumulative variance explained
 
-### Code Generator
-- **Auto-generates Python code** matching your current algorithm, dataset, and hyperparameters
-- **Copy to clipboard** or **download as .py** file
-- **Updates automatically** when you change configuration
+### Code generator
+- Auto-generates Python code matching your current algorithm, dataset, and hyperparameters
+- Copy to clipboard or download as .py file
+- Updates automatically when you change configuration
 
-### AI Assistant
-- **Floating chat button** on landing page and visualizer page
-- **Chat interface** with context-aware ML explanations
-- **Quick questions** for common queries (overfitting, boundaries, metrics)
-- **Works with or without LLM API** — built-in fallback for common questions
+### Step-by-step tree builder
+- Animated tree construction: watch splits grow depth by depth
+- Tree visualization showing nodes, thresholds, Gini values, class counts
+- Synced with the decision boundary, so you see how each split changes it
 
-### Step-by-Step Tree Builder
-- **Animated tree construction** — watch splits grow depth by depth
-- **Tree visualization** showing nodes, thresholds, Gini values, class counts
-- **Synced with decision boundary** — see how each split changes the boundary
+### ML roadmap
+- 7 learning categories: Statistics, Linear Algebra, Optimization, Feature Engineering, Evaluation, Model Selection, Deployment
+- Each topic links to relevant Confluence features for hands-on practice
+- External resources for deeper learning
 
-### ML Roadmap
-- **7 learning categories**: Statistics, Linear Algebra, Optimization, Feature Engineering, Evaluation, Model Selection, Deployment
-- **Each topic** links to relevant Confluence features for hands-on practice
-- **External resources** for deeper learning
-
-### Other Tools
-- **Cross-validation** with per-fold boundary visualization
-- **Coefficient inspector** for linear/tree models
-- **Learning curves** showing train vs. validation performance
-- **Sensitivity heatmaps** for hyperparameter interaction analysis
-- **Boundary taxonomy explorer**: filter algorithms by geometric boundary type
-- **Algorithm encyclopedia**: 38 algorithms with complexity, intuition, and SVG diagrams
+### Other tools
+- Cross-validation with per-fold boundary visualization
+- Coefficient inspector for linear/tree models
+- Learning curves showing train vs. validation performance
+- Sensitivity heatmaps for hyperparameter interaction analysis
+- Boundary taxonomy explorer: filter algorithms by geometric boundary type
+- Algorithm encyclopedia: 38 algorithms with complexity, intuition, and SVG diagrams
 
 ---
 
-## Algorithm Encyclopedia
+## Algorithm encyclopedia
 
-Confluence ships with a dedicated **Algorithm Encyclopedia** — an interactive reference covering all 38 algorithms with rich detail, organized by family.
+There is a full encyclopedia built in: all 38 algorithms in one browsable reference, organized by family.
 
-<img src="docs/images/algorithms-page.png" alt="Confluence Algorithm Encyclopedia — Browse, search, and learn every algorithm" width="100%" />
+<img src="docs/images/algorithms-page.png" alt="Confluence Algorithm Encyclopedia: browse, search, and learn every algorithm" width="100%" />
 
-### What the Encyclopedia Offers
+### What the encyclopedia offers
 
 | Feature | Description |
 |---------|-------------|
-| **38 Algorithm Cards** | Every algorithm across classification, regression, clustering, and dimensionality reduction — each with a one-line intuition, complexity notes, and boundary taxonomy tag |
-| **Organized by Family** | Algorithms are grouped into four families with clear visual separation — Classification, Regression, Clustering, and Dimensionality Reduction |
-| **Boundary Taxonomy Tags** | Each algorithm is tagged by the geometric shape of its decision boundary — Linear, Tree-Based, Instance-Based, Margin/Kernel, Probabilistic, Neural, Boosting, and more |
-| **Search & Filter** | Instantly search algorithms by name or filter by family to find the right tool for your dataset |
-| **Complexity Reference** | Every card shows Big-O complexity for both fit and predict operations, helping you reason about scalability |
-| **SVG Diagrams** | Visual diagrams illustrate the intuition behind each algorithm's decision-making process |
-| **Interactive Launch** | Click any algorithm card to jump directly into the visualizer with that algorithm pre-selected |
+| 38 algorithm cards | Every algorithm across classification, regression, clustering, and dimensionality reduction, each with a one-line intuition, complexity notes, and boundary taxonomy tag |
+| Organized by family | Algorithms are grouped into four families with clear visual separation: Classification, Regression, Clustering, and Dimensionality Reduction |
+| Boundary taxonomy tags | Each algorithm is tagged by the geometric shape of its decision boundary: Linear, Tree-Based, Instance-Based, Margin/Kernel, Probabilistic, Neural, Boosting, and more |
+| Search & filter | Instantly search algorithms by name or filter by family to find the right tool for your dataset |
+| Complexity reference | Every card shows Big-O complexity for both fit and predict operations, helping you reason about scalability |
+| SVG diagrams | Visual diagrams illustrate the intuition behind each algorithm's decision-making process |
+| Interactive launch | Click any algorithm card to jump directly into the visualizer with that algorithm pre-selected |
 
 ---
 
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
@@ -205,7 +198,7 @@ Confluence ships with a dedicated **Algorithm Encyclopedia** — an interactive 
 | Node.js | 20+ | `node --version` |
 | Redis | 7+ (optional) | `redis-cli ping` |
 
-### Quick Start (Local Development)
+### Quick start (local development)
 
 ```bash
 # 1. Clone
@@ -223,75 +216,38 @@ npm install
 npm run dev
 ```
 
-Open **[http://localhost:3000](http://localhost:3000)** → click **Launch App** → select an algorithm and dataset.
+Open [http://localhost:3000](http://localhost:3000), click Launch Visualizer, then pick an algorithm and a dataset.
 
-### AI Assistant (Local Setup)
-
-The floating chat button works immediately with built-in responses. For LLM-powered answers:
-
-```bash
-# Create .env in backend/
-echo "LLM_PROVIDER=openai" >> backend/.env
-echo "LLM_API_KEY=sk-your-key-here" >> backend/.env
-```
-
-Restart the backend. The assistant will use your LLM for context-aware ML explanations.
-
-### Docker Compose (Recommended for Full Stack)
+### Docker Compose (recommended for full stack)
 
 ```bash
 docker compose up --build
 ```
 
 This starts three services:
-- `frontend` — Next.js on port 3000
-- `backend` — FastAPI on port 8000
-- `redis` — Redis on port 6379
+- `frontend`: Next.js on port 3000
+- `backend`: FastAPI on port 8000
+- `redis`: Redis on port 6379
 
-### AI Assistant Configuration
-
-The AI Assistant works out-of-the-box with built-in responses. For enhanced LLM-powered answers:
-
-1. Copy the environment template:
-```bash
-cp .env.example .env
-```
-
-2. Add your API keys to `.env`:
-```bash
-# AI Assistant (optional — works without these)
-LLM_PROVIDER=openai          # openai | anthropic | groq
-LLM_API_KEY=sk-...           # Your API key
-LLM_MODEL=gpt-4o-mini        # Model name (default: gpt-4o-mini)
-```
-
-3. Restart the backend:
-```bash
-docker compose restart backend
-```
-
-**Supported providers:**
-| Provider | LLM_PROVIDER | Models |
-|----------|--------------|--------|
-| OpenAI | `openai` | gpt-4o-mini, gpt-4o, gpt-3.5-turbo |
-| Anthropic | `anthropic` | claude-3-haiku, claude-3-sonnet |
-| Groq | `groq` | llama3-8b, llama3-70b, mixtral |
-
-Without API keys, the assistant uses pattern-matching for common ML questions (overfitting, metrics, boundaries, hyperparameters).
-
-### Verify Installation
+### Verify installation
 
 ```bash
 make typecheck     # Frontend TypeScript
 make lint          # Frontend ESLint
-make test-backend  # Backend pytest
+make test-backend  # Backend pytest (60 tests)
 ```
+
+### CI pipeline
+
+GitHub Actions runs on every push:
+- Frontend job: `npm ci`, then lint, typecheck, build
+- Backend job: `pip install`, then import validation
 
 ---
 
 ## Architecture
 
-### System Overview
+### System overview
 
 ```mermaid
 graph TB
@@ -371,7 +327,7 @@ graph TB
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
 Confluence/
@@ -407,10 +363,10 @@ Confluence/
 │   │       ├── explain.py                  # Prediction & metric explanations
 │   │       ├── training.py                 # Training playground & wrong predictions
 │   │       ├── compare.py                  # Hyperparameter comparison, race, benchmark
-│   │       ├── tools.py                    # PCA explorer, code gen, AI assistant
+│   │       ├── tools.py                    # PCA explorer, code gen
 │   │       ├── streaming.py                # WebSocket training animation + tree builder
 │   │       └── health.py                   # Health check
-│   ├── tests/                              # 41 tests (pytest + httpx)
+│   ├── tests/                              # 60 tests (pytest + httpx)
 │   ├── Dockerfile
 │   ├── requirements.txt
 │   └── pyproject.toml
@@ -428,7 +384,7 @@ Confluence/
 │   │   │   ├── controls/                   # Algorithm panel, dataset selector, sliders
 │   │   │   ├── explain/                    # Prediction explainer, tree builder, learning mode
 │   │   │   ├── training/                   # Training playground, confusion matrix, ROC/PR
-│   │   │   ├── tools/                      # PCA explorer, code gen, AI assistant
+│   │   │   ├── tools/                      # PCA explorer, code gen
 │   │   │   ├── metrics/                    # 9 metric visualization components
 │   │   │   ├── streaming/                  # WebSocket training viz
 │   │   │   ├── taxonomy/                   # Boundary taxonomy explorer
@@ -469,7 +425,7 @@ Confluence/
 
 ---
 
-## Algorithm Catalog
+## Algorithm catalog
 
 ### Classification (15 algorithms)
 
@@ -531,7 +487,7 @@ Confluence/
 
 ---
 
-## Dataset Catalog
+## Dataset catalog
 
 ### Synthetic (9)
 
@@ -547,7 +503,7 @@ Confluence/
 | `linearly-separable` | Linearly separable | 2 | Baseline linear |
 | `checkerboard` | Checkerboard pattern | 2 | Piecewise boundaries |
 
-### Classification — Real-World (11)
+### Classification, real-world (11)
 
 | Dataset | Features | Classes | Category | Source |
 |---------|----------|---------|----------|--------|
@@ -563,7 +519,7 @@ Confluence/
 | `penguins` | bill length, flipper | 3 | General | Kaggle |
 | `heart-disease` | age, chol, HR | 2 | Healthcare | Kaggle |
 
-### Classification — Extended (4)
+### Classification, extended (3)
 
 | Dataset | Features | Classes | Category | Source |
 |---------|----------|---------|----------|--------|
@@ -577,7 +533,7 @@ Confluence/
 |---------|----------|----------|--------|
 | `california-housing` | income, age | Housing | sklearn |
 | `california-housing-full` | 8 features | Housing | sklearn |
-| `california-housing-kaggle` | 4 features | Housing | Kaggle |
+| `california-housing-kaggle` | 4 features | Kaggle | Kaggle |
 | `diabetes` | BMI, S5 | Healthcare | sklearn |
 | `diabetes-full` | 10 features | Healthcare | sklearn |
 | `diabetes-kaggle` | glucose, BMI, age | Healthcare | Kaggle |
@@ -610,15 +566,15 @@ Confluence/
 | `linearly-separable` | Linearly separable |
 | `swiss-roll` | Rolled manifold |
 
-### Custom Data
+### Custom data
 
-- **CSV upload** — drag-and-drop any CSV, map columns to features/target
-- **Custom points** — click on canvas to place points with class labels
-- **Data Generator Studio** — generate datasets with configurable parameters
+- CSV upload: drag and drop any CSV, map columns to features/target
+- Custom points: click on canvas to place points with class labels
+- Data Generator Studio: generate datasets with configurable parameters
 
 ---
 
-## API Reference
+## API reference
 
 ### Base URL
 
@@ -722,7 +678,6 @@ WS   /ws/compare/race                     → Algorithm race frames
 ```
 POST /api/tools/pca-explore               → PCAResponse
 POST /api/tools/generate-code             → CodeResponse
-POST /api/tools/assistant                 → AssistantResponse
 ```
 
 #### Streaming (1 WebSocket)
@@ -731,7 +686,7 @@ POST /api/tools/assistant                 → AssistantResponse
 WS   /ws/stream                           → Training animation frames
 ```
 
-### Interactive API Docs
+### Interactive API docs
 
 - **Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
 - **ReDoc**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
@@ -741,7 +696,7 @@ WS   /ws/stream                           → Training animation frames
 
 ## Configuration
 
-### Environment Variables
+### Environment variables
 
 | Variable | Service | Required | Default | Description |
 |----------|---------|----------|---------|-------------|
@@ -750,11 +705,8 @@ WS   /ws/stream                           → Training animation frames
 | `LOG_LEVEL` | Backend | No | `INFO` | Logging level |
 | `NEXT_PUBLIC_API_URL` | Frontend | Yes | `http://localhost:8000` | Backend API URL |
 | `NEXT_PUBLIC_WS_URL` | Frontend | No | `ws://localhost:8000` | WebSocket URL |
-| `LLM_PROVIDER` | Backend | No | — | LLM provider (`openai`) |
-| `LLM_API_KEY` | Backend | No | — | LLM API key |
-| `LLM_MODEL` | Backend | No | `gpt-4o-mini` | LLM model name |
 
-### Copy Environment Template
+### Copy environment template
 
 ```bash
 cp .env.example .env
@@ -762,35 +714,26 @@ cp .env.example .env
 
 ---
 
-## Verification & Testing
+## Verification & testing
 
 ### Commands
 
 ```bash
 make typecheck      # Frontend TypeScript type checking
 make lint           # Frontend ESLint
-make test-backend   # Backend pytest (41 tests)
+make test-backend   # Backend pytest (60 tests)
 make install        # Install all dependencies
 ```
 
-### Windows (PowerShell)
-
-```powershell
-.\verify.ps1 -All           # Run all checks
-.\verify.ps1 -Typecheck     # TypeScript only
-.\verify.ps1 -TestBackend   # Backend tests only
-.\verify.ps1 -Install       # Install dependencies
-```
-
-### CI Pipeline
+### CI pipeline
 
 GitHub Actions runs on every push:
-- **Frontend job**: `npm ci` → `lint` → `typecheck` → `build`
-- **Backend job**: `pip install` → import validation
+- Frontend job: `npm ci`, then lint, typecheck, build
+- Backend job: `pip install`, then import validation
 
 ---
 
-## Tech Stack
+## Tech stack
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
@@ -815,9 +758,9 @@ GitHub Actions runs on every push:
 
 ---
 
-## Performance & Caching
+## Performance & caching
 
-### Redis Caching
+### Redis caching
 
 Prediction grids are cached with a deterministic key based on:
 - Algorithm name
@@ -825,23 +768,23 @@ Prediction grids are cached with a deterministic key based on:
 - Dataset name
 - Grid resolution
 
-Cache TTL: **1 hour** (configurable). Redis is optional — the app works without it (caching disabled).
+Cache TTL: 1 hour (configurable). Redis is optional: the app works without it, with caching disabled.
 
-### Async ML Execution
+### Async ML execution
 
-All CPU-bound ML operations are wrapped in `asyncio.to_thread()` to prevent blocking the event loop.
+All CPU-bound ML operations run through `asyncio.to_thread()`, so the event loop never blocks on model fitting.
 
 ---
 
 ## Contributing
 
-See **[CONTRIBUTING.md](CONTRIBUTING.md)** for development setup, code quality standards, and detailed templates for adding new algorithms, datasets, and visualizations.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code quality standards, and templates for adding new algorithms, datasets, and visualizations.
 
-### Community Templates
+### Community templates
 
-- **[New Algorithm Request](.github/ISSUE_TEMPLATE/new_algorithm.md)** — Suggest a new algorithm
-- **[New Dataset Request](.github/ISSUE_TEMPLATE/new_dataset.md)** — Suggest a new dataset
-- **[Feature Request](.github/ISSUE_TEMPLATE/feature_request.md)** — Suggest a feature
+- [New algorithm request](.github/ISSUE_TEMPLATE/new_algorithm.md): suggest a new algorithm
+- [New dataset request](.github/ISSUE_TEMPLATE/new_dataset.md): suggest a new dataset
+- [Feature request](.github/ISSUE_TEMPLATE/feature_request.md): suggest a feature
 
 ---
 
@@ -853,6 +796,6 @@ MIT
 
 <div align="center">
 
-**[Getting Started](#-getting-started)** · **[Features](#-features)** · **[Architecture](#-architecture)** · **[API Reference](#-api-reference)** · **[Contributing](CONTRIBUTING.md)**
+**[Getting Started](#getting-started)** · **[Features](#features)** · **[Architecture](#architecture)** · **[API Reference](#api-reference)** · **[Contributing](CONTRIBUTING.md)**
 
 </div>
