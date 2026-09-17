@@ -107,6 +107,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+p {
+  text-wrap: pretty;
+}
+
 ::selection {
   background: #171719;
   color: #ffffff;
@@ -129,21 +133,37 @@ body {
   font-family: var(--font-inter), var(--font-inter-tight), system-ui, sans-serif;
   font-weight: 800;
   letter-spacing: -0.075em;
-  line-height: 0.88;
+  line-height: 0.87;
   text-wrap: balance;
   color: var(--foreground);
-  font-size: clamp(4.75rem, 8vw, 8.25rem);
+  font-size: clamp(4rem, 7vw, 7.25rem);
+}
+
+/* Second headline line: subtle graphite tonal shift (black → dark graphite
+   → soft graphite). Refined, not shiny, not colorful — barely lighter and
+   cooler than the first line. Padding bleed keeps glyphs from clipping,
+   plus a slight downward settle. */
+.hero-title__secondary {
+  display: inline-block;
+  padding: 0.06em 0.08em 0.1em 0;
+  margin: -0.06em -0.08em -0.1em 0;
+  transform: translateY(4px);
+  background-image: linear-gradient(180deg, #3a3a40 0%, #57575d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 @media (max-width: 1199px) {
   .hero-title {
-    font-size: clamp(3.5rem, 11vw, 6.25rem);
+    font-size: clamp(3.25rem, 10vw, 5.5rem);
   }
 }
 
 @media (max-width: 767px) {
   .hero-title {
-    font-size: clamp(3.25rem, 15vw, 5rem);
+    font-size: clamp(2.9rem, 14vw, 4.5rem);
     line-height: 0.9;
     letter-spacing: -0.065em;
   }
@@ -162,7 +182,7 @@ body {
 
 .hero-copy {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
-  font-size: clamp(1.05rem, 1.45vw, 1.35rem);
+  font-size: clamp(0.95rem, 1.25vw, 1.15rem);
   line-height: 1.55;
   letter-spacing: -0.015em;
   color: #6f6f6f;
@@ -203,32 +223,9 @@ body {
   color: var(--muted-foreground);
 }
 
-/* Glass headline treatment: soft sheen gradient glyphs + faint depth.
-   Padding bleed keeps glyph overshoot (e.g. the G) from clipping. */
-.hero-glass {
-  display: inline-block;
-  padding: 0.08em 0.1em 0.12em 0.03em;
-  margin: -0.08em -0.1em -0.12em -0.03em;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
-
-.hero-glass--solid {
-  background-image: linear-gradient(180deg, #2b2b31 0%, #060608 55%, #232329 100%);
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5))
-    drop-shadow(0 10px 22px rgba(0, 0, 0, 0.08));
-}
-
-.hero-glass--fade {
-  background-image: linear-gradient(180deg, #78787f 0%, #52525b 60%, #4b4b53 100%);
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.55))
-    drop-shadow(0 10px 22px rgba(0, 0, 0, 0.06));
-}
-
+/* Raised headline line: settled slightly lower */
 .hero-line--raised {
-  transform: translateY(-10px);
+  transform: translateY(-8px);
 }
 
 /* Navigation underline micro-interaction */

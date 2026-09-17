@@ -1,10 +1,10 @@
 import React from "react";
-import { LiveVisitorsCard } from "@/components/landing/LiveVisitorsCard";
+import Link from "next/link";
 
 export function Hero() {
   return (
     <section aria-labelledby="hero-heading" className="relative overflow-hidden bg-white">
-      {/* Barely-there geometry: cropped arcs + grid fragment, 0.04–0.08 opacity */}
+      {/* Barely-there geometry: cropped arcs only, 0.05 opacity */}
       <svg
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[280px] w-full text-[#171719]"
@@ -16,36 +16,55 @@ export function Hero() {
         <circle cx="1280" cy="330" r="220" stroke="currentColor" strokeWidth="1" />
         <circle cx="1280" cy="330" r="150" stroke="currentColor" strokeWidth="1" />
         <circle cx="120" cy="330" r="180" stroke="currentColor" strokeWidth="1" />
-        {Array.from({ length: 24 }, (_, i) => (
-          <line
-            key={i}
-            x1={60 + i * 56}
-            y1="180"
-            x2={60 + i * 56}
-            y2="280"
-            stroke="currentColor"
-            strokeWidth="1"
-          />
-        ))}
       </svg>
 
       <div className="page-shell relative">
-        <div className="grid items-center gap-12 pt-32 pb-16 md:pt-40 md:pb-24 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
-          {/* Left: oversized headline */}
+        <div className="grid items-center gap-12 pt-32 pb-16 md:pt-36 md:pb-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          {/* Left: heading, avatars, actions */}
           <div>
             <h1 id="hero-heading" className="hero-title">
-              <span className="hero-glass hero-glass--solid hero-line--raised">
-                Machine Learning,
-              </span>
+              <span className="hero-line--raised inline-block">Machine Learning,</span>
               <br />
-              <span className="hero-glass hero-glass--fade">Made Visible.</span>
+              <span className="hero-title__secondary inline-block">Made Visible.</span>
             </h1>
+
+            <p className="hero-copy mt-6">
+              A hands-on way to learn ml, experiment with models, mess with
+              the parameters, and watch the results change in real time.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/app"
+                className="font-ui inline-flex h-12 items-center justify-center border border-[#151515] bg-[#151515] px-[22px] text-[0.95rem] font-medium text-white transition-all duration-150 hover:bg-[#2a2a2a] active:scale-[0.99]"
+                style={{ borderRadius: 4 }}
+              >
+                Launch Visualizer
+              </Link>
+              <Link
+                href="/algorithms"
+                className="font-ui inline-flex h-12 items-center justify-center border border-border bg-white px-[22px] text-[0.95rem] font-medium text-foreground transition-all duration-150 hover:border-[#1b1b1b] active:scale-[0.99]"
+                style={{ borderRadius: 4 }}
+              >
+                Browse algorithms
+              </Link>
+            </div>
           </div>
 
-          {/* Right: live visitors */}
-          <div className="flex flex-col justify-center">
-            <LiveVisitorsCard />
-          </div>
+          {/* Right: single hero visualization, no card chrome */}
+          <figure className="relative m-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/illustrations/hero-visual.svg"
+              alt="Decision-boundary diagram separating two classes of data points with a single model boundary"
+              className="h-auto w-full"
+              loading="eager"
+              decoding="async"
+            />
+            <figcaption className="sr-only">
+              Schematic decision-boundary illustration. No measured accuracy is shown.
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
