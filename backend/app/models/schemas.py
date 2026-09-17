@@ -111,6 +111,18 @@ class HealthResponse(BaseModel):
     uptime: float
 
 
+class PresenceHeartbeatRequest(BaseModel):
+    visitor_id: str = Field(min_length=8, max_length=128, pattern=r"^[A-Za-z0-9_-]+$")
+    path: Optional[str] = Field(default=None, max_length=200)
+    is_new_visit: bool = False
+
+
+class PresenceLiveResponse(BaseModel):
+    active_visitors: int
+    total_visitors: int = 0
+    unique_visitors: int = 0
+
+
 class DatasetInfo(BaseModel):
     name: str
     description: str
@@ -221,9 +233,9 @@ class SensitivityRequest(BaseModel):
     dataset_name: str = Field(min_length=1, max_length=50)
     hyperparameters: dict = Field(default={}, max_length=20)
     param1: str = Field(min_length=1, max_length=50)
-    param1_range: list[float]
+    param1_range: list[float] = Field(max_length=15)
     param2: str = Field(min_length=1, max_length=50)
-    param2_range: list[float]
+    param2_range: list[float] = Field(max_length=15)
     noise: float = Field(default=0.5, ge=0, le=5)
     n_samples: int = Field(default=300, ge=10, le=5000)
 
