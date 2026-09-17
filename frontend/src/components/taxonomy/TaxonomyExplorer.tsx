@@ -66,7 +66,7 @@ export function TaxonomyExplorer() {
         <select
           value={selectedFamily}
           onChange={(e) => setSelectedFamily(e.target.value as AlgorithmFamily | "all")}
-          className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+          className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 max-md:min-h-[44px] max-md:text-[16px] text-sm text-foreground"
         >
           <option value="all">All Families</option>
           <option value="classification">Classification</option>

@@ -412,7 +412,7 @@ export default function ResourcesPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search layers, concepts…"
-                className="font-ui h-12 w-full border border-border bg-white pr-4 pl-11 text-[0.95rem] text-foreground transition-colors placeholder:text-muted-foreground focus:border-[#1b1b1b] focus:outline-none"
+                className="font-ui h-12 max-md:min-h-[48px] max-md:text-[16px] w-full border border-border bg-white pr-4 pl-11 text-[0.95rem] text-foreground transition-colors placeholder:text-muted-foreground focus:border-[#1b1b1b] focus:outline-none"
                 style={{ borderRadius: 10 }}
               />
             </div>
@@ -421,7 +421,7 @@ export default function ResourcesPage() {
 
         {/* Sticky filter bar */}
         <div className="sticky top-14 z-30 border-b border-border bg-white/80 backdrop-blur-xl">
-          <div className="page-shell flex items-center gap-2 overflow-x-auto py-3">
+          <div className="page-shell flex items-center gap-2 overflow-x-auto mobile-snap-x py-3">
             <div
               className="flex items-center gap-1 bg-black/[0.04] p-1"
               style={{ borderRadius: 999 }}
@@ -475,7 +475,7 @@ export default function ResourcesPage() {
                       type="button"
                       onClick={() => setOpenId(open ? null : topic.id)}
                       aria-expanded={open}
-                      className="group grid w-full grid-cols-[44px_1fr_auto] items-center gap-4 border-t border-border py-5 text-left transition-colors duration-150 hover:bg-surface md:py-6"
+                      className="group grid w-full grid-cols-[44px_1fr_auto] max-md:mobile-row-tight items-center gap-4 border-t border-border py-5 max-md:min-h-[64px] text-left transition-colors duration-150 hover:bg-surface md:py-6"
                     >
                       <span className="font-mono pl-1 text-[13px] text-muted-foreground tabular-nums">
                         {String(ROADMAP.indexOf(topic) + 1).padStart(2, "0")}

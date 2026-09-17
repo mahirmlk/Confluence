@@ -611,11 +611,11 @@ function SearchBar({ onSelect }: { onSelect: (name: string) => void }) {
           }}
           onFocus={() => setIsOpen(query.length > 0)}
           onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-          className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-none text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground/30 transition-colors"
+          className="w-full pl-12 pr-4 py-3 max-md:py-3.5 max-md:text-[16px] bg-card border border-border rounded-none text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground/30 transition-colors"
         />
       </div>
       {isOpen && filtered.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-none shadow-lg z-50 max-h-80 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-none shadow-lg z-50 max-h-80 max-sm:max-h-[60dvh] overflow-y-auto">
           {filtered.map((algo) => (
             <button
               key={algo.name}
@@ -702,11 +702,11 @@ function AlgorithmCard({ algo, id }: { algo: AlgorithmEntry; id?: string }) {
           </div>
 
         {/* Formula */}
-        <div className="mt-6 px-4 md:px-5 py-3 md:py-4 bg-accent/50 border border-border rounded-none">
+        <div className="mt-6 px-4 md:px-5 py-3 md:py-4 bg-accent/50 border border-border rounded-none overflow-x-auto">
           <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground block mb-2">
             Key Formula
           </span>
-          <code className="text-sm font-mono text-foreground break-all">{algo.formula}</code>
+          <code className="text-sm font-mono text-foreground break-all max-md:break-words max-md:text-[13px]">{algo.formula}</code>
         </div>
 
         {/* Strengths / Limitations */}
@@ -837,7 +837,7 @@ export default function AlgorithmsPage() {
           </div>
 
           {/* Family overview cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+          <div className="grid grid-cols-2 max-sm:gap-3 md:grid-cols-4 gap-4 mt-12 max-md:mt-8">
             {FAMILIES.map((f) => (
               <a
                 key={f.name}
