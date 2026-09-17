@@ -1,4 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 440" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Editorial data-topology visualization with three clusters, one outlier, and one selected target point">
+  <style>
+    @media (max-width: 480px) {
+      .annotation, .annotation-line { display: none; }
+    }
+  </style>
   <defs>
     <pattern id="ds-grid" width="32" height="32" patternUnits="userSpaceOnUse">
       <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#F2F2F2" stroke-width="1" class="grid-line"/>
@@ -46,7 +51,7 @@
   <g class="data-point">
     <circle cx="548" cy="72" r="4.5" fill="#FFFFFF" stroke="#999999" stroke-width="1.5"/>
   </g>
-  <line x1="552" y1="78" x2="572" y2="100" stroke="#B8B8B8" stroke-width="0.75"/>
+  <line x1="552" y1="78" x2="572" y2="100" stroke="#B8B8B8" stroke-width="0.75" class="annotation-line"/>
   <text x="574" y="108" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="8" letter-spacing="1.5" fill="#666666" class="annotation">OUTLIER</text>
 
   <!-- selected target point with crosshair -->
@@ -58,7 +63,7 @@
     <circle cx="320" cy="215" r="9" fill="none" stroke="#2563EB" stroke-width="1.5"/>
     <circle cx="320" cy="215" r="2.5" fill="#2563EB"/>
   </g>
-  <line x1="329" y1="208" x2="366" y2="182" stroke="#B8B8B8" stroke-width="0.75"/>
+  <line x1="329" y1="208" x2="366" y2="182" stroke="#B8B8B8" stroke-width="0.75" class="annotation-line"/>
   <text x="368" y="178" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="8" letter-spacing="1.5" fill="#2563EB" class="annotation">TARGET</text>
 
   <!-- density annotation: structural, no counts -->
