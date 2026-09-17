@@ -101,7 +101,7 @@ export function SearchPalette({ open, onClose }: SearchPaletteProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-start justify-center bg-black/25 px-4 pt-[14vh] backdrop-blur-[2px]"
+      className="fixed inset-0 z-[70] flex items-start justify-center bg-black/25 px-4 pt-[14vh] max-sm:pt-[6vh] backdrop-blur-[2px]"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -133,14 +133,14 @@ export function SearchPalette({ open, onClose }: SearchPaletteProps) {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search algorithms, pages…"
             aria-label="Search algorithms and pages"
-            className="font-ui h-14 w-full bg-transparent text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none"
+            className="font-ui h-14 w-full bg-transparent text-[15px] max-md:text-[16px] text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
           <kbd className="font-mono hidden shrink-0 border border-black/10 bg-black/[0.03] px-1.5 py-0.5 text-[10px] tracking-wider text-muted-foreground sm:block" style={{ borderRadius: 4 }}>
             ESC
           </kbd>
         </div>
 
-        <div className="max-h-[320px] overflow-y-auto p-2">
+        <div className="max-h-[320px] max-sm:max-h-[62dvh] overflow-y-auto p-2">
           {totalRows === 0 && (
             <p className="font-ui px-4 py-8 text-center text-sm text-muted-foreground">
               No matches. Try a name, family, or tag.

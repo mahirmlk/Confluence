@@ -70,13 +70,13 @@ export function Resources() {
                   <li className={i === READING_LIST.length - 1 ? "border-b border-border" : ""}>
                     <Link
                       href={r.href}
-                      className="group flex items-center justify-between gap-6 border-t border-border py-6 transition-colors duration-150 hover:bg-surface"
+                      className="group flex items-center justify-between gap-6 max-md:gap-3 border-t border-border py-6 max-md:py-4 transition-colors duration-150 hover:bg-surface"
                     >
-                      <span>
+                      <span className="min-w-0">
                         <span className="font-mono block text-[11px] tracking-[0.12em] text-muted-foreground uppercase">
                           {r.tag}
                         </span>
-                        <span className="font-ui mt-1 block text-[1.4rem] font-semibold tracking-[-0.02em] text-foreground md:text-[1.7rem]">
+                        <span className="font-ui mt-1 block text-[1.4rem] max-md:text-[1.15rem] font-semibold tracking-[-0.02em] text-foreground md:text-[1.7rem]">
                           {r.title}
                         </span>
                       </span>

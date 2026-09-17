@@ -139,7 +139,7 @@ export function Navbar() {
         <div className="border-t border-black/[0.08] bg-white/80 backdrop-blur-xl md:hidden">
           <nav
             aria-label="Mobile"
-            className="flex flex-col gap-1 px-5 py-6"
+            className="flex flex-col gap-1 px-5 max-md:px-4 py-6 max-md:py-4 max-h-[calc(100dvh-3.5rem)] overflow-y-auto mobile-safe-bottom"
           >
             <button
               type="button"

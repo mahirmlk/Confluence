@@ -90,7 +90,7 @@ export function ProductPreview() {
             style={{ borderRadius: 12 }}
           >
             {/* Browser chrome */}
-            <div className="flex items-center gap-4 border-b border-border px-5 py-3.5">
+            <div className="flex items-center gap-4 max-md:gap-2 border-b border-border px-5 max-md:px-3 py-3.5">
               <div className="flex gap-1.5" aria-hidden="true">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#e2e2e2]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#e2e2e2]" />
@@ -189,7 +189,7 @@ export function ProductPreview() {
                 </div>
                 <Link
                   href="/app"
-                  className="font-ui mt-auto inline-flex h-12 items-center justify-center border border-[#151515] bg-[#151515] px-[22px] text-[0.95rem] font-medium text-white transition-all duration-150 hover:bg-[#2a2a2a] active:scale-[0.99] max-lg:mt-8"
+                  className="font-ui mt-auto inline-flex h-12 max-md:min-h-[48px] max-md:w-full items-center justify-center border border-[#151515] bg-[#151515] px-[22px] text-[0.95rem] font-medium text-white transition-all duration-150 hover:bg-[#2a2a2a] active:scale-[0.99] max-lg:mt-8"
                   style={{ borderRadius: 4 }}
                 >
                   Try it live
@@ -198,8 +198,8 @@ export function ProductPreview() {
             </div>
 
             {/* Status strip */}
-            <div className="border-t border-border bg-surface px-5 py-3">
-              <p className="font-mono text-[11px] tracking-[0.12em] text-muted-foreground">
+            <div className="border-t border-border bg-surface px-5 max-md:px-3 py-3 overflow-x-auto">
+              <p className="font-mono text-[11px] max-md:text-[10px] tracking-[0.12em] text-muted-foreground whitespace-nowrap">
                 SCIKIT-LEARN · EXAMPLE PREVIEW · 300 ROWS
               </p>
             </div>

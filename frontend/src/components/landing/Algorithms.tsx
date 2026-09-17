@@ -79,7 +79,7 @@ export function Algorithms() {
 
         <Reveal delay={100}>
           <div className="mt-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by family">
+            <div className="flex flex-wrap gap-2 max-md:mobile-snap-x max-md:flex-nowrap max-md:overflow-x-auto max-md:pb-1" role="group" aria-label="Filter by family">
               {FILTERS.map((f) => {
                 const active = family === f.id;
                 return (
@@ -88,7 +88,7 @@ export function Algorithms() {
                     type="button"
                     onClick={() => setFamily(f.id)}
                     aria-pressed={active}
-                    className={`font-ui h-10 border px-4 text-[0.85rem] font-medium transition-all duration-150 active:scale-[0.97] ${
+                    className={`font-ui h-10 max-md:min-h-[44px] max-md:shrink-0 max-md:px-5 border px-4 text-[0.85rem] font-medium transition-all duration-150 active:scale-[0.97] ${
                       active
                         ? "border-[#151515] bg-[#151515] text-white"
                         : "border-border bg-white text-muted-foreground hover:border-[#1b1b1b] hover:text-foreground"
@@ -111,7 +111,7 @@ export function Algorithms() {
                 placeholder="Filter list..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="font-ui h-10 w-full border border-border bg-white pr-4 pl-4 text-sm text-foreground transition-colors placeholder:text-muted-foreground focus:border-[#1b1b1b] focus:outline-none"
+                className="font-ui h-10 max-md:min-h-[44px] max-md:text-[16px] w-full border border-border bg-white pr-4 pl-4 text-sm text-foreground transition-colors placeholder:text-muted-foreground focus:border-[#1b1b1b] focus:outline-none"
                 style={{ borderRadius: 4 }}
               />
             </div>
@@ -127,7 +127,7 @@ export function Algorithms() {
               <li key={a.name} className={i === visible.length - 1 ? "border-b border-border" : ""}>
                 <Link
                   href={`/algorithms#algo-${a.name}`}
-                  className="group grid grid-cols-[44px_1fr_auto] items-center gap-4 border-t border-border py-4 transition-colors duration-150 hover:bg-[#f8f8f8] md:py-5"
+                  className="group grid grid-cols-[44px_1fr_auto] max-md:mobile-row-tight items-center gap-4 border-t border-border py-4 max-md:min-h-[64px] transition-colors duration-150 hover:bg-[#f8f8f8] md:py-5"
                 >
                   <span className="font-mono pl-1 text-[13px] text-muted-foreground">
                     {String(ALGORITHMS.indexOf(a) + 1).padStart(2, "0")}
@@ -137,6 +137,9 @@ export function Algorithms() {
                       {a.label}
                     </span>
                     <span className="font-ui mt-0.5 hidden truncate text-sm text-muted-foreground md:block">
+                      {a.description}
+                    </span>
+                    <span className="font-ui mt-0.5 line-clamp-2 text-[13px] leading-snug text-muted-foreground md:hidden">
                       {a.description}
                     </span>
                   </span>
