@@ -696,7 +696,7 @@ export function RegularizationDiagram() {
       <text x={380} y={55} fontSize={9} fontFamily="var(--font-geist-mono), monospace" fill={GRAY} textAnchor="middle">
         β₂
       </text>
-      <InsightBox text="L1 diamond corners touch axes → sparse solutions. L2 circle touches远离 axes → small but nonzero coefficients." y={210} />
+      <InsightBox text="L1 diamond corners touch axes → sparse solutions. L2 circle stays off the axes → small but nonzero coefficients." y={210} />
     </svg>
   );
 }
