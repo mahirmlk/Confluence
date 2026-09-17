@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Three-stage transformation from raw data points to model boundary to prediction regions">
+  <rect x="0" y="0" width="620" height="400" fill="#FFFFFF"/>
+
+  <!-- stage frames -->
+  <g>
+    <rect x="20" y="60" width="160" height="220" fill="#FAFAFA" stroke="#E7E7E7" stroke-width="1"/>
+    <rect x="240" y="60" width="160" height="220" fill="#FAFAFA" stroke="#E7E7E7" stroke-width="1"/>
+    <rect x="460" y="60" width="140" height="220" fill="#FAFAFA" stroke="#E7E7E7" stroke-width="1"/>
+  </g>
+
+  <!-- stage labels -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9" letter-spacing="1.5" fill="#777777">
+    <text x="20" y="40">DATA</text>
+    <text x="240" y="40">MODEL</text>
+    <text x="460" y="40">BEHAVIOR</text>
+  </g>
+
+  <!-- stage 1: raw points -->
+  <g fill="#171717" class="data-point">
+    <circle cx="60" cy="120" r="3.5"/><circle cx="90" cy="150" r="3.5"/><circle cx="120" cy="110" r="3.5"/>
+    <circle cx="70" cy="190" r="3.5"/><circle cx="110" cy="210" r="3.5"/><circle cx="140" cy="180" r="3.5"/>
+    <circle cx="55" cy="240" r="3.5"/><circle cx="100" cy="250" r="3.5"/><circle cx="150" cy="235" r="3.5"/>
+  </g>
+
+  <!-- stage 2: points + boundary -->
+  <g fill="#171717" class="data-point">
+    <circle cx="270" cy="120" r="3.5"/><circle cx="300" cy="150" r="3.5"/><circle cx="330" cy="110" r="3.5"/>
+    <circle cx="280" cy="190" r="3.5"/><circle cx="320" cy="210" r="3.5"/><circle cx="350" cy="180" r="3.5"/>
+  </g>
+  <g fill="#FFFFFF" stroke="#666666" stroke-width="1.5" class="data-point">
+    <circle cx="265" cy="240" r="3.5"/><circle cx="310" cy="250" r="3.5"/><circle cx="360" cy="235" r="3.5"/>
+  </g>
+  <path d="M 245 215 C 290 200, 320 170, 395 130" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" class="boundary"/>
+
+  <!-- stage 3: prediction regions + contour -->
+  <path d="M 460 200 C 500 190, 520 160, 600 130 L 600 60 L 460 60 Z" fill="#111111" opacity="0.04"/>
+  <path d="M 460 200 C 500 190, 520 160, 600 130 L 600 280 L 460 280 Z" fill="#2563EB" opacity="0.06"/>
+  <path d="M 460 200 C 500 190, 520 160, 600 130" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" class="boundary"/>
+  <path d="M 465 225 C 505 215, 530 190, 595 165" fill="none" stroke="#999999" stroke-width="1" stroke-dasharray="4 4" class="flow-line"/>
+  <g class="data-point">
+    <circle cx="490" cy="120" r="3.5" fill="#171717"/>
+    <circle cx="530" cy="150" r="3.5" fill="#171717"/>
+    <circle cx="500" cy="235" r="3.5" fill="#FFFFFF" stroke="#666666" stroke-width="1.5"/>
+    <circle cx="555" cy="225" r="3.5" fill="#FFFFFF" stroke="#666666" stroke-width="1.5"/>
+    <circle cx="570" cy="180" r="5" fill="none" stroke="#2563EB" stroke-width="1.5" class="node"/>
+    <circle cx="570" cy="180" r="2" fill="#2563EB"/>
+  </g>
+
+  <!-- transformation path -->
+  <g stroke="#B8B8B8" stroke-width="1" fill="none" class="flow-line">
+    <line x1="188" y1="170" x2="232" y2="170"/>
+    <polygon points="232,170 226,166 226,174" fill="#B8B8B8" stroke="none"/>
+    <line x1="408" y1="170" x2="452" y2="170"/>
+    <polygon points="452,170 446,166 446,174" fill="#B8B8B8" stroke="none"/>
+  </g>
+
+  <!-- bottom captions: concepts only -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="8" letter-spacing="1.2" fill="#777777" class="annotation">
+    <text x="20" y="308">RAW POINTS</text>
+    <text x="240" y="308">DECISION BOUNDARY</text>
+    <text x="460" y="308">PREDICTION REGIONS</text>
+  </g>
+
+  <!-- measurement baseline -->
+  <line x1="20" y1="340" x2="600" y2="340" stroke="#ECECEC" stroke-width="1" class="grid-line"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="8" letter-spacing="1.2" fill="#999999" class="annotation">
+    <text x="20" y="362">INPUT</text>
+    <text x="560" y="362">OUTPUT</text>
+  </g>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 380" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Compact research taxonomy of algorithm families around a central machine-learning node">
+  <rect x="0" y="0" width="560" height="380" fill="#FFFFFF"/>
+  <text x="24" y="36" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9" letter-spacing="1.5" fill="#999999" class="annotation">ALGORITHM TAXONOMY</text>
+
+  <!-- connections: curved, structural -->
+  <g fill="none" stroke="#B8B8B8" stroke-width="1" class="flow-line">
+    <path d="M 262 172 C 220 150, 190 130, 168 112"/>
+    <path d="M 298 172 C 340 150, 370 130, 392 112"/>
+    <path d="M 250 200 C 200 210, 160 225, 132 240"/>
+    <path d="M 272 222 C 265 250, 260 272, 258 292"/>
+    <path d="M 290 222 C 310 250, 325 272, 336 292"/>
+    <path d="M 310 200 C 360 205, 410 210, 448 216"/>
+  </g>
+
+  <!-- central node -->
+  <g class="node">
+    <circle cx="280" cy="192" r="34" fill="#111111"/>
+    <text x="280" y="198" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="15" fill="#FFFFFF" text-anchor="middle">ML</text>
+  </g>
+
+  <!-- satellite nodes -->
+  <g font-family="Inter, system-ui, sans-serif" text-anchor="middle">
+    <g class="node">
+      <circle cx="150" cy="96" r="26" fill="#FFFFFF" stroke="#2A2A2A" stroke-width="1.5"/>
+      <text x="150" y="101" font-weight="700" font-size="12" fill="#111111">LR</text>
+    </g>
+    <g class="node">
+      <circle cx="410" cy="96" r="26" fill="#FFFFFF" stroke="#2A2A2A" stroke-width="1.5"/>
+      <text x="410" y="101" font-weight="700" font-size="12" fill="#111111">SVM</text>
+    </g>
+    <g class="node">
+      <circle cx="110" cy="248" r="26" fill="#FFFFFF" stroke="#2A2A2A" stroke-width="1.5"/>
+      <text x="110" y="253" font-weight="700" font-size="12" fill="#111111">KNN</text>
+    </g>
+    <g class="node">
+      <circle cx="256" cy="318" r="26" fill="#FFFFFF" stroke="#2A2A2A" stroke-width="1.5"/>
+      <text x="256" y="323" font-weight="700" font-size="12" fill="#111111">RF</text>
+    </g>
+    <g class="node">
+      <circle cx="348" cy="318" r="26" fill="#FFFFFF" stroke="#2A2A2A" stroke-width="1.5"/>
+      <text x="348" y="323" font-weight="700" font-size="12" fill="#111111">XGB</text>
+    </g>
+    <g class="node">
+      <circle cx="470" cy="216" r="26" fill="#FFFFFF" stroke="#666666" stroke-width="1"/>
+      <text x="470" y="221" font-weight="700" font-size="12" fill="#111111">PCA</text>
+    </g>
+  </g>
+
+  <!-- family labels -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="7.5" letter-spacing="1.2" fill="#999999" text-anchor="middle" class="annotation">
+    <text x="150" y="134">LINEAR</text>
+    <text x="410" y="134">KERNEL</text>
+    <text x="110" y="286">INSTANCE</text>
+    <text x="256" y="356">TREE</text>
+    <text x="348" y="356">BOOSTING</text>
+    <text x="470" y="254">MANIFOLD</text>
+  </g>
+
+  <!-- quiet baseline -->
+  <line x1="24" y1="52" x2="200" y2="52" stroke="#ECECEC" stroke-width="1" class="grid-line"/>
+</svg>
